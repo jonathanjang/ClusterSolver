@@ -5,7 +5,6 @@
     <header class="container-fluid background">
       <div class="jumbotron text-center">
         {{if response.title:}}
-        I AM SEXY
         <h1>{{=response.title}}
           <small>{{=response.subtitle or ''}}</small></h1>
         {{pass}}
@@ -35,12 +34,7 @@
 {{pass}}
  -->
 
-<form action="upload.php" method="post" enctype="multipart/form-data">
-    Select image to upload:
-    <input type="file" name="fileToUpload" id="fileToUpload">
-    <input type="submit" value="Upload .csv" name="submit">
-</form>
-
+{{=form}}
 
 
 {{block right_sidebar}}

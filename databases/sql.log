@@ -53,3 +53,10 @@ CREATE TABLE auth_cas(
     renew CHAR(1)
 );
 success!
+timestamp: 2016-10-23T20:40:52.422811
+CREATE TABLE import_data(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    file_name CHAR(512),
+    file_data CHAR(512)
+);
+success!
