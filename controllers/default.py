@@ -8,6 +8,7 @@
 # - download is for downloading files uploaded in the db (does streaming)
 # -------------------------------------------------------------------------
 
+import csv
 
 def index():
     """
@@ -39,6 +40,15 @@ def user():
     also notice there is http://..../[app]/appadmin/manage/auth to allow administrator to manage users
     """
     return dict(form=auth())
+
+# FIXME: this function will most likely need to be moved into another file
+# function arguments may need to be modified for a delimiter value
+def csv_parsing(file, filename):
+    with open(filename, 'wb') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=' ')
+        for row in spamreader:
+            print ','.join(row)
+
 
 
 @cache.action()
