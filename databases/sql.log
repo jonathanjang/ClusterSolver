@@ -60,3 +60,19 @@ CREATE TABLE import_data(
     file_data CHAR(512)
 );
 success!
+timestamp: 2016-10-25T00:41:22.639413
+CREATE TABLE importdata(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    filename CHAR(512),
+    datafile CHAR(512)
+);
+success!
+timestamp: 2016-10-26T17:50:27.349084
+CREATE TABLE csv_data(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name CHAR(512),
+    id2 CHAR(512),
+    name2 CHAR(512),
+    owner_id CHAR(512)
+);
+success!

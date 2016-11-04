@@ -9,7 +9,14 @@
 
 import datetime
 
-db.define_table('import_data',
-				Field('file_name', requires=IS_NOT_EMPTY()),
-				Field('file_data', 'upload')
+db.define_table('importdata',
+				Field('filename', requires=IS_NOT_EMPTY()),
+				Field('datafile', 'upload')
                 )
+
+db.define_table('csv_data',
+	Field('id'),
+	Field('name'),
+	Field('id2'),
+	Field('name2'),
+	Field('owner_id'))

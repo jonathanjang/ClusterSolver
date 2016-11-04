@@ -34,10 +34,44 @@
 {{pass}}
  -->
 
+<!-- <script src="{{=URL('static', 'js/dropzone.js')}}"></script>
+
+<script>
+function produce_upload_url (files) {
+    return APP.upload_url;
+}
+
+$(function() {
+  Dropzone.options.fileUploader = {
+    maxFilesize: 10, // MB
+    url: produce_upload_url,
+    addRemoveLinks: true,
+    parallelUploads: 1,
+    acceptedFiles: 'audio/*',
+    createImageThumbnails: false,
+    init: function() {
+      this.on("queuecomplete", function() {
+      });
+    }
+  }
+});
+</script>
+{{end}}
+
+    <div id="uploader_div" style="display:none">
+      <form action="" class="dropzone dz-clickable" id="file-uploader">
+        <div class="dz-message">
+          Drop files here to upload them, or click to select them.
+        </div>
+      </form>
+    </div> -->
+
+
+<h2>Hi, please input a .csv file to perform clustering on!</h2><br>
 {{=form}}
 
 
-{{block right_sidebar}}
+<!-- {{block right_sidebar}}
 <div class="panel panel-info">
   <div class="panel-heading"><h3 class="panel-title"><a class="btn-block"
       href="{{=URL('admin','default','index')}}">
@@ -54,3 +88,4 @@
   </ul>
 </div>
 {{end}}
+ -->

@@ -1,0 +1,6 @@
+errors/
+databases/
+*.pyc
+sessions/
+uploads/
+languages/

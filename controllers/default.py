@@ -9,6 +9,8 @@
 # -------------------------------------------------------------------------
 
 import csv
+import pprint
+import os
 
 def index():
     """
@@ -18,9 +20,27 @@ def index():
     if you need a simple wiki simply replace the two lines below with:
     return auth.wiki()
     """
-    form = SQLFORM(db.import_data)
+
+    # form = SQLFORM(db.importdata)
+    # if form.process().accepted:
+    #     file = db(db.importdata.filename != None).select().first().filename
+    #     print file
+
+    form = SQLFORM(db.importdata)
+    if form.process().accepted:
+        print form.vars
+        for k,v in request.iteritems():
+            print "{} -- {}".format(k,v)
+        pprint.pprint(request.file)
+        db.csv_data.import_from_csv_file(open("{}/uploads/{}".format(request.folder,form.vars.datafile),'rb'), 
+            delimiter=',')
+        print db.tables
+
     return dict(form=form)
 
+def query():
+    # file = db(db.import.datafile != None).select()
+    return dict()
 
 
 def user():
@@ -44,10 +64,10 @@ def user():
 # FIXME: this function will most likely need to be moved into another file
 # function arguments may need to be modified for a delimiter value
 def csv_parsing(file, filename):
-    with open(filename, 'wb') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=' ')
+    with open(filename, 'rb') as csvfile:
+        reader = csv.reader(csvfile)
         for row in spamreader:
-            print ','.join(row)
+            print row
 
 
 
