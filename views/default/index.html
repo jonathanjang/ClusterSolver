@@ -1,7 +1,7 @@
 {{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
 {{extend 'layout.html'}}
 
-{{block header}}
+<!-- {{block header}}
     <header class="container-fluid background">
       <div class="jumbotron text-center">
         {{if response.title:}}
@@ -11,7 +11,7 @@
       </div>
     </header>
 {{end}}
-
+ -->
 <!-- {{if 'message' in globals():}}
 <h2>{{=message}}</h2>
 <p class="lead">{{=T('How did you get here?')}}</p>
@@ -34,11 +34,17 @@
 {{pass}}
  -->
 
-<!-- <script src="{{=URL('static', 'js/dropzone.js')}}"></script>
+{{block head}}
+<script src="{{=URL('static', 'js/vue.js')}}"></script>
+<script>
+  var upload_url = "{{=URL('api', 'upload_form')}}";
+</script>
+
+<script src="{{=URL('static', 'js/dropzone.js')}}"></script>
 
 <script>
 function produce_upload_url (files) {
-    return APP.upload_url;
+    return APP.upload_url; 
 }
 
 $(function() {
@@ -47,7 +53,7 @@ $(function() {
     url: produce_upload_url,
     addRemoveLinks: true,
     parallelUploads: 1,
-    acceptedFiles: 'audio/*',
+    acceptedFiles: 'audio/*', //FIXME, change to .csv
     createImageThumbnails: false,
     init: function() {
       this.on("queuecomplete", function() {
@@ -55,21 +61,28 @@ $(function() {
     }
   }
 });
+
 </script>
 {{end}}
 
-    <div id="uploader_div" style="display:none">
-      <form action="" class="dropzone dz-clickable" id="file-uploader">
-        <div class="dz-message">
-          Drop files here to upload them, or click to select them.
-        </div>
-      </form>
-    </div> -->
+<!-- <form action="/file-upload"
+      class="dropzone"
+      id="uploader-div"></form>
+ -->
 
 
-<h2>Hi, please input a .csv file to perform clustering on!</h2><br>
-{{=form}}
+<h3>Hi, Welcome to ClusterSolver!. Please input a .csv file to perform clustering on!</h3><br>
+  <div id="uploader_div">
+    <form action="" class="dropzone dz-clickable" id="file-uploader">
+      <div class="dz-message">
+        Drop files here to upload them, or click to select them.
+      </div>
+    </form>
+  </div>
 
+
+<!-- {{=form}}
+ -->
 
 <!-- {{block right_sidebar}}
 <div class="panel panel-info">
