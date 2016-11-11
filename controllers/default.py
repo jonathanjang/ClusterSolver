@@ -26,15 +26,28 @@ def index():
     #     file = db(db.importdata.filename != None).select().first().filename
     #     print file
 
+    # print request
+
+
+
+
+
+
+
     form = SQLFORM(db.importdata)
     if form.process().accepted:
-        print form.vars
-        for k,v in request.iteritems():
-            print "{} -- {}".format(k,v)
-        pprint.pprint(request.file)
-        db.csv_data.import_from_csv_file(open("{}/uploads/{}".format(request.folder,form.vars.datafile),'rb'), 
-            delimiter=',')
-        print db.tables
+        # print form.vars
+        # for k,v in request.iteritems():
+        #     print "{} -- {}".format(k,v)
+        # pprint.pprint(request.file)
+        # print request.folder
+        # db.csv_data.import_from_csv_file(open("{}/uploads/{}".format(request.folder,form.vars.datafile),'rb'), 
+        #     delimiter=',')
+        # print db.tables
+
+        path = request.folder + "/uploads/" + form.vars.datafile
+        # db.csv_data.import_from_csv_file(open(path, 'rb'), delimiter=',')
+        csv_parsing(path)
 
     return dict(form=form)
 
@@ -59,14 +72,14 @@ def user():
     to decorate functions that need access control
     also notice there is http://..../[app]/appadmin/manage/auth to allow administrator to manage users
     """
-    return dict(form=auth())
+    return dict()
 
 # FIXME: this function will most likely need to be moved into another file
 # function arguments may need to be modified for a delimiter value
-def csv_parsing(file, filename):
-    with open(filename, 'rb') as csvfile:
+def csv_parsing(path):
+    with open(path, 'rb') as csvfile:
         reader = csv.reader(csvfile)
-        for row in spamreader:
+        for row in reader:
             print row
 
 

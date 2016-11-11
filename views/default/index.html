@@ -1,4 +1,3 @@
-{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
 {{extend 'layout.html'}}
 
 <!-- {{block header}}
@@ -53,7 +52,7 @@ $(function() {
     url: produce_upload_url,
     addRemoveLinks: true,
     parallelUploads: 1,
-    acceptedFiles: 'audio/*', //FIXME, change to .csv
+    acceptedFiles: '.csv', //FIXME, change to .csv
     createImageThumbnails: false,
     init: function() {
       this.on("queuecomplete", function() {
@@ -65,23 +64,35 @@ $(function() {
 </script>
 {{end}}
 
-<!-- <form action="/file-upload"
-      class="dropzone"
-      id="uploader-div"></form>
+
+    <h3>Hi, Welcome to ClusterSolver!. Please input a .csv file to perform clustering on!</h3><br>
+
+  {{=form}}
+
+<!--     <div id="uploader_div">
+      <form action="/random" class="dropzone dz-clickable" id="file-uploader">
+        <div class="dz-message">
+          Drop files here to upload them, or click to select them.
+        </div>
+      </form>
+    </div>
  -->
 
 
-<h3>Hi, Welcome to ClusterSolver!. Please input a .csv file to perform clustering on!</h3><br>
-  <div id="uploader_div">
-    <form action="" class="dropzone dz-clickable" id="file-uploader">
-      <div class="dz-message">
-        Drop files here to upload them, or click to select them.
-      </div>
-    </form>
+<!-- <div class="main_content">
+
+  <form action="/file-upload"
+        class="dropzone"
+        id="uploader-div"></form>
+
+  <div id="vue-div">
   </div>
 
 
-<!-- {{=form}}
+
+</div>
+
+<script src="{{=URL('static', 'js/default_index.js')}}"></script>
  -->
 
 <!-- {{block right_sidebar}}

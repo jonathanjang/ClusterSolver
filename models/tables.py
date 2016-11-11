@@ -10,7 +10,6 @@
 import datetime
 
 db.define_table('importdata',
-				Field('filename', requires=IS_NOT_EMPTY()),
 				Field('datafile', 'upload')
                 )
 
