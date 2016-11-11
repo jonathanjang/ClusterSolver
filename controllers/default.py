@@ -29,22 +29,19 @@ def index():
     # print request
 
 
-
-
-
+    # FROM: Rakshit's OH :)
+    # print form.vars
+    # for k,v in request.iteritems():
+    #     print "{} -- {}".format(k,v)
+    # pprint.pprint(request.file)
+    # print request.folder
+    # db.csv_data.import_from_csv_file(open("{}/uploads/{}".format(request.folder,form.vars.datafile),'rb'), 
+    #     delimiter=',')
+    # print db.tables
 
 
     form = SQLFORM(db.importdata)
     if form.process().accepted:
-        # print form.vars
-        # for k,v in request.iteritems():
-        #     print "{} -- {}".format(k,v)
-        # pprint.pprint(request.file)
-        # print request.folder
-        # db.csv_data.import_from_csv_file(open("{}/uploads/{}".format(request.folder,form.vars.datafile),'rb'), 
-        #     delimiter=',')
-        # print db.tables
-
         path = request.folder + "/uploads/" + form.vars.datafile
         # db.csv_data.import_from_csv_file(open(path, 'rb'), delimiter=',')
         csv_parsing(path)
