@@ -12,10 +12,3 @@ import datetime
 db.define_table('importdata',
 				Field('datafile', 'upload')
                 )
-
-db.define_table('csv_data',
-	Field('id'),
-	Field('name'),
-	Field('id2'),
-	Field('name2'),
-	Field('owner_id'))

@@ -76,16 +76,28 @@ def user():
 def csv_parsing(path):
     with open(path, 'rb') as csvfile:
         reader = csv.reader(csvfile)
+        first = True
         for row in reader:
-            print row
+            if first:
+                new_table(row)
+                first = False
+            # else:
+            #     insert_row(row)
 
+# creates a db named entry_data with variable fields
 def new_table(fields):
-    db.define_table('test_table',
-        Field('amar'),
-        Field('jyothi'),
-        Field('sucks')
-        )
-    print db(db.test_table).select()
+    # db.define_table('test_table',
+    #     Field('amar'),
+    #     Field('jyothi'),
+    #     Field('sucks')
+    #     )
+    # print db(db.test_table).select()
+    # print [f.replace(' ' , '') for f in fields]
+
+    db.define_table('entry_data',
+        *[Field(f.replace(' ', '')) for f in fields],
+        migrate=True)
+    print db(db.entry_data).select()
 
 @cache.action()
 def download():
