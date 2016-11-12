@@ -79,7 +79,13 @@ def csv_parsing(path):
         for row in reader:
             print row
 
-
+def new_table(fields):
+    db.define_table('test_table',
+        Field('amar'),
+        Field('jyothi'),
+        Field('sucks')
+        )
+    print db(db.test_table).select()
 
 @cache.action()
 def download():
