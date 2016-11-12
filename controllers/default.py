@@ -49,7 +49,6 @@ def index():
     return dict(form=form)
 
 def query():
-    # file = db(db.import.datafile != None).select()
     return dict()
 
 
@@ -77,27 +76,31 @@ def csv_parsing(path):
     with open(path, 'rb') as csvfile:
         reader = csv.reader(csvfile)
         first = True
+        field_names = []
+        i = 0
         for row in reader:
-            if first:
+            if i == 0:
+                field_names = row
                 new_table(row)
-                first = False
-            # else:
-            #     insert_row(row)
+            else:
+                insert_row(row, field_names, i)
+            i += 1
+
 
 # creates a db named entry_data with variable fields
 def new_table(fields):
-    # db.define_table('test_table',
-    #     Field('amar'),
-    #     Field('jyothi'),
-    #     Field('sucks')
-    #     )
-    # print db(db.test_table).select()
-    # print [f.replace(' ' , '') for f in fields]
-
     db.define_table('entry_data',
-        *[Field(f.replace(' ', '')) for f in fields],
+        *[Field(f) for f in fields],
         migrate=True)
-    print db(db.entry_data).select()
+
+# to check db, use 'sqlite3 storage.sqlite'
+# no need for primary keys or any field names 'id'
+def insert_row(row, field_names, t_id):
+    entry = { field_names[i] : row[i] for i in xrange(len(row))}
+    db.entry_data.bulk_insert([entry])
+
+
+    
 
 @cache.action()
 def download():
