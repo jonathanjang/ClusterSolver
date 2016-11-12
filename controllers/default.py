@@ -39,11 +39,11 @@ def index():
     #     delimiter=',')
     # print db.tables
 
+    # db.csv_data.import_from_csv_file(open(path, 'rb'), delimiter=',')
 
     form = SQLFORM(db.importdata)
     if form.process().accepted:
         path = request.folder + "/uploads/" + form.vars.datafile
-        # db.csv_data.import_from_csv_file(open(path, 'rb'), delimiter=',')
         csv_parsing(path)
 
     return dict(form=form)
@@ -70,8 +70,6 @@ def user():
     """
     return dict()
 
-# FIXME: this function will most likely need to be moved into another file
-# function arguments may need to be modified for a delimiter value
 def csv_parsing(path):
     with open(path, 'rb') as csvfile:
         reader = csv.reader(csvfile)
@@ -83,7 +81,7 @@ def csv_parsing(path):
                 field_names = row
                 new_table(row)
             else:
-                insert_row(row, field_names, i)
+                insert_row(row, field_names)
             i += 1
 
 
@@ -95,12 +93,9 @@ def new_table(fields):
 
 # to check db, use 'sqlite3 storage.sqlite'
 # no need for primary keys or any field names 'id'
-def insert_row(row, field_names, t_id):
+def insert_row(row, field_names):
     entry = { field_names[i] : row[i] for i in xrange(len(row))}
-    db.entry_data.bulk_insert([entry])
-
-
-    
+    db.entry_data.bulk_insert([entry])   
 
 @cache.action()
 def download():
