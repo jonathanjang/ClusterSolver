@@ -41,12 +41,18 @@ def index():
 
     # db.csv_data.import_from_csv_file(open(path, 'rb'), delimiter=',')
 
+    upload_flag = False
+
     form = SQLFORM(db.importdata)
     if form.process().accepted:
         path = request.folder + "/uploads/" + form.vars.datafile
         csv_parsing(path)
+        upload_flag = True
 
-    return dict(form=form)
+    print upload_flag
+
+
+    return dict(form=form, upload_flag=upload_flag)
 
 def query():
     return dict()
@@ -73,7 +79,6 @@ def user():
 def csv_parsing(path):
     with open(path, 'rb') as csvfile:
         reader = csv.reader(csvfile)
-        first = True
         field_names = []
         i = 0
         for row in reader:
