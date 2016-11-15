@@ -16,14 +16,30 @@ def upload_form():
 	# print isinstance(request.vars.file.file.read(), str)
 	# print request.vars.file.filename
     upload_complete = True
+    # print upload_complete
     return 1
 
+# not being used as of this moment
 def check_upload_status():
     print upload_complete
     return response.json(dict(
         upload_status = upload_complete
         ))
 
+def insert_field_names(row):
+    db.column_names.insert(row_string=row)
+    get_fields()
+
+def get_fields():
+    fields = db(db.column_names).select(orderby='id')
+    field_string = fields.last().row_string
+    field_list = field_string.split('|')
+    print field_list[1:-1]
+    return response.json(dict(
+        field_list=field_list[1:-1]
+        ))
+    # fields = field_string.split('|')
+    # print fields
 
 
 def csv_parsing(path):
@@ -38,6 +54,7 @@ def csv_parsing(path):
             if i == 0:
                 field_names = row
                 new_table(row)
+                insert_field_names(row)
             else:
                 insert_row(row, field_names)
             i += 1

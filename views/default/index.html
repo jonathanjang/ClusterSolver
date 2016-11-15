@@ -4,7 +4,7 @@
 <script src="{{=URL('static', 'js/vue.js')}}"></script>
 <script>
   var upload_url = "{{=URL('api', 'upload_form')}}";
-  var upload_status_url = "{{=URL('api', 'check_upload_status')}}"
+  var get_fields_url = "{{=URL('api', 'get_fields')}}";
 </script>
 
 <script src="{{=URL('static', 'js/dropzone.js')}}"></script>
@@ -62,9 +62,13 @@ $(function() {
       </div> -->
 
     </div>
-    <div id="settings_div" v-if="page == 'settings'"> HELLO FROM THE OUTSIIIIIDE
-<!--       <div v-if="get_upload_status()">upload status is correct</div>
- -->    </div>
+    <div id="settings_div" v-if="page == 'settings'"> 
+      HELLO FROM THE OUTSIIIIIDE
+      <div v-if="get_fields()"></div>
+      <div v-for="f in fields">
+        ${f}
+      </div>
+    </div>
 
   </div>
 

@@ -34,6 +34,12 @@ var app = function(){
         return (status == 1)
     };
 
+    self.get_fields = function(){
+        $.getJSON(get_fields_url, function(data){
+            self.vue.fields = data.field_list;
+        });
+    }
+
     self.upload_button_clicked = function(){
         // possible unnecessary VVV
         self.vue.is_btn_clicked = !self.vue.is_btn_clicked;
@@ -45,6 +51,7 @@ var app = function(){
         delimiters: ['${', '}'],
         unsafeDelimiters: ['!{', '}'],
         data: {
+            fields: [],
             page: 'upload',
             is_btn_clicked: false,
             is_uploaded: false,
@@ -52,7 +59,8 @@ var app = function(){
         methods: {
             change_page: self.change_page,
             get_upload_status: self.get_upload_status,
-            upload_button_clicked: self.upload_button_clicked
+            upload_button_clicked: self.upload_button_clicked,
+            get_fields: self.get_fields
         }
 
     });

@@ -12,3 +12,6 @@ import datetime
 db.define_table('importdata',
 				Field('datafile', 'upload')
                 )
+
+db.define_table('column_names',
+				 Field('row_string', 'string'))
