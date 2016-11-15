@@ -43,16 +43,16 @@ def index():
 
     upload_flag = False
 
+    field_names = []
+
     form = SQLFORM(db.importdata)
     if form.process().accepted:
         path = request.folder + "/uploads/" + form.vars.datafile
-        csv_parsing(path)
+        field_names = csv_parsing(path)
         upload_flag = True
+        redirect(URL('index'))
 
-    print upload_flag
-
-
-    return dict(form=form, upload_flag=upload_flag)
+    return dict(form=form, upload_flag=upload_flag, field_names=field_names)
 
 def query():
     return dict()
@@ -88,6 +88,7 @@ def csv_parsing(path):
             else:
                 insert_row(row, field_names)
             i += 1
+    return field_names
 
 
 # creates a db named entry_data with variable fields
@@ -100,7 +101,7 @@ def new_table(fields):
 # no need for primary keys or any field names 'id'
 def insert_row(row, field_names):
     entry = { field_names[i] : row[i] for i in xrange(len(row))}
-    db.entry_data.bulk_insert([entry])   
+    db.entry_data.bulk_insert([entry])  
 
 @cache.action()
 def download():

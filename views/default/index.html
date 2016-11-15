@@ -16,7 +16,7 @@ function produce_upload_url (files) {
 $(function() {
   Dropzone.options.fileUploader = {
     maxFilesize: 10, // MB
-    url: produce_upload_url,
+    url: upload_url,
     addRemoveLinks: true,
     parallelUploads: 1,
     acceptedFiles: '.csv', //FIXME, change to .csv
@@ -33,22 +33,45 @@ $(function() {
 
 <div class="main_content">
   <div id="vue-div">
-    <div id="upload_div" v-if="show_upload_form"> 
+    <div id="upload_div" v-if="page == 'upload'"> 
     <!--  v-if="show_upload()" -->
-      <h3>Hi, Welcome to ClusterSolver!. Please input a .csv file to perform clustering on! Please use commas to separate the values and not spaces!</h3><br>
-      {{=form}}
+    <h3>Hi, Welcome to ClusterSolver!. Please input a .csv file to perform clustering on! Please use commas to separate the values and not spaces!</h3><br>
+
+    <div id="uploader_div">
+      <form action="/random" class="dropzone dz-clickable" id="file-uploader">
+        <div class="dz-message">
+          Drop files here to upload them, or click to select them.
+        </div>
+      </form>
+    </div>      
+
+
+
+
+
+
+
+
+      <!--{{=form}}
 
       {{if upload_flag:}}
-        <div v-if="switch_upload_flag()"></div>
+        <div v-if="change_page('setting')"></div>
       {{pass}}
 
-    </div>.
+      <div class="cluster_settings" v-if="page == 'settings'">
+        inside the settings page
+
+      </div> -->
+
+    </div>
   </div>
 
 
 
 </div>
 
+
+<!-- for uploading using SQLFORM -->
 <!--     <div id="uploader_div">
       <form action="/random" class="dropzone dz-clickable" id="file-uploader">
         <div class="dz-message">
@@ -57,7 +80,6 @@ $(function() {
       </form>
     </div>
  -->
-
 
 <!-- <div class="main_content">
 
@@ -73,3 +95,4 @@ $(function() {
 </div>
  -->
 <script src="{{=URL('static', 'js/default_index.js')}}"></script>
+

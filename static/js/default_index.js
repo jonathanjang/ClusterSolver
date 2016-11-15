@@ -13,7 +13,8 @@ var app = function(){
     };
 
     self.start = function(){
-        self.switch_upload_flag();
+        self.vue.page = 'upload';
+        console.log(self.vue.page)
     }
 
     // self.create_upload_url = function(){
@@ -25,21 +26,35 @@ var app = function(){
         self.vue.show_upload_form = !self.vue.show_upload_form;
     };
 
+    self.change_page = function(page_name){
+        console.log('out here in change_page', page_name)
+        console.log("printing self.vue.page", self.vue.page)
+        self.vue.page = page_name;
+        console.log("page has been changed to: ", self.vue.page);
+        return true 
+    };
+
+    self.check_page = function(){
+        return self.vue.page;
+    };
+
     self.vue = new Vue({
         el: "#vue-div",
         delimiters: ['${', '}'],
         unsafeDelimiters: ['!{', '}'],
         data: {
-            show_upload_form: false
+            show_upload_form: false,
+            page: 'upload'
         },
         methods: {
-            switch_upload_flag: self.switch_upload_flag
+            switch_upload_flag: self.switch_upload_flag,
+            change_page: self.change_page,
+            check_page: self.check_page,
         }
 
     });
 
 
-    self.start();
     $("#vue-div").show();
 
 
