@@ -43,7 +43,8 @@ var app = function(){
     self.upload_button_clicked = function(){
         // possible unnecessary VVV
         self.vue.is_btn_clicked = !self.vue.is_btn_clicked;
-        self.change_page('settings');        
+        self.change_page('settings');
+        self.get_fields();    
     };
 
     self.vue = new Vue({
