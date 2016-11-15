@@ -12,30 +12,32 @@ var app = function(){
         }
     };
 
+    //possibly unecessary 
     self.start = function(){
         self.vue.page = 'upload';
-        console.log(self.vue.page)
     }
 
-    // self.create_upload_url = function(){
-    // 	count++;
-    // 	self.upload_url = upload_url + "?" + $.param({ upload_id: count });
-    // };
-
-    self.switch_upload_flag = function(){
-        self.vue.show_upload_form = !self.vue.show_upload_form;
-    };
 
     self.change_page = function(page_name){
-        console.log('out here in change_page', page_name)
-        console.log("printing self.vue.page", self.vue.page)
         self.vue.page = page_name;
-        console.log("page has been changed to: ", self.vue.page);
         return true 
     };
 
-    self.check_page = function(){
-        return self.vue.page;
+    // FIXME: when the upload btn is pressed, page is changed even if 
+    // a form has not been uploaded
+    self.get_upload_status = function(){
+        status = 0;
+        $.getJSON(upload_status_url, function(data){
+            status = data.upload_status;
+        })
+        console.log(status) == 1;
+        return (status == 1)
+    };
+
+    self.upload_button_clicked = function(){
+        // possible unnecessary VVV
+        self.vue.is_btn_clicked = !self.vue.is_btn_clicked;
+        self.change_page('settings');        
     };
 
     self.vue = new Vue({
@@ -43,13 +45,14 @@ var app = function(){
         delimiters: ['${', '}'],
         unsafeDelimiters: ['!{', '}'],
         data: {
-            show_upload_form: false,
-            page: 'upload'
+            page: 'upload',
+            is_btn_clicked: false,
+            is_uploaded: false,
         },
         methods: {
-            switch_upload_flag: self.switch_upload_flag,
             change_page: self.change_page,
-            check_page: self.check_page,
+            get_upload_status: self.get_upload_status,
+            upload_button_clicked: self.upload_button_clicked
         }
 
     });

@@ -1,5 +1,6 @@
 import csv
 
+upload_complete = False
 
 def upload_form():
     name = request.vars.file.filename
@@ -7,24 +8,33 @@ def upload_form():
 
     new_file = open(destination_path, 'w')
     # print request.vars.file.file.read()
-    print request.vars.file
+    # print request.vars.file
     new_file.write(request.vars.file.file.read())
     new_file.close()
 
     csv_parsing(destination_path)
 	# print isinstance(request.vars.file.file.read(), str)
 	# print request.vars.file.filename
+    upload_complete = True
     return 1
+
+def check_upload_status():
+    print upload_complete
+    return response.json(dict(
+        upload_status = upload_complete
+        ))
+
+
 
 def csv_parsing(path):
     with open(path, 'rb') as csvfile:
-    	print "hello"
+    	# print "hello"
         reader = csv.reader(csvfile)
-        print reader
+        # print reader
         field_names = []
         i = 0
         for row in reader:
-            print row
+            # print row
             if i == 0:
                 field_names = row
                 new_table(row)
