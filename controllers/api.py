@@ -7,16 +7,12 @@ def upload_form():
     destination_path = request.folder + "/uploads/" + name
 
     new_file = open(destination_path, 'w')
-    # print request.vars.file.file.read()
-    # print request.vars.file
     new_file.write(request.vars.file.file.read())
     new_file.close()
 
     csv_parsing(destination_path)
-	# print isinstance(request.vars.file.file.read(), str)
-	# print request.vars.file.filename
     upload_complete = True
-    # print upload_complete
+
     return 1
 
 # not being used as of this moment
@@ -27,27 +23,34 @@ def check_upload_status():
         ))
 
 def start_clustering():
-    print "starting clustering"
+    # FIXME: why does check_fields have the '[]' after it?
+    print request.vars['checked_fields[]']
+    checked_fields = request.vars['checked_fields[]']
+    entry = db(db.csv_data).select(orderby='id').last()
+    all_fields = entry.field_names
+    print all_fields
+    indexes = [all_fields.index(c) for c in checked_fields if c in all_fields]
+    data_string = entry.csv_rows
+    data_list = data_string.split('|')
+    data_list = data_list[1:-1]
+    print data_list
+
 
 def get_fields():
     fields = db(db.csv_data).select(orderby='id')
-    field_string = fields.last().field_names
-    field_list = field_string.split('|')
+    field_list = fields.last().field_names
     return response.json(dict(
-        field_list=field_list[1:-1]
+        field_list=field_list
         ))
 
 
 def csv_parsing(path):
     with open(path, 'rb') as csvfile:
-    	# print "hello"
         reader = csv.reader(csvfile)
-        # print reader
         field_names = []
         data = []  #list of lists
         i = 0
         for row in reader:
-            # print row
             if i == 0:
                 field_names = row
             else:

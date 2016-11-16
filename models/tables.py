@@ -13,9 +13,6 @@ db.define_table('importdata',
 				Field('datafile', 'upload')
                 )
 
-db.define_table('column_names',
-				 Field('row_string', 'string'))
-
 db.define_table('csv_data',
-				 Field('field_names'),
+				 Field('field_names', 'list:string'),
 				 Field('csv_rows'))
