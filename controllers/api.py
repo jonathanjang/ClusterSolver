@@ -34,7 +34,6 @@ def get_fields():
     fields = db(db.column_names).select(orderby='id')
     field_string = fields.last().row_string
     field_list = field_string.split('|')
-    print field_list[1:-1]
     return response.json(dict(
         field_list=field_list[1:-1]
         ))

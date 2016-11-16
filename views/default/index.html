@@ -63,14 +63,21 @@ $(function() {
 
     </div>
     <div id="settings_div" v-if="page == 'settings'"> 
-      <div v-for="f in fields">
-        ${f}
+    Please chose the fields that you want to focus on.
+      <div class="fields" v-for="f in fields">
+        <input type='checkbox' v-on:click="push_field(f)">${f}</div>
+        <br>
+        <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
+
       </div>
+
     </div>
 
   </div>
 
-
+<!--         <input type="checkbox" id="${f}" value="${f}" v-model="checked_fields">
+        <label for="${f}">${f}</label>
+ -->
 
 </div>
 
