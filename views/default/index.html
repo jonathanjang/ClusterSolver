@@ -5,6 +5,7 @@
 <script>
   var upload_url = "{{=URL('api', 'upload_form')}}";
   var get_fields_url = "{{=URL('api', 'get_fields')}}";
+  var start_clustering_url = "{{=URL('api', 'start_clustering')}}";
 </script>
 
 <script src="{{=URL('static', 'js/dropzone.js')}}"></script>
@@ -75,9 +76,6 @@ $(function() {
 
   </div>
 
-<!--         <input type="checkbox" id="${f}" value="${f}" v-model="checked_fields">
-        <label for="${f}">${f}</label>
- -->
 
 </div>
 

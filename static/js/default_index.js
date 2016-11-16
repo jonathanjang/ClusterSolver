@@ -63,11 +63,22 @@ var app = function(){
         }else{
             self.vue.checked_fields.splice(i,1);
         }
-    }
+    };
 
     self.continue_button_clicked = function(){
+        // self.start_clustering();
         self.change_page('cluster');
-    }
+    };
+
+    // self.start_clustering = function(){
+    //     $.post(start_clustering_url, 
+    //           {
+    //               checked_fields = self.vue.checked_fields
+    //           },
+    //           function(data){
+
+    //           });
+    // };
 
     self.vue = new Vue({
         el: "#vue-div",

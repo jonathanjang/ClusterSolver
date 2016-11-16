@@ -26,19 +26,16 @@ def check_upload_status():
         upload_status = upload_complete
         ))
 
-def insert_field_names(row):
-    db.column_names.insert(row_string=row)
-    get_fields()
+def start_clustering():
+    print "starting clustering"
 
 def get_fields():
-    fields = db(db.column_names).select(orderby='id')
-    field_string = fields.last().row_string
+    fields = db(db.csv_data).select(orderby='id')
+    field_string = fields.last().field_names
     field_list = field_string.split('|')
     return response.json(dict(
         field_list=field_list[1:-1]
         ))
-    # fields = field_string.split('|')
-    # print fields
 
 
 def csv_parsing(path):
@@ -47,27 +44,42 @@ def csv_parsing(path):
         reader = csv.reader(csvfile)
         # print reader
         field_names = []
+        data = []  #list of lists
         i = 0
         for row in reader:
             # print row
             if i == 0:
                 field_names = row
-                new_table(row)
-                insert_field_names(row)
             else:
-                insert_row(row, field_names)
+                data.append(row)
             i += 1
-    return field_names
+
+        db.csv_data.insert(field_names=field_names, csv_rows=data)
 
 
+
+
+
+
+# old way to store data
 # creates a db named entry_data with variable fields
-def new_table(fields):
-    db.define_table('entry_data',
-        *[Field(f) for f in fields],
-        migrate=True)
+# def new_table(fields):
+#     db.define_table('entry_data',
+#         *[Field(f) for f in fields],
+#         migrate=True)
 
 # to check db, use 'sqlite3 storage.sqlite'
 # no need for primary keys or any field names 'id'
-def insert_row(row, field_names):
-    entry = { field_names[i] : row[i] for i in xrange(len(row))}
-    db.entry_data.bulk_insert([entry])  
+# def insert_row(row, field_names):
+#     entry = { field_names[i] : row[i] for i in xrange(len(row))}
+#     db.entry_data.bulk_insert([entry])  
+
+# def get_fields():
+#     fields = db(db.column_names).select(orderby='id')
+#     field_string = fields.last().row_string
+#     field_list = field_string.split('|')
+#     return response.json(dict(
+#         field_list=field_list[1:-1]
+#         ))
+    # fields = field_string.split('|')
+    # print fields

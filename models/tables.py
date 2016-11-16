@@ -15,3 +15,7 @@ db.define_table('importdata',
 
 db.define_table('column_names',
 				 Field('row_string', 'string'))
+
+db.define_table('csv_data',
+				 Field('field_names'),
+				 Field('csv_rows'))
