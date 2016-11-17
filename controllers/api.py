@@ -6,11 +6,13 @@ def upload_form():
     name = request.vars.file.filename
     destination_path = request.folder + "/uploads/" + name
 
+    # VVV this may all be unecessary
     new_file = open(destination_path, 'w')
     new_file.write(request.vars.file.file.read())
     new_file.close()
 
-    csv_parsing(destination_path)
+    db.import_data.insert(file_path=destination_path)
+
     upload_complete = True
 
     return 1
@@ -24,40 +26,43 @@ def check_upload_status():
 
 def start_clustering():
     # FIXME: why does check_fields have the '[]' after it?
-    print request.vars['checked_fields[]']
-    checked_fields = request.vars['checked_fields[]']
-    entry = db(db.csv_data).select(orderby='id').last()
-    all_fields = entry.field_names
-    print all_fields
-    indexes = [all_fields.index(c) for c in checked_fields if c in all_fields]
-    data_string = entry.csv_rows
-    data_list = data_string.split('|')
-    data_list = data_list[1:-1]
-    print data_list
+    path = db(db.import_data).select().last().file_path
+    data_list = []
+
+    with open(path, 'rb') as csvfile:
+        reader = csv.reader(csvfile)
+        i = 0
+        fields = []
+        for row in reader:
+            if i == 0:
+                fields = row
+            else:
+                d = {fields[i]:row[i] for i in range(len(fields))}
+                data_list.append(d)
+            i += 1
+
+    selected_fields = request.vars['checked_fields[]']
+    sorted_list = sorted(data_list, key=lambda x: x[selected_fields])
+    print sorted_list
 
 
 def get_fields():
-    fields = db(db.csv_data).select(orderby='id')
-    field_list = fields.last().field_names
-    return response.json(dict(
-        field_list=field_list
-        ))
+    path = db(db.import_data).select().last().file_path
 
-
-def csv_parsing(path):
     with open(path, 'rb') as csvfile:
         reader = csv.reader(csvfile)
-        field_names = []
-        data = []  #list of lists
+        fields = None
         i = 0
         for row in reader:
             if i == 0:
-                field_names = row
+                fields = row
             else:
-                data.append(row)
+                break
             i += 1
 
-        db.csv_data.insert(field_names=field_names, csv_rows=data)
+    return response.json(dict(
+        field_list=fields
+        ))
 
 
 
@@ -86,3 +91,18 @@ def csv_parsing(path):
 #         ))
     # fields = field_string.split('|')
     # print fields
+
+    # def csv_parsing(path):
+    # with open(path, 'rb') as csvfile:
+    #     reader = csv.reader(csvfile)
+    #     field_names = []
+    #     data = []  #list of lists
+    #     i = 0
+    #     for row in reader:
+    #         if i == 0:
+    #             field_names = row
+    #         else:
+    #             data.append(row)
+    #         i += 1
+
+    #     db.csv_data.insert(field_names=field_names, csv_rows=data)

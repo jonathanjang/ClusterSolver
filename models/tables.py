@@ -9,8 +9,9 @@
 
 import datetime
 
-db.define_table('importdata',
-				Field('datafile', 'upload')
+db.define_table('import_data',
+				# Field('datafile', 'upload'),
+				Field('file_path')
                 )
 
 db.define_table('csv_data',

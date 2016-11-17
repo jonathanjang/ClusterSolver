@@ -71,6 +71,7 @@ var app = function(){
     };
 
     self.start_clustering = function(){
+        console.log(self.vue.checked_fields);
         $.post(start_clustering_url, 
               {
                   checked_fields: self.vue.checked_fields

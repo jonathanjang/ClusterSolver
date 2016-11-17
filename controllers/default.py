@@ -45,7 +45,7 @@ def index():
 
     field_names = []
 
-    form = SQLFORM(db.importdata)
+    form = SQLFORM(db.import_data)
     if form.process().accepted:
         path = request.folder + "/uploads/" + form.vars.datafile
         field_names = csv_parsing(path)
