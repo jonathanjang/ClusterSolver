@@ -64,19 +64,29 @@ $(function() {
 
     </div>
     <div id="settings_div" v-if="page == 'settings'"> 
-    Please chose one field that you want to focus on.
+    Please chose <b>one</b> field that you want to focus on.
       <div class="fields" v-for="f in fields">
-        <input type='checkbox' v-on:click="push_field(f)">${f}</div>
+        <input type='checkbox' v-on:click="push_field(f)">
+        ${f}
+      </div>
         
         <br>
-        <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
-
+        Please input the number of clusters you would like:
+        <textarea class="form-control string" size="20" v-model="input_k" placeholder="# of Clusters" type="text"></textarea>
+      <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
+      <div class="error_message" v-if="is_error">
+        ${ err_message }
       </div>
+    </div>
+
+    <div id="clustering_div" v-if="page == 'clustering'">
+
+
 
     </div>
 
-  </div>
 
+  </div>
 
 </div>
 

@@ -13,9 +13,11 @@ def upload_form():
 
     db.import_data.insert(file_path=destination_path)
 
-    upload_complete = True
+    response.flash = T("Upload complete!")
 
-    return 1
+    return response.json(dict(
+        message = T("Upload complete!")
+        ))
 
 # not being used as of this moment
 def check_upload_status():
@@ -26,6 +28,7 @@ def check_upload_status():
 
 def start_clustering():
     # FIXME: why does check_fields have the '[]' after it?
+    k = int(request.vars.input_k)
     path = db(db.import_data).select().last().file_path
     data_list = []
 
@@ -42,6 +45,7 @@ def start_clustering():
             i += 1
 
     selected_fields = request.vars['checked_fields[]']
+    selected_fields = selected_fields if type(selected_fields) is str else selected_fields[0]
     sorted_list = sorted(data_list, key=lambda x: x[selected_fields])
     print sorted_list
 

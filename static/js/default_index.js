@@ -66,20 +66,30 @@ var app = function(){
     };
 
     self.continue_button_clicked = function(){
-        self.start_clustering();
-        self.change_page('cluster');
+        if (self.vue.checked_fields.length > 1){
+            self.vue.is_error = true
+            self.vue.err_message = "You have selected too many fields, please choose one";
+        }else if (isNaN(parseInt(self.vue.input_k))){
+            self.vue.is_error = true
+            self.vue.err_message = "Please put in a number for # of clusters";
+        }else{
+            self.vue.is_error = false;
+            self.start_clustering();
+            self.change_page('cluster');
+        }
     };
 
     self.start_clustering = function(){
-        console.log(self.vue.checked_fields);
         $.post(start_clustering_url, 
               {
-                  checked_fields: self.vue.checked_fields
+                  checked_fields: self.vue.checked_fields,
+                  input_k: self.vue.input_k
               },
               function(data){
 
               });
     };
+
 
     self.vue = new Vue({
         el: "#vue-div",
@@ -90,6 +100,9 @@ var app = function(){
             page: 'upload',
             is_uploaded: false,
             checked_fields: [],
+            input_k: "",
+            err_message: "",
+            is_error: false
         },
         methods: {
             //get fields and change page are unnecessary
