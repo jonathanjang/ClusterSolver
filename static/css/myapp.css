@@ -553,3 +553,8 @@
 .dropzone .fa {
   color: #999;
 }
+
+.small_area{
+  width: 100px;
+  height: 35px;
+}

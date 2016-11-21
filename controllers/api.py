@@ -49,11 +49,12 @@ def start_clustering():
 
     selected_field = request.vars['checked_fields[]']
 
-    perform_clustering(data_list, selected_field, k)
+    perform_clustering(data_list, selected_field, k, [request.vars['x_lower'],
+                       request.vars['x_upper'], request.vars['y_lower'], request.vars['y_upper']])
 
 
-def perform_clustering(data_list, selected_field, k):
-    processed_data = process_data(data_list, selected_field)
+def perform_clustering(data_list, selected_field, k, bounds_list):
+    processed_data = process_data(data_list, selected_field, bounds_list)
     pairs_list = processed_data.keys()
     coordinate_list = [[x,y] for x,y in pairs_list]
     print coordinate_list
@@ -63,12 +64,12 @@ def perform_clustering(data_list, selected_field, k):
     print kmeans.cluster_centers_
 
 
-def process_data(data_list, selected_field):
+def process_data(data_list, selected_field, bounds_list):
     coordinates_to_data_dict = {}
     grouped_data = group_data(data_list, selected_field)
     # FIXME: let the user decide this ;)
-    x_lower, y_lower = 0, 0
-    x_upper, y_upper = 20, 20
+    x_lower, x_upper = int(bounds_list[0]), int(bounds_list[1])
+    y_lower, y_upper = int(bounds_list[2]), int(bounds_list[3])
     for group in grouped_data:
         x_center_group = random.uniform(x_lower, x_upper)
         y_center_group = random.uniform(y_lower, y_upper)
@@ -80,7 +81,7 @@ def process_data(data_list, selected_field):
             x = random.uniform(x_single_lower, x_single_upper)
             y = random.uniform(y_single_lower, y_single_upper)
             coordinates_to_data_dict[x,y] = data
-            
+
     return coordinates_to_data_dict
 
 

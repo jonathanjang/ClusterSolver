@@ -72,7 +72,26 @@ $(function() {
         
         <br>
         Please input the number of clusters you would like:
-        <textarea class="form-control string" size="20" v-model="input_k" placeholder="# of Clusters" type="text"></textarea>
+        <br>
+        <textarea class="small_area" v-model="input_k" placeholder="# of Clusters" type="text"></textarea>
+        <br>
+        Please input an lower bound for X:
+        <br>
+        <textarea class="small_area" v-model="x_lower" placeholder="X Lower Bound" type="text"></textarea>
+        <br>
+        Please input an upper bound for X:
+        <br>
+        <textarea class="small_area" v-model="x_upper" placeholder="X Upper Bound" type="text"></textarea>
+        <br>
+        Please input an lower bound for Y:
+        <br>
+        <textarea class="small_area" v-model="y_lower" placeholder="Y Lower Bound" type="text"></textarea>
+        <br>
+        Please input an upper bound for Y:
+        <br>
+        <textarea class="small_area" v-model="y_upper" placeholder="Y Upper Bound" type="text"></textarea>
+        <br>
+
         <!-- think about asking the user how big of a graph they want -->
       <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
       <div class="error_message" v-if="is_error">

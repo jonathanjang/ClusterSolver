@@ -72,6 +72,18 @@ var app = function(){
         }else if (isNaN(parseInt(self.vue.input_k))){
             self.vue.is_error = true
             self.vue.err_message = "Please put in a number for # of clusters";
+        }else if (isNaN(parseInt(self.vue.x_lower))){
+            self.vue.is_error = true
+            self.vue.err_message = "Please put in a number for the lower bound of X";
+        }else if (isNaN(parseInt(self.vue.x_upper))){
+            self.vue.is_error = true
+            self.vue.err_message = "Please put in a number for the upper bound of X";
+        }else if (isNaN(parseInt(self.vue.y_lower))){
+            self.vue.is_error = true
+            self.vue.err_message = "Please put in a number for the lower bound of Y";
+        }else if (isNaN(parseInt(self.vue.y_upper))){
+            self.vue.is_error = true
+            self.vue.err_message = "Please put in a number for the upper bound of Y";    
         }else{
             self.vue.is_error = false;
             self.start_clustering();
@@ -83,7 +95,11 @@ var app = function(){
         $.post(start_clustering_url, 
               {
                   checked_fields: self.vue.checked_fields,
-                  input_k: self.vue.input_k
+                  input_k: self.vue.input_k,
+                  x_lower: self.vue.x_lower,
+                  x_upper: self.vue.x_upper,
+                  y_lower: self.vue.y_lower,
+                  y_upper: self.vue.y_upper
               },
               function(data){
 
@@ -101,6 +117,10 @@ var app = function(){
             is_uploaded: false,
             checked_fields: [],
             input_k: "",
+            x_lower: "",
+            x_upper: "",
+            y_lower: "",
+            y_upper: "",
             err_message: "",
             is_error: false
         },
