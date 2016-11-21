@@ -82,6 +82,11 @@ $(function() {
           <br>
           <textarea class="small_area" v-model="y_upper" placeholder="Y Upper Bound" type="text"></textarea>
           <br>
+          Please select the # of iterations you want to run:
+          <br>
+          <textarea class="small_area" v-model="num_iters" placeholder="# of Iterations" type="text"></textarea>
+          <br>
+
 
         <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
         <div class="error_message" v-if="is_error">

@@ -82,6 +82,9 @@ var app = function(){
         }else if (isNaN(parseInt(self.vue.y_upper))){
             self.vue.is_error = true
             self.vue.err_message = "Please put in a number for the upper bound of Y";    
+        }else if (isNaN(parseInt(self.vue.num_iters))){
+            self.vue.is_error = true
+            self.vue.err_message = "Please put in a number for the # of iterations";    
         }else{
             self.vue.is_error = false;
             self.start_clustering();
@@ -97,7 +100,8 @@ var app = function(){
                   x_lower: self.vue.x_lower,
                   x_upper: self.vue.x_upper,
                   y_lower: self.vue.y_lower,
-                  y_upper: self.vue.y_upper
+                  y_upper: self.vue.y_upper,
+                  num_iters: self.vue.num_iters
               },
               function(data){
 
@@ -120,6 +124,7 @@ var app = function(){
             x_upper: "",
             y_lower: "",
             y_upper: "",
+            num_iters: "300",
             err_message: "",
             is_error: false
         },

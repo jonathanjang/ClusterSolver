@@ -1,5 +1,6 @@
 1. GET GOOGLE CHARTS TO WORK!
 2. Make the user login
-3. more user settings
-4. ask about styling recommendations 
-5. possibly better error checking
+3. ask about styling recommendations 
+4. more user settings - different algorithms
+5. possibly better error checking - upload btn disabled
+6. predict on new data

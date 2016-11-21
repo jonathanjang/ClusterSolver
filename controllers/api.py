@@ -53,17 +53,18 @@ def start_clustering():
 
     selected_field = request.vars['checked_fields[]']
 
-    perform_clustering(data_list, selected_field, k, [request.vars['x_lower'],
+    perform_clustering(data_list, selected_field, k, request.vars['num_iters'], [request.vars['x_lower'],
                        request.vars['x_upper'], request.vars['y_lower'], request.vars['y_upper']])
 
 
-def perform_clustering(data_list, selected_field, k, bounds_list):
+def perform_clustering(data_list, selected_field, k, iterations, bounds_list):
     processed_data = process_data(data_list, selected_field, bounds_list)
     pairs_list = processed_data.keys()
     coordinate_list = [[x,y] for x,y in pairs_list]
     print coordinate_list
     X = np.array(coordinate_list)
-    kmeans = KMeans(n_clusters=k, random_state=0).fit(X)
+    iterations = int(iterations)
+    kmeans = KMeans(n_clusters=k, random_state=0, max_iter=iterations).fit(X)
     print kmeans.labels_
     print kmeans.cluster_centers_
 
