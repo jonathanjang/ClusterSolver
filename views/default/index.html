@@ -18,7 +18,7 @@ $(function() {
     url: upload_url,
     addRemoveLinks: true,
     parallelUploads: 1,
-    acceptedFiles: '.csv', //FIXME, change to .csv
+    acceptedFiles: '.csv', 
     createImageThumbnails: false,
     init: function() {
       this.on("queuecomplete", function() {
@@ -46,8 +46,13 @@ $(function() {
               Drop files here to upload them, or click to select them.
             </div>
           </form>
-          <button class="btn btn-warning btn-sm" v-on:click="upload_button_clicked()">Upload</button>
-
+          <div v-if="logged_in">
+            <button class="btn btn-warning btn-sm" v-on:click="upload_button_clicked()">Upload</button>
+          </div>
+          <div v-if="!logged_in">
+            <button class="btn btn-warning btn-sm disabled">Upload</button><br>
+            Please log in to start!          
+          </div>
         </div>      
 
 
@@ -106,10 +111,11 @@ $(function() {
 
         </div>
 
+        <!--FIXME: include "add to collection" btn -->
 
       </div>
 
-
+    <!-- VVV comment out this div -->
 <!--     </div>
  -->  </div>
 </div>

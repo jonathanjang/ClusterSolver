@@ -53,8 +53,9 @@ def start_clustering():
 
     selected_field = request.vars['checked_fields[]']
 
-    perform_clustering(data_list, selected_field, k, request.vars['num_iters'], [request.vars['x_lower'],
-                       request.vars['x_upper'], request.vars['y_lower'], request.vars['y_upper']])
+    perform_clustering(data_list, selected_field, k, request.vars['num_iters'], 
+                       [request.vars['x_lower'], request.vars['x_upper'], 
+                        request.vars['y_lower'], request.vars['y_upper']])
 
 
 def perform_clustering(data_list, selected_field, k, iterations, bounds_list):
@@ -67,6 +68,12 @@ def perform_clustering(data_list, selected_field, k, iterations, bounds_list):
     kmeans = KMeans(n_clusters=k, random_state=0, max_iter=iterations).fit(X)
     print kmeans.labels_
     print kmeans.cluster_centers_
+
+    # return dict where selected field value maps to x,y center coordinates
+    # return all labels
+    # return all clusters
+    # return kmeans
+    # return coordinate list?? or just add all to db
 
 
 def process_data(data_list, selected_field, bounds_list):
