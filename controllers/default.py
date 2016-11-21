@@ -21,40 +21,6 @@ def index():
     return auth.wiki()
     """
 
-    # form = SQLFORM(db.importdata)
-    # if form.process().accepted:
-    #     file = db(db.importdata.filename != None).select().first().filename
-    #     print file
-
-    # print request
-
-
-    # FROM: Rakshit's OH :)
-    # print form.vars
-    # for k,v in request.iteritems():
-    #     print "{} -- {}".format(k,v)
-    # pprint.pprint(request.file)
-    # print request.folder
-    # db.csv_data.import_from_csv_file(open("{}/uploads/{}".format(request.folder,form.vars.datafile),'rb'), 
-    #     delimiter=',')
-    # print db.tables
-
-    # db.csv_data.import_from_csv_file(open(path, 'rb'), delimiter=',')
-
-    upload_flag = False
-
-    field_names = []
-
-    form = SQLFORM(db.import_data)
-    if form.process().accepted:
-        path = request.folder + "/uploads/" + form.vars.datafile
-        field_names = csv_parsing(path)
-        upload_flag = True
-        redirect(URL('index'))
-
-    return dict(form=form, upload_flag=upload_flag, field_names=field_names)
-
-def query():
     return dict()
 
 
@@ -74,34 +40,25 @@ def user():
     to decorate functions that need access control
     also notice there is http://..../[app]/appadmin/manage/auth to allow administrator to manage users
     """
-    return dict()
+    return dict(form=auth())
 
-def csv_parsing(path):
-    with open(path, 'rb') as csvfile:
-        reader = csv.reader(csvfile)
-        field_names = []
-        i = 0
-        for row in reader:
-            if i == 0:
-                field_names = row
-                new_table(row)
-            else:
-                insert_row(row, field_names)
-            i += 1
-    return field_names
+def upload_form():
+    name = request.vars.file.filename
+    destination_path = request.folder + "/uploads/" + name
 
+    # VVV this may all be unecessary
+    new_file = open(destination_path, 'w')
+    new_file.write(request.vars.file.file.read())
+    new_file.close()
 
-# creates a db named entry_data with variable fields
-def new_table(fields):
-    db.define_table('entry_data',
-        *[Field(f) for f in fields],
-        migrate=True)
+    db.import_data.insert(file_path=destination_path)
 
-# to check db, use 'sqlite3 storage.sqlite'
-# no need for primary keys or any field names 'id'
-def insert_row(row, field_names):
-    entry = { field_names[i] : row[i] for i in xrange(len(row))}
-    db.entry_data.bulk_insert([entry])  
+    response.flash = T("Upload complete!")
+
+    return response.json(dict(
+        message = T("Upload complete!")
+        ))
+
 
 @cache.action()
 def download():

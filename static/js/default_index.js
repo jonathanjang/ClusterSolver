@@ -12,11 +12,16 @@ var app = function(){
         }
     };
 
-    //possibly unecessary 
     self.start = function(){
         self.vue.page = 'upload';
+        self.check_logged_in();
     }
 
+    self.check_logged_in = function(){
+        $.getJSON(check_login_url, function(data){
+            self.vue.logged_in = data.logged_in;
+        })
+    };
 
     self.change_page = function(page_name){
         self.vue.page = page_name;
@@ -40,21 +45,14 @@ var app = function(){
     }
 
     self.upload_button_clicked = function(){
-        // possible unnecessary VVV
         self.change_page('settings');
+        //FIXME: take this out when submitting/demo
+        self.vue.x_lower = "0";
+        self.vue.x_upper = "20";
+        self.vue.y_lower = "0";
+        self.vue.y_upper = "20";
         self.get_fields();
     };
-
-    // self.parse_inputs = function(){
-    //     fields = self.vue.fields;
-    //     console.log(self.vue.fields.length);
-    //     self.vue.checkboxes = []
-    //     for(i = 0; i < fields.length; i++){
-    //         self.vue.checkboxes.push('<input type="checkbox" id="'+ fields[i]  +'" value="' + fields[i] + '" v-model="checked_fields">');
-    //         self.vue.checkboxes.push('<label for="' + fields[i] + '">' + fields[i] + '</label>');
-    //     }
-    //     console.log(self.vue.checkboxes);
-    // };
 
     self.push_field = function(f){
         i = self.vue.checked_fields.indexOf(f)
@@ -112,6 +110,7 @@ var app = function(){
         delimiters: ['${', '}'],
         unsafeDelimiters: ['!{', '}'],
         data: {
+            logged_in: false,
             fields: [],
             page: 'upload',
             is_uploaded: false,
@@ -134,7 +133,7 @@ var app = function(){
 
     });
 
-
+    self.start();
     $("#vue-div").show();
 
 

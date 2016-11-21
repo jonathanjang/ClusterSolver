@@ -5,6 +5,11 @@ import numpy as np
 
 upload_complete = False
 
+def check_login():
+    return response.json(dict(
+        logged_in = auth.user_id is not None
+        ))
+
 def upload_form():
     name = request.vars.file.filename
     destination_path = request.folder + "/uploads/" + name
@@ -116,44 +121,3 @@ def get_fields():
         ))
 
 
-
-
-
-
-# old way to store data
-# creates a db named entry_data with variable fields
-# def new_table(fields):
-#     db.define_table('entry_data',
-#         *[Field(f) for f in fields],
-#         migrate=True)
-
-# to check db, use 'sqlite3 storage.sqlite'
-# no need for primary keys or any field names 'id'
-# def insert_row(row, field_names):
-#     entry = { field_names[i] : row[i] for i in xrange(len(row))}
-#     db.entry_data.bulk_insert([entry])  
-
-# def get_fields():
-#     fields = db(db.column_names).select(orderby='id')
-#     field_string = fields.last().row_string
-#     field_list = field_string.split('|')
-#     return response.json(dict(
-#         field_list=field_list[1:-1]
-#         ))
-    # fields = field_string.split('|')
-    # print fields
-
-    # def csv_parsing(path):
-    # with open(path, 'rb') as csvfile:
-    #     reader = csv.reader(csvfile)
-    #     field_names = []
-    #     data = []  #list of lists
-    #     i = 0
-    #     for row in reader:
-    #         if i == 0:
-    #             field_names = row
-    #         else:
-    #             data.append(row)
-    #         i += 1
-
-    #     db.csv_data.insert(field_names=field_names, csv_rows=data)

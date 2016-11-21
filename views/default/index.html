@@ -3,7 +3,8 @@
 {{block head}}
 <script src="{{=URL('static', 'js/vue.js')}}"></script>
 <script>
-  var upload_url = "{{=URL('api', 'upload_form')}}";
+  var check_login_url = "{{=URL('api', 'check_login')}}";
+  var upload_url = "{{=URL('default', 'upload_form')}}";
   var get_fields_url = "{{=URL('api', 'get_fields')}}";
   var start_clustering_url = "{{=URL('api', 'start_clustering')}}";
 </script>
@@ -11,10 +12,6 @@
 <script src="{{=URL('static', 'js/dropzone.js')}}"></script>
 
 <script>
-// function produce_upload_url (files) {
-//     return APP.upload_url; 
-// }
-
 $(function() {
   Dropzone.options.fileUploader = {
     maxFilesize: 10, // MB
@@ -35,104 +32,74 @@ $(function() {
 
 <div class="main_content">
   <div id="vue-div">
-    <div id="upload_div" v-if="page == 'upload'"> 
-    <!--  v-if="show_upload()" -->
-      <h3>Welcome to ClusterSolver!. Please input a .csv file to perform clustering on! Please use commas to separate the values and not spaces!</h3><br>
+  <!-- test1@gmail.com ,test -->
+<!--     <div v-if="!logged_in"><h3>Hi, Welcome to ClusterSolver. Please log in at the top right to start!</h3></div>
+    <div v-if="logged_in">
+ -->      
+      <!-- FIXME: problem with logging in and using dropzone -->
+      <div id="upload_div" v-if="page == 'upload'"> 
+        <h3>Welcome to ClusterSolver!. Please input a .csv file to perform clustering on! Please use commas to separate the values and not spaces!</h3><br>
 
-      <div id="uploader_div">
-        <form action="" class="dropzone dz-clickable" id="file-uploader">
-          <div class="dz-message">
-            Drop files here to upload them, or click to select them.
-          </div>
-        </form>
-        <button class="btn btn-warning btn-sm" v-on:click="upload_button_clicked()">Upload</button>
+        <div id="uploader_div">
+          <form action="" class="dropzone dz-clickable" id="file-uploader">
+            <div class="dz-message">
+              Drop files here to upload them, or click to select them.
+            </div>
+          </form>
+          <button class="btn btn-warning btn-sm" v-on:click="upload_button_clicked()">Upload</button>
 
-      </div>      
+        </div>      
 
 
 
-      <!--{{=form}}
 
-      {{if upload_flag:}}
-        <div v-if="change_page('setting')"></div>
-      {{pass}}
-
-      <div class="cluster_settings" v-if="page == 'settings'">
-        inside the settings page
-
-      </div> -->
-
-    </div>
-    <div id="settings_div" v-if="page == 'settings'"> 
-    Please chose <b>one</b> field that you want to focus on.
-      <div class="fields" v-for="f in fields">
-        <input type='checkbox' v-on:click="push_field(f)">
-        ${f}
       </div>
-        
-        <br>
-        Please input the number of clusters you would like:
-        <br>
-        <textarea class="small_area" v-model="input_k" placeholder="# of Clusters" type="text"></textarea>
-        <br>
-        Please input an lower bound for X:
-        <br>
-        <textarea class="small_area" v-model="x_lower" placeholder="X Lower Bound" type="text"></textarea>
-        <br>
-        Please input an upper bound for X:
-        <br>
-        <textarea class="small_area" v-model="x_upper" placeholder="X Upper Bound" type="text"></textarea>
-        <br>
-        Please input an lower bound for Y:
-        <br>
-        <textarea class="small_area" v-model="y_lower" placeholder="Y Lower Bound" type="text"></textarea>
-        <br>
-        Please input an upper bound for Y:
-        <br>
-        <textarea class="small_area" v-model="y_upper" placeholder="Y Upper Bound" type="text"></textarea>
-        <br>
-
-        <!-- think about asking the user how big of a graph they want -->
-      <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
-      <div class="error_message" v-if="is_error">
-        ${ err_message }
-      </div>
-    </div>
-
-    <div id="clustering_div" v-if="page == 'clustering'">
-
-
-
-    </div>
-
-
-  </div>
-
-</div>
-
-
-<!-- for uploading using SQLFORM -->
-<!--     <div id="uploader_div">
-      <form action="/random" class="dropzone dz-clickable" id="file-uploader">
-        <div class="dz-message">
-          Drop files here to upload them, or click to select them.
+      <div id="settings_div" v-if="page == 'settings'"> 
+      Please chose <b>one</b> field that you want to focus on.
+        <div class="fields" v-for="f in fields">
+          <input type='checkbox' v-on:click="push_field(f)">
+          ${f}
         </div>
-      </form>
-    </div>
- -->
+          
+          <br>
+          Please input the number of clusters you would like:
+          <br>
+          <textarea class="small_area" v-model="input_k" placeholder="# of Clusters" type="text"></textarea>
+          <br>
+          Please input an lower bound for X:
+          <br>
+          <textarea class="small_area" v-model="x_lower" placeholder="X Lower Bound" type="text"></textarea>
+          <br>
+          Please input an upper bound for X:
+          <br>
+          <textarea class="small_area" v-model="x_upper" placeholder="X Upper Bound" type="text"></textarea>
+          <br>
+          Please input an lower bound for Y:
+          <br>
+          <textarea class="small_area" v-model="y_lower" placeholder="Y Lower Bound" type="text"></textarea>
+          <br>
+          Please input an upper bound for Y:
+          <br>
+          <textarea class="small_area" v-model="y_upper" placeholder="Y Upper Bound" type="text"></textarea>
+          <br>
 
-<!-- <div class="main_content">
+          <!-- think about asking the user how big of a graph they want -->
+        <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
+        <div class="error_message" v-if="is_error">
+          ${ err_message }
+        </div>
+      </div>
 
-  <form action="/file-upload"
-        class="dropzone"
-        id="uploader-div"></form>
-
-  <div id="vue-div">
-  </div>
+      <div id="clustering_div" v-if="page == 'clustering'">
 
 
 
+      </div>
+
+
+<!--     </div>
+ -->  </div>
 </div>
- -->
+
 <script src="{{=URL('static', 'js/default_index.js')}}"></script>
 
