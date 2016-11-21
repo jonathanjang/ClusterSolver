@@ -52,9 +52,6 @@ def start_clustering():
     perform_clustering(data_list, selected_field, k)
 
 
-    # ----------------sorting a list--------------------
-    # selected_fields = selected_fields if type(selected_fields) is str else selected_fields[0]
-
 def perform_clustering(data_list, selected_field, k):
     processed_data = process_data(data_list, selected_field)
     pairs_list = processed_data.keys()
@@ -69,11 +66,21 @@ def perform_clustering(data_list, selected_field, k):
 def process_data(data_list, selected_field):
     coordinates_to_data_dict = {}
     grouped_data = group_data(data_list, selected_field)
-    x_lower, y_lower = -10, -10
-    x_upper, y_upper = 10, 10
+    # FIXME: let the user decide this ;)
+    x_lower, y_lower = 0, 0
+    x_upper, y_upper = 20, 20
     for group in grouped_data:
+        x_center_group = random.uniform(x_lower, x_upper)
+        y_center_group = random.uniform(y_lower, y_upper)
         for data in group:
-            coordinates_to_data_dict[random.randint(x_lower,x_upper), random.randint(y_lower,y_upper)] = data
+            x_single_lower = x_center_group - 1 if x_center_group - 1 > x_lower else x_lower
+            x_single_upper = x_center_group + 1 if x_center_group + 1 < x_upper else x_upper
+            y_single_lower = y_center_group - 1 if y_center_group - 1 > y_lower else y_lower
+            y_single_upper = y_center_group + 1 if y_center_group + 1 < y_upper else y_upper
+            x = random.uniform(x_single_lower, x_single_upper)
+            y = random.uniform(y_single_lower, y_single_upper)
+            coordinates_to_data_dict[x,y] = data
+            
     return coordinates_to_data_dict
 
 

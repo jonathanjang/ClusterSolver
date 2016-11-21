@@ -73,6 +73,7 @@ $(function() {
         <br>
         Please input the number of clusters you would like:
         <textarea class="form-control string" size="20" v-model="input_k" placeholder="# of Clusters" type="text"></textarea>
+        <!-- think about asking the user how big of a graph they want -->
       <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
       <div class="error_message" v-if="is_error">
         ${ err_message }
