@@ -69,6 +69,7 @@ def perform_clustering(data_list, selected_field, k, iterations, bounds_list):
     print kmeans.labels_
     print kmeans.cluster_centers_
 
+    # pseudocode:
     # return dict where selected field value maps to x,y center coordinates
     # return all labels
     # return all clusters

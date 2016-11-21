@@ -90,6 +90,9 @@ var app = function(){
             self.vue.is_error = false;
             self.start_clustering();
             self.change_page('clustering');
+            // If graph setting is on:
+            self.set_gchart(self.vue.chart_data);
+
         }
     };
 
@@ -108,6 +111,37 @@ var app = function(){
 
               });
     };
+
+    self.set_gchart = function(data){
+
+        // Initialize a graph for google chart.
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart(data));
+        function drawChart(chart_data) {
+          var data = google.visualization.arrayToDataTable(chart_data);
+
+          var options = {
+            title: 'Age vs. Weight comparison',
+            hAxis: {title: 'Age', minValue: 0, maxValue: 15},
+            vAxis: {title: 'Weight', minValue: 0, maxValue: 15},
+            legend: 'none'
+          };
+
+          var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+
+          chart.draw(data, options);
+        }
+
+        // Create a chart with given data
+
+        // Make the chart object visible
+        $('#chart_div').show();
+    };
+
+
+    // google.charts.load('current', {'packages':['corechart']});
+
+    // google.charts.setOnLoadCallback(self.drawChart);
 
 
     self.vue = new Vue({
@@ -129,19 +163,21 @@ var app = function(){
             err_message: "",
             is_error: false,
             new_data: [],
-            f_index: []
+            f_index: [],
+            chart_data: [ ['Age', 'Weight'], [8,      12],[ 4,      5.5]]
         },
         methods: {
             get_upload_status: self.get_upload_status,
             upload_button_clicked: self.upload_button_clicked,
             push_field: self.push_field,
-            continue_button_clicked: self.continue_button_clicked    
+            continue_button_clicked: self.continue_button_clicked,
         }
 
     });
 
     self.start();
     $("#vue-div").show();
+    // $("#chart_div").hide();
 
 
     return self;

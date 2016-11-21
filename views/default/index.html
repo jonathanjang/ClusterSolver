@@ -2,6 +2,9 @@
 
 {{block head}}
 <script src="{{=URL('static', 'js/vue.js')}}"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="{{=URL('static', 'js/gchart.js')}}"></script>
+
 <script>
   var check_login_url = "{{=URL('api', 'check_login')}}";
   var upload_url = "{{=URL('default', 'upload_form')}}";
@@ -28,9 +31,13 @@ $(function() {
 });
 
 </script>
+
 {{end}}
 
 <div class="main_content">
+
+        <div id="chart_div" style="width: 1500px; height: 500px;"></div>
+
   <div id="vue-div">
   <!-- test1@gmail.com ,test -->
 <!--     <div v-if="!logged_in"><h3>Hi, Welcome to ClusterSolver. Please log in at the top right to start!</h3></div>
@@ -100,6 +107,9 @@ $(function() {
       </div>
 
       <div id="clustering_div" v-if="page == 'clustering'">
+
+
+
         <div id="new_data">
           Feel free to add more points to predict on: <br>
           <div v-for="i in f_index">
