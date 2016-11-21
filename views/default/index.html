@@ -83,7 +83,6 @@ $(function() {
           <textarea class="small_area" v-model="y_upper" placeholder="Y Upper Bound" type="text"></textarea>
           <br>
 
-          <!-- think about asking the user how big of a graph they want -->
         <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
         <div class="error_message" v-if="is_error">
           ${ err_message }

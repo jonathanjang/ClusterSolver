@@ -35,7 +35,6 @@ def check_upload_status():
         ))
 
 def start_clustering():
-    # FIXME: why does check_fields have the '[]' after it?
     k = int(request.vars.input_k)
     path = db(db.import_data).select().last().file_path
     data_list = []
@@ -72,7 +71,6 @@ def perform_clustering(data_list, selected_field, k, bounds_list):
 def process_data(data_list, selected_field, bounds_list):
     coordinates_to_data_dict = {}
     grouped_data = group_data(data_list, selected_field)
-    # FIXME: let the user decide this ;)
     x_lower, x_upper = int(bounds_list[0]), int(bounds_list[1])
     y_lower, y_upper = int(bounds_list[2]), int(bounds_list[3])
     for group in grouped_data:

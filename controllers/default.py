@@ -46,7 +46,6 @@ def upload_form():
     name = request.vars.file.filename
     destination_path = request.folder + "/uploads/" + name
 
-    # VVV this may all be unecessary
     new_file = open(destination_path, 'w')
     new_file.write(request.vars.file.file.read())
     new_file.close()

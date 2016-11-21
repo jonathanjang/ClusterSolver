@@ -124,7 +124,6 @@ var app = function(){
             is_error: false
         },
         methods: {
-            //get fields and change page are unnecessary
             get_upload_status: self.get_upload_status,
             upload_button_clicked: self.upload_button_clicked,
             push_field: self.push_field,
