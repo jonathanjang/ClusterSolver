@@ -41,6 +41,7 @@ var app = function(){
     self.get_fields = function(){
         $.getJSON(get_fields_url, function(data){
             self.vue.fields = data.field_list;
+            self.vue.f_index = data.f_index;
         });
     }
 
@@ -88,7 +89,7 @@ var app = function(){
         }else{
             self.vue.is_error = false;
             self.start_clustering();
-            self.change_page('cluster');
+            self.change_page('clustering');
         }
     };
 
@@ -126,7 +127,9 @@ var app = function(){
             y_upper: "",
             num_iters: "300",
             err_message: "",
-            is_error: false
+            is_error: false,
+            new_data: [],
+            f_index: []
         },
         methods: {
             get_upload_status: self.get_upload_status,

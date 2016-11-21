@@ -95,7 +95,16 @@ $(function() {
       </div>
 
       <div id="clustering_div" v-if="page == 'clustering'">
+        <div id="new_data">
+          Feel free to add more points to predict on: <br>
+          <div v-for="i in f_index">
+            ${fields[i]}: <br>
+            <textarea class="input_area" v-model="new_data[i]" type="text"></textarea>
+              
+          </div>
+          <button class="btn btn-warning btn-sm">Add</button>
 
+        </div>
 
 
       </div>

@@ -116,7 +116,8 @@ def get_fields():
             i += 1
 
     return response.json(dict(
-        field_list=fields
+        field_list=fields,
+        f_index=[i for i in xrange(len(fields))]
         ))
 
 
