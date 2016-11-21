@@ -1,4 +1,7 @@
 import csv
+import random
+from sklearn.cluster import KMeans
+import numpy as np
 
 upload_complete = False
 
@@ -44,11 +47,47 @@ def start_clustering():
                 data_list.append(d)
             i += 1
 
-    selected_fields = request.vars['checked_fields[]']
-    selected_fields = selected_fields if type(selected_fields) is str else selected_fields[0]
-    sorted_list = sorted(data_list, key=lambda x: x[selected_fields])
-    print sorted_list
+    selected_field = request.vars['checked_fields[]']
 
+    perform_clustering(data_list, selected_field, k)
+
+
+    # ----------------sorting a list--------------------
+    # selected_fields = selected_fields if type(selected_fields) is str else selected_fields[0]
+
+def perform_clustering(data_list, selected_field, k):
+    processed_data = process_data(data_list, selected_field)
+    pairs_list = processed_data.keys()
+    coordinate_list = [[x,y] for x,y in pairs_list]
+    print coordinate_list
+    X = np.array(coordinate_list)
+    kmeans = KMeans(n_clusters=k, random_state=0).fit(X)
+    print kmeans.labels_
+    print kmeans.cluster_centers_
+
+
+def process_data(data_list, selected_field):
+    coordinates_to_data_dict = {}
+    grouped_data = group_data(data_list, selected_field)
+    x_lower, y_lower = -10, -10
+    x_upper, y_upper = 10, 10
+    for group in grouped_data:
+        for data in group:
+            coordinates_to_data_dict[random.randint(x_lower,x_upper), random.randint(y_lower,y_upper)] = data
+    return coordinates_to_data_dict
+
+
+def group_data(data_list, selected_field):
+    sorted_list = sorted(data_list, key=lambda x: x[selected_field])
+    unique_field_data = set([s[selected_field] for s in sorted_list])
+    grouped_data = []
+    for u in unique_field_data:
+        group = []
+        for s in sorted_list:
+            if s[selected_field] == u:
+                group.append(s)
+        grouped_data.append(group)
+    return grouped_data
 
 def get_fields():
     path = db(db.import_data).select().last().file_path
