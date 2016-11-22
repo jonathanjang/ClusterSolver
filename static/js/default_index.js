@@ -90,9 +90,6 @@ var app = function(){
             self.vue.is_error = false;
             self.start_clustering();
             self.change_page('clustering');
-            // If graph setting is on:
-            self.set_gchart(self.vue.chart_data);
-
         }
     };
 
@@ -108,27 +105,44 @@ var app = function(){
                   num_iters: self.vue.num_iters
               },
               function(data){
-
+                  self.vue.points = data.points;
+                  self.vue.points_data = data.values;
+                  self.set_gchart();
               });
     };
 
-    self.set_gchart = function(data){
-
+    // need to set colors and need to set toolbar
+    self.set_gchart = function(){
         // Initialize a graph for google chart.
         var container = document.getElementById('chart_div');
         container.style.display = 'block';
 
         google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart(data));
-        function drawChart(chart_data) {
+        google.charts.setOnLoadCallback(drawChart());
+        function drawChart() {
 
-            var data = google.visualization.arrayToDataTable(chart_data);
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'X');
+            data.addColumn('number', 'Y');
+            data.addColumn({type: 'string', role: 'tooltip'});
+            data.addColumn( {type: 'string', role: 'style'} );    
+
+
+            plot = []
+            points = self.vue.points;
+            for(var i = 0; i < points.length; i++){
+                line = convert_dict_to_string(self.vue.points_data[i]);
+                plot.push([points[i][0], points[i][1], line, 'point { fill-color:'+getRandomColor()+'}']);
+            }
+
+            data.addRows(plot)
 
             var options = {
-                title: 'Age vs. Weight comparison',
-                hAxis: {title: 'Age', minValue: 0, maxValue: 15},
-                vAxis: {title: 'Weight', minValue: 0, maxValue: 15},
-                legend: 'none'
+                title: 'Results' , //FIXME: add name of the file
+                hAxis: {title: 'X', minValue: parseInt(self.vue.x_lower), maxValue: parseInt(self.vue.x_upper)},
+                vAxis: {title: 'Y', minValue: parseInt(self.vue.y_lower), maxValue: parseInt(self.vue.y_upper)},
+                legend: 'none',
+                tooltip: {isHTML: true}
             };
 
             var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
@@ -147,10 +161,24 @@ var app = function(){
     };
 
 
-    // google.charts.load('current', {'packages':['corechart']});
 
-    // google.charts.setOnLoadCallback(self.drawChart);
+    function convert_dict_to_string(dict){
+        line = ""
+        for(var i = 0; i < self.vue.fields.length; i++){
+            line += self.vue.fields[i] + "=" + dict[self.vue.fields[i]] + " ";
+        }
+        return line;
+    }
 
+    // taken from: http://stackoverflow.com/questions/31380320/change-point-colour-based-on-value-for-google-scatter-chart
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++ ) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
 
     self.vue = new Vue({
         el: "#vue-div",
@@ -172,7 +200,9 @@ var app = function(){
             is_error: false,
             new_data: [],
             f_index: [],
-            chart_data: [ ['Age', 'Weight'], [8,      12],[ 4,      5.5]]
+            points: [],
+            points_data: []
+            // chart_data: [ ['Age', 'Weight'], [8,      12],[ 4,      5.5]]
         },
         methods: {
             get_upload_status: self.get_upload_status,

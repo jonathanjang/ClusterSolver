@@ -53,9 +53,14 @@ def start_clustering():
 
     selected_field = request.vars['checked_fields[]']
 
-    perform_clustering(data_list, selected_field, k, request.vars['num_iters'], 
+    data = perform_clustering(data_list, selected_field, k, request.vars['num_iters'], 
                        [request.vars['x_lower'], request.vars['x_upper'], 
                         request.vars['y_lower'], request.vars['y_upper']])
+
+    return response.json(dict(
+        points=data.keys(),
+        values=data.values()
+        ))
 
 
 def perform_clustering(data_list, selected_field, k, iterations, bounds_list):
@@ -69,6 +74,7 @@ def perform_clustering(data_list, selected_field, k, iterations, bounds_list):
     print kmeans.labels_
     print kmeans.cluster_centers_
 
+    return processed_data
     # pseudocode:
     # return dict where selected field value maps to x,y center coordinates
     # return all labels
