@@ -115,21 +115,29 @@ var app = function(){
     self.set_gchart = function(data){
 
         // Initialize a graph for google chart.
+        var container = document.getElementById('chart_div');
+        container.style.display = 'block';
+
         google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(drawChart(data));
         function drawChart(chart_data) {
-          var data = google.visualization.arrayToDataTable(chart_data);
 
-          var options = {
-            title: 'Age vs. Weight comparison',
-            hAxis: {title: 'Age', minValue: 0, maxValue: 15},
-            vAxis: {title: 'Weight', minValue: 0, maxValue: 15},
-            legend: 'none'
-          };
+            var data = google.visualization.arrayToDataTable(chart_data);
 
-          var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+            var options = {
+                title: 'Age vs. Weight comparison',
+                hAxis: {title: 'Age', minValue: 0, maxValue: 15},
+                vAxis: {title: 'Weight', minValue: 0, maxValue: 15},
+                legend: 'none'
+            };
 
-          chart.draw(data, options);
+            var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+            
+            google.visualization.events.addListener(chart, 'ready', function () {
+                container.style.display = 'none';
+            });
+
+            chart.draw(data, options);
         }
 
         // Create a chart with given data
@@ -154,7 +162,7 @@ var app = function(){
             page: 'upload',
             is_uploaded: false,
             checked_fields: [],
-            input_k: "",
+            input_k: "8",
             x_lower: "",
             x_upper: "",
             y_lower: "",
@@ -177,7 +185,7 @@ var app = function(){
 
     self.start();
     $("#vue-div").show();
-    // $("#chart_div").hide();
+    $("#chart_div").hide();
 
 
     return self;

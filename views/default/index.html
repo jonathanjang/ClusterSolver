@@ -3,6 +3,7 @@
 {{block head}}
 <script src="{{=URL('static', 'js/vue.js')}}"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<!-- FIXME: this should not be needed, but it is VVV -->
 <script src="{{=URL('static', 'js/gchart.js')}}"></script>
 
 <script>
@@ -36,7 +37,7 @@ $(function() {
 
 <div class="main_content">
 
-        <div id="chart_div" style="width: 1500px; height: 500px;"></div>
+        <div id="chart_div" style="width: 900px; height: 500px;"></div>
 
   <div id="vue-div">
   <!-- test1@gmail.com ,test -->
