@@ -109,11 +109,11 @@ var app = function(){
                   self.vue.points_data = data.values;
                   self.vue.labels = data.labels;
                   self.vue.cluster_centers = data.cluster_centers;
+                  self.vue.file_name = data.file_name;
                   self.set_gchart();
               });
     };
 
-    // need to set colors and need to set toolbar
     self.set_gchart = function(){
         // Initialize a graph for google chart.
         var container = document.getElementById('chart_div');
@@ -134,7 +134,7 @@ var app = function(){
             data.addRows(plot)
 
             var options = {
-                title: 'Results' , //FIXME: add name of the file
+                title: 'Results of ' + self.vue.file_name ,
                 hAxis: {title: 'X', minValue: parseInt(self.vue.x_lower), maxValue: parseInt(self.vue.x_upper)},
                 vAxis: {title: 'Y', minValue: parseInt(self.vue.y_lower), maxValue: parseInt(self.vue.y_upper)},
                 legend: 'none',
@@ -149,8 +149,6 @@ var app = function(){
 
             chart.draw(data, options);
         }
-
-        // Create a chart with given data
 
         // Make the chart object visible
         $('#chart_div').show();
@@ -176,7 +174,6 @@ var app = function(){
 
         // push the cluster centers onto a list
         for(var i = 0; i < self.vue.cluster_centers.length; i++){
-            // line = convert_dict_to_string(self.vue.cluster_centers[i]);
             line = "Cluster Center for label: " + i;
             plot.push([self.vue.cluster_centers[i][0], 
                        self.vue.cluster_centers[i][1], 
@@ -230,7 +227,8 @@ var app = function(){
             points: [],
             points_data: [],
             labels: [],
-            cluster_centers: []
+            cluster_centers: [],
+            file_name: ""
         },
         methods: {
             get_upload_status: self.get_upload_status,

@@ -50,7 +50,7 @@ def upload_form():
     new_file.write(request.vars.file.file.read())
     new_file.close()
 
-    db.import_data.insert(file_path=destination_path)
+    db.import_data.insert(file_path=destination_path, file_name=name)
 
     response.flash = T("Upload complete!")
 

@@ -10,23 +10,6 @@ def check_login():
         logged_in = auth.user_id is not None
         ))
 
-def upload_form():
-    name = request.vars.file.filename
-    destination_path = request.folder + "/uploads/" + name
-
-    # VVV this may all be unecessary
-    new_file = open(destination_path, 'w')
-    new_file.write(request.vars.file.file.read())
-    new_file.close()
-
-    db.import_data.insert(file_path=destination_path)
-
-    response.flash = T("Upload complete!")
-
-    return response.json(dict(
-        message = T("Upload complete!")
-        ))
-
 # not being used as of this moment
 def check_upload_status():
     print upload_complete
@@ -37,6 +20,7 @@ def check_upload_status():
 def start_clustering():
     k = int(request.vars.input_k)
     path = db(db.import_data).select().last().file_path
+    name = db(db.import_data).select().last().file_name
     data_list = []
 
     with open(path, 'rb') as csvfile:
@@ -65,6 +49,7 @@ def start_clustering():
         values=data[0].values(),
         labels=data[1].tolist(),
         cluster_centers=cluster_centers,
+        file_name=name
         ))
 
 

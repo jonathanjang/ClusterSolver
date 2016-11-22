@@ -10,5 +10,6 @@
 import datetime
 
 db.define_table('import_data',
-				Field('file_path')
+				Field('file_path'),
+				Field('file_name')
                 )
