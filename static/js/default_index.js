@@ -189,7 +189,7 @@ var app = function(){
 
 
     function convert_dict_to_string(dict, label){
-        line = "Cluster #" + label + " ";
+        line = "Cluster #" + label + ": \nValue: ";
         for(var i = 0; i < self.vue.fields.length; i++){
             line += self.vue.fields[i] + "=" + dict[self.vue.fields[i]] + " ";
         }
