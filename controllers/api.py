@@ -57,9 +57,14 @@ def start_clustering():
                        [request.vars['x_lower'], request.vars['x_upper'], 
                         request.vars['y_lower'], request.vars['y_upper']])
 
+    nd_cluster_centers = list(data[2])
+    cluster_centers = [d.tolist() for d in nd_cluster_centers]
+
     return response.json(dict(
-        points=data.keys(),
-        values=data.values()
+        points=data[0].keys(),
+        values=data[0].values(),
+        labels=data[1].tolist(),
+        cluster_centers=cluster_centers,
         ))
 
 
@@ -74,7 +79,7 @@ def perform_clustering(data_list, selected_field, k, iterations, bounds_list):
     print kmeans.labels_
     print kmeans.cluster_centers_
 
-    return processed_data
+    return [processed_data, kmeans.labels_, kmeans.cluster_centers_]
     # pseudocode:
     # return dict where selected field value maps to x,y center coordinates
     # return all labels

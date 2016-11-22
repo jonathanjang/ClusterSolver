@@ -107,6 +107,8 @@ var app = function(){
               function(data){
                   self.vue.points = data.points;
                   self.vue.points_data = data.values;
+                  self.vue.labels = data.labels;
+                  self.vue.cluster_centers = data.cluster_centers;
                   self.set_gchart();
               });
     };
@@ -127,13 +129,7 @@ var app = function(){
             data.addColumn({type: 'string', role: 'tooltip'});
             data.addColumn( {type: 'string', role: 'style'} );    
 
-
-            plot = []
-            points = self.vue.points;
-            for(var i = 0; i < points.length; i++){
-                line = convert_dict_to_string(self.vue.points_data[i]);
-                plot.push([points[i][0], points[i][1], line, 'point { fill-color:'+getRandomColor()+'}']);
-            }
+            plot = parse_points();
 
             data.addRows(plot)
 
@@ -160,17 +156,48 @@ var app = function(){
         $('#chart_div').show();
     };
 
+    // adapted partly by: 
+    // http://stackoverflow.com/questions/31380320/change-point-colour-based-on-value-for-google-scatter-chart
+    function parse_points(){
+        // get random colors for each cluster/label
+        colors = []
+        labels = self.vue.labels
+        for(var i = 0; i < labels.length; i++){
+            colors.push(getRandomColor());
+        }
+
+        // begin pushing data points onto a list
+        plot = []
+        points = self.vue.points;
+        for(var i = 0; i < points.length; i++){
+            line = convert_dict_to_string(self.vue.points_data[i], labels[i]);
+            plot.push([points[i][0], points[i][1], line, 'point { fill-color:'+colors[labels[i]]+'}']);
+        }
+
+        // push the cluster centers onto a list
+        for(var i = 0; i < self.vue.cluster_centers.length; i++){
+            // line = convert_dict_to_string(self.vue.cluster_centers[i]);
+            line = "Cluster Center for label: " + i;
+            plot.push([self.vue.cluster_centers[i][0], 
+                       self.vue.cluster_centers[i][1], 
+                       line, 
+                       'point { fill-color:'+colors[i]+'}']);
+
+        }
+        return plot;
+    }
 
 
-    function convert_dict_to_string(dict){
-        line = ""
+    function convert_dict_to_string(dict, label){
+        line = "Cluster #" + label + " ";
         for(var i = 0; i < self.vue.fields.length; i++){
             line += self.vue.fields[i] + "=" + dict[self.vue.fields[i]] + " ";
         }
         return line;
     }
 
-    // taken from: http://stackoverflow.com/questions/31380320/change-point-colour-based-on-value-for-google-scatter-chart
+    // taken from: 
+    // http://stackoverflow.com/questions/31380320/change-point-colour-based-on-value-for-google-scatter-chart
     function getRandomColor() {
         var letters = '0123456789ABCDEF';
         var color = '#';
@@ -201,8 +228,9 @@ var app = function(){
             new_data: [],
             f_index: [],
             points: [],
-            points_data: []
-            // chart_data: [ ['Age', 'Weight'], [8,      12],[ 4,      5.5]]
+            points_data: [],
+            labels: [],
+            cluster_centers: []
         },
         methods: {
             get_upload_status: self.get_upload_status,
