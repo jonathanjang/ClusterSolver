@@ -11,6 +11,7 @@
   var upload_url = "{{=URL('default', 'upload_form')}}";
   var get_fields_url = "{{=URL('api', 'get_fields')}}";
   var start_clustering_url = "{{=URL('api', 'start_clustering')}}";
+  var add_to_profile_url = "{{=URL('api', 'add_to_profile')}}";
 </script>
 
 <script src="{{=URL('static', 'js/dropzone.js')}}"></script>
@@ -108,24 +109,23 @@ $(function() {
         </div>
       </div>
 
-      <div id="clustering_div" v-if="page == 'clustering'">
-
-
-
+      <div id="clustering_div" v-if="page=='clustering'">
         <div id="new_data">
           Feel free to add more points to predict on: <br>
           <div v-for="i in f_index">
             ${fields[i]}: <br>
-            <textarea class="input_area" v-model="new_data[fields[i]]" type="text"></textarea>
-              
+            <textarea class="input_area" v-model="new_data[fields[i]]" type="text"></textarea> 
           </div>
           <button class="btn btn-warning btn-sm" v-on:click="insert_point()">Insert and Classify Point</button><br>
           <button class="btn btn-success btn-sm" v-on:click="add_to_profile()">Add to Profile</button><br>
-
-
         </div>
+      </div>
 
-        <!--FIXME: include "add to collection" btn -->
+      <div id="profile_div" v-if="page=='profile'">
+        Here is a list of your most recent plots:<br>
+        Select <b>one</b> plot you would like to view again:<br>
+        <button class="btn btn-warning btn-sm" v-on:click="view_plot()">View Plot</button><br>
+        <button class="btn btn-success btn-sm" v-on:click="change_page('upload')">Back to Upload</button><br>
 
       </div>
 

@@ -244,8 +244,18 @@ var app = function(){
     // };
 
     self.add_to_profile = function(){
-        console.log("inside add_to_profile");
-    }
+        $.post(add_to_profile_url, {
+            chart_plot: JSON.stringify(self.vue.chart_plot),
+            chart_options: JSON.stringify(self.vue.chart_options)
+        });
+        self.change_page('profile');
+        $('#chart_div').hide();
+
+    };
+
+    self.view_plot = function(){
+        console.log("inside view_plot");
+    };
 
 
 
@@ -420,7 +430,9 @@ var app = function(){
             push_field: self.push_field,
             continue_button_clicked: self.continue_button_clicked,
             insert_point: self.insert_point,
-            add_to_profile: self.add_to_profile
+            add_to_profile: self.add_to_profile,
+            change_page: self.change_page,
+            view_plot: self.view_plot
         }
 
     });

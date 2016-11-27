@@ -13,3 +13,8 @@ db.define_table('import_data',
 				Field('file_path'),
 				Field('file_name')
                 )
+
+db.define_table('saved_graphs',
+				Field('user_id'),
+				Field('chart_plot'),
+				Field('chart_options'))

@@ -2,6 +2,9 @@ import csv
 import random
 from sklearn.cluster import KMeans
 import numpy as np
+#VVV there may be no need for these two
+import pprint
+import json
 
 upload_complete = False
 
@@ -130,11 +133,11 @@ def get_fields():
         ))
 
 
-def insert_vals():
-    """Things needed for this method:
-        1. a dictionary mapping from cluster# to x_center_group, y_center_group
-        2. a set, converted to a list, of values for the selected_field in order
-        3. a list of already plotted points
-        4. a dict of options
-    """
+def add_to_profile():
+    db.saved_graphs.insert(user_id=auth.user_id,
+                           chart_plot=request.vars.chart_plot,
+                           chart_options=request.vars.chart_options)
+    # print db(db.saved_graphs).select().last().chart_options
+    # print db(db.saved_graphs).select().last().chart_plot
+
     return ""
