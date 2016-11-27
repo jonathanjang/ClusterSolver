@@ -163,7 +163,7 @@ var app = function(){
     // 2. take the closest one, and find its center
     // 3. using its center, plot a new point
     // 4. start appending to lists
-    self.add_to_collection = function(){
+    self.insert_point = function(){
         $('#chart_div').hide();
 
         // find the point that is most similar to the newly inserted one
@@ -176,43 +176,16 @@ var app = function(){
 
         // get the closest center
         // then assign a point to it
-        d = 999999;
-        point = self.vue.points[point_i];
-        closest_center = [];
-        x_lower = parseInt(self.vue.x_lower);
-        x_upper = parseInt(self.vue.x_upper);
-        y_lower = parseInt(self.vue.y_lower);
-        y_upper = parseInt(self.vue.y_upper);
+        center = get_closest_center(self.vue.points[point_i], self.vue.cluster_centers);
+        center_i = center[2];
+        new_points = create_new_points(center);
 
-        for(var i = 0; i < self.vue.cluster_centers.length; i++){
-            center = self.vue.cluster_centers[i];
-            curr_d = calc_distance(center[0], center[1], point[0], point[1]);
-            if (curr_d < d){
-                closest_center = center;
-                d = curr_d;
-            }
-        }
-
-        center = closest_center
-        console.log(center[0], center[1]);
-        x_new_lower = center[0] - 1 > x_lower ? center[0] - 1 : x_lower
-        x_new_upper = center[0] + 1 < x_upper ? center[0] + 1 : x_upper
-        y_new_lower = center[1] - 1 > y_lower ? center[1] - 1 : y_lower
-        y_new_upper = center[1] + 1 < y_upper ? center[1] + 1 : y_upper
-        // console.log(x_new_lower);
-        // console.log(x_new_upper);
-        // console.log(y_new_lower);
-        // console.log(y_new_upper);
-
-        x_new = Math.random()*(x_new_upper-x_new_lower+1) + x_new_lower;
-        y_new = Math.random()*(y_new_upper-y_new_lower+1) + y_new_lower;
-        center_i = find_index_of_nested_arr(self.vue.cluster_centers, center);
         new_entry_dict = create_new_entry_dict(self.vue.fields, self.vue.new_data);
 
         line = "NEWLY INSERTED VALUE\n";
         line += convert_dict_to_string(new_entry_dict, center_i);
 
-        self.vue.chart_plot.push([x_new, y_new, line, 'point { fill-color:'+self.vue.colors[labels[i]]+'}']);
+        self.vue.chart_plot.push([new_points[0], new_points[1], line, 'point { fill-color:'+self.vue.colors[labels[i]]+'}']);
 
         self.reset_gchart();
 
@@ -282,6 +255,41 @@ var app = function(){
             }
         }
         return point_i
+    }
+
+    function get_closest_center(point, cluster_centers){
+        d = 999999;
+        closest_center = [];
+        center_i = -1;
+        for(var i = 0; i < cluster_centers.length; i++){
+            center = cluster_centers[i];
+            curr_d = calc_distance(center[0], center[1], point[0], point[1]);
+            if (curr_d < d){
+                closest_center = center;
+                d = curr_d;
+                center_i = i;
+            }
+        }
+        closest_center.push(center_i)
+        return closest_center;
+    }
+
+    function create_new_points(center){
+        x_lower = parseInt(self.vue.x_lower);
+        x_upper = parseInt(self.vue.x_upper);
+        y_lower = parseInt(self.vue.y_lower);
+        y_upper = parseInt(self.vue.y_upper);
+
+        console.log(center[0], center[1]);
+        x_new_lower = center[0] - 1 > x_lower ? center[0] - 1 : x_lower
+        x_new_upper = center[0] + 1 < x_upper ? center[0] + 1 : x_upper
+        y_new_lower = center[1] - 1 > y_lower ? center[1] - 1 : y_lower
+        y_new_upper = center[1] + 1 < y_upper ? center[1] + 1 : y_upper
+
+        x_new = Math.random()*(x_new_upper-x_new_lower+1) + x_new_lower;
+        y_new = Math.random()*(y_new_upper-y_new_lower+1) + y_new_lower;
+
+        return [x_new, y_new];
     }
 
     function create_new_entry_dict(fields, new_data){
@@ -397,7 +405,7 @@ var app = function(){
             upload_button_clicked: self.upload_button_clicked,
             push_field: self.push_field,
             continue_button_clicked: self.continue_button_clicked,
-            add_to_collection: self.add_to_collection
+            insert_point: self.insert_point
         }
 
     });
