@@ -167,12 +167,18 @@ var app = function(){
         
         // find the point that is most similar to the newly inserted one
         selected_field = self.vue.checked_fields[0];
+        new_inserted_code = convert_to_ASCII(self.vue.new_data[selected_field]);
         point_i = -1;
+        difference = 999999;
         // FIXME: random inputs should still find a closest cluster
         for(var i = 0; i < self.vue.points_data.length; i++){
+            point_code = convert_to_ASCII(self.vue.points_data[i][selected_field]);
             if(self.vue.points_data[i][selected_field] == self.vue.new_data[selected_field]){
                 point_i = i;
                 break;
+            }else if(Math.abs(new_inserted_code-point_code) < difference){
+                difference = Math.abs(new_inserted_code - point_code);
+                point_i = i;
             }
         }
 
@@ -186,33 +192,30 @@ var app = function(){
         x_upper = parseInt(self.vue.x_upper);
         y_lower = parseInt(self.vue.y_lower);
         y_upper = parseInt(self.vue.y_upper);
-        if (point_i != -1){
-            for(var i = 0; i < self.vue.cluster_centers.length; i++){
-                center = self.vue.cluster_centers[i];
-                curr_d = calc_distance(center[0], center[1], point[0], point[1]);
-                if (curr_d < d){
-                    closest_center = center;
-                    d = curr_d;
-                }
+
+        for(var i = 0; i < self.vue.cluster_centers.length; i++){
+            center = self.vue.cluster_centers[i];
+            curr_d = calc_distance(center[0], center[1], point[0], point[1]);
+            if (curr_d < d){
+                closest_center = center;
+                d = curr_d;
             }
-            center = closest_center
-            console.log(center[0], center[1]);
-            x_new_lower = center[0] - 1 > x_lower ? center[0] - 1 : x_lower
-            x_new_upper = center[0] + 1 < x_upper ? center[0] + 1 : x_upper
-            y_new_lower = center[1] - 1 > y_lower ? center[1] - 1 : y_lower
-            y_new_upper = center[1] + 1 < y_upper ? center[1] + 1 : y_upper
-            console.log(x_new_lower);
-            console.log(x_new_upper);
-            console.log(y_new_lower);
-            console.log(y_new_upper);
-
-            x_new = Math.random()*(x_new_upper-x_new_lower+1) + x_new_lower;
-            y_new = Math.random()*(y_new_upper-y_new_lower+1) + y_new_lower;
-
-        }else{
-            x_new = Math.random()*x_upper + x_lower;
-            y_new = Math.random()*y_upper + y_lower;
         }
+        
+        center = closest_center
+        console.log(center[0], center[1]);
+        x_new_lower = center[0] - 1 > x_lower ? center[0] - 1 : x_lower
+        x_new_upper = center[0] + 1 < x_upper ? center[0] + 1 : x_upper
+        y_new_lower = center[1] - 1 > y_lower ? center[1] - 1 : y_lower
+        y_new_upper = center[1] + 1 < y_upper ? center[1] + 1 : y_upper
+        console.log(x_new_lower);
+        console.log(x_new_upper);
+        console.log(y_new_lower);
+        console.log(y_new_upper);
+
+        x_new = Math.random()*(x_new_upper-x_new_lower+1) + x_new_lower;
+        y_new = Math.random()*(y_new_upper-y_new_lower+1) + y_new_lower;
+
 
         console.log(x_new);
         console.log(y_new);
@@ -272,6 +275,14 @@ var app = function(){
             color += letters[Math.floor(Math.random() * 16)];
         }
         return color;
+    }
+
+    function convert_to_ASCII(str){
+        code = 0;
+        for(var i = 0; i < str.length; i++){
+            code += str.charCodeAt(i);
+        }
+        return code;
     }
 
     self.vue = new Vue({
