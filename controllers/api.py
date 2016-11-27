@@ -57,12 +57,13 @@ def perform_clustering(data_list, selected_field, k, iterations, bounds_list):
     processed_data = process_data(data_list, selected_field, bounds_list)
     pairs_list = processed_data.keys()
     coordinate_list = [[x,y] for x,y in pairs_list]
-    print coordinate_list
+    # print coordinate_list
     X = np.array(coordinate_list)
     iterations = int(iterations)
     kmeans = KMeans(n_clusters=k, random_state=0, max_iter=iterations).fit(X)
-    print kmeans.labels_
-    print kmeans.cluster_centers_
+    # print kmeans.labels_
+    # print kmeans.cluster_centers_
+
 
     return [processed_data, kmeans.labels_, kmeans.cluster_centers_]
     # pseudocode:
@@ -78,6 +79,8 @@ def process_data(data_list, selected_field, bounds_list):
     grouped_data = group_data(data_list, selected_field)
     x_lower, x_upper = int(bounds_list[0]), int(bounds_list[1])
     y_lower, y_upper = int(bounds_list[2]), int(bounds_list[3])
+    # a mapping from cluster # to 
+    centers = {}
     for group in grouped_data:
         x_center_group = random.uniform(x_lower, x_upper)
         y_center_group = random.uniform(y_lower, y_upper)
@@ -90,6 +93,8 @@ def process_data(data_list, selected_field, bounds_list):
             y = random.uniform(y_single_lower, y_single_upper)
             coordinates_to_data_dict[x,y] = data
 
+    # print coordinates_to_data_dict
+    # print grouped_data
     return coordinates_to_data_dict
 
 
@@ -125,3 +130,11 @@ def get_fields():
         ))
 
 
+def insert_vals():
+    """Things needed for this method:
+        1. a dictionary mapping from cluster# to x_center_group, y_center_group
+        2. a set, converted to a list, of values for the selected_field in order
+        3. a list of already plotted points
+        4. a dict of options
+    """
+    return ""

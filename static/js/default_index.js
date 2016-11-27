@@ -148,10 +148,77 @@ var app = function(){
             });
 
             chart.draw(data, options);
+
+
+            self.vue.chart_plot = plot;
+            self.vue.chart_options = options;
         }
 
         // Make the chart object visible
         $('#chart_div').show();
+    };
+
+    // Outline for this method:
+    // 1. check to see if the new selected field value is equal to anything else
+    // 2. take the closest one, and find its center
+    // 3. using its center, plot a new point
+    // 4. start appending to lists
+    self.add_to_collection = function(){
+        
+        // find the point that is most similar to the newly inserted one
+        selected_field = self.vue.checked_fields[0];
+        point_i = -1;
+        for(var i = 0; i < self.vue.points_data.length; i++){
+            if(self.vue.points_data[i][selected_field] == self.vue.new_data[selected_field]){
+                point_i = i;
+                break;
+            }
+        }
+
+
+        // get the closest center
+        // then assign a point to it
+        d = 999999;
+        point = self.vue.points[point_i];
+        closest_center = [];
+        x_lower = parseInt(self.vue.x_lower);
+        x_upper = parseInt(self.vue.x_upper);
+        y_lower = parseInt(self.vue.y_lower);
+        y_upper = parseInt(self.vue.y_upper);
+        if (point_i != -1){
+            for(var i = 0; i < self.vue.cluster_centers.length; i++){
+                center = self.vue.cluster_centers[i];
+                curr_d = calc_distance(center[0], center[1], point[0], point[1]);
+                if (curr_d < d){
+                    closest_center = center;
+                    d = curr_d;
+                }
+            }
+            center = closest_center
+            console.log(center[0], center[1]);
+            x_new_lower = center[0] - 1 > x_lower ? center[0] - 1 : x_lower
+            x_new_upper = center[0] + 1 < x_upper ? center[0] + 1 : x_upper
+            y_new_lower = center[1] - 1 > y_lower ? center[1] - 1 : y_lower
+            y_new_upper = center[1] + 1 < y_upper ? center[1] + 1 : y_upper
+            console.log(x_new_lower);
+            console.log(x_new_upper);
+            console.log(y_new_lower);
+            console.log(y_new_upper);
+
+            x_new = Math.random()*(x_new_upper-x_new_lower+1) + x_new_lower;
+            y_new = Math.random()*(y_new_upper-y_new_lower+1) + y_new_lower;
+
+        }else{
+            x_new = Math.random()*x_upper + x_lower;
+            y_new = Math.random()*y_upper + y_lower;
+        }
+
+        console.log(x_new);
+        console.log(y_new);
+
+
+
+
     };
 
     // adapted partly by: 
@@ -176,14 +243,16 @@ var app = function(){
         for(var i = 0; i < self.vue.cluster_centers.length; i++){
             line = "Cluster Center for label: " + i;
             plot.push([self.vue.cluster_centers[i][0], 
-                       self.vue.cluster_centers[i][1], 
-                       line, 
-                       'point { fill-color:'+colors[i]+'}']);
-
+                        self.vue.cluster_centers[i][1], 
+                        line, 
+                        'point { fill-color:'+colors[i]+'}']);
         }
         return plot;
     }
 
+    function calc_distance(x1, y1, x2, y2){
+        return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+    }
 
     function convert_dict_to_string(dict, label){
         line = "Cluster #" + label + ": \nValue: ";
@@ -222,19 +291,22 @@ var app = function(){
             num_iters: "300",
             err_message: "",
             is_error: false,
-            new_data: [],
+            new_data: {},
             f_index: [],
             points: [],
             points_data: [],
             labels: [],
             cluster_centers: [],
-            file_name: ""
+            file_name: "",
+            chart_plot: [],
+            chart_options: {},
         },
         methods: {
             get_upload_status: self.get_upload_status,
             upload_button_clicked: self.upload_button_clicked,
             push_field: self.push_field,
             continue_button_clicked: self.continue_button_clicked,
+            add_to_collection: self.add_to_collection
         }
 
     });

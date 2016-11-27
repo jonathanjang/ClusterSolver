@@ -99,6 +99,7 @@ $(function() {
           <br>
           <textarea class="small_area" v-model="num_iters" placeholder="# of Iterations" type="text"></textarea>
           <br>
+          <!-- Add a parameter to let the user chose how much they want to depend on the field they have chosen -->
 
 
         <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
@@ -115,10 +116,10 @@ $(function() {
           Feel free to add more points to predict on: <br>
           <div v-for="i in f_index">
             ${fields[i]}: <br>
-            <textarea class="input_area" v-model="new_data[i]" type="text"></textarea>
+            <textarea class="input_area" v-model="new_data[fields[i]]" type="text"></textarea>
               
           </div>
-          <button class="btn btn-warning btn-sm">Add</button><br>
+          <button class="btn btn-warning btn-sm" v-on:click="add_to_collection()">Add to Collection</button><br>
 
         </div>
 
