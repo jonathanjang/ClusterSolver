@@ -164,23 +164,14 @@ var app = function(){
     // 3. using its center, plot a new point
     // 4. start appending to lists
     self.add_to_collection = function(){
-        
+        $('#chart_div').hide();
+
         // find the point that is most similar to the newly inserted one
-        selected_field = self.vue.checked_fields[0];
-        new_inserted_code = convert_to_ASCII(self.vue.new_data[selected_field]);
-        point_i = -1;
-        difference = 999999;
-        // FIXME: random inputs should still find a closest cluster
-        for(var i = 0; i < self.vue.points_data.length; i++){
-            point_code = convert_to_ASCII(self.vue.points_data[i][selected_field]);
-            if(self.vue.points_data[i][selected_field] == self.vue.new_data[selected_field]){
-                point_i = i;
-                break;
-            }else if(Math.abs(new_inserted_code-point_code) < difference){
-                difference = Math.abs(new_inserted_code - point_code);
-                point_i = i;
-            }
-        }
+
+
+        point_i = index_of_closest_point(self.vue.checked_fields[0],
+                                          self.vue.new_data,
+                                          self.vue.points_data);
 
 
         // get the closest center
@@ -201,29 +192,106 @@ var app = function(){
                 d = curr_d;
             }
         }
-        
+
         center = closest_center
         console.log(center[0], center[1]);
         x_new_lower = center[0] - 1 > x_lower ? center[0] - 1 : x_lower
         x_new_upper = center[0] + 1 < x_upper ? center[0] + 1 : x_upper
         y_new_lower = center[1] - 1 > y_lower ? center[1] - 1 : y_lower
         y_new_upper = center[1] + 1 < y_upper ? center[1] + 1 : y_upper
-        console.log(x_new_lower);
-        console.log(x_new_upper);
-        console.log(y_new_lower);
-        console.log(y_new_upper);
+        // console.log(x_new_lower);
+        // console.log(x_new_upper);
+        // console.log(y_new_lower);
+        // console.log(y_new_upper);
 
         x_new = Math.random()*(x_new_upper-x_new_lower+1) + x_new_lower;
         y_new = Math.random()*(y_new_upper-y_new_lower+1) + y_new_lower;
+        center_i = find_index_of_nested_arr(self.vue.cluster_centers, center);
+        new_entry_dict = create_new_entry_dict(self.vue.fields, self.vue.new_data);
+
+        line = "NEWLY INSERTED VALUE\n";
+        line += convert_dict_to_string(new_entry_dict, center_i);
+
+        self.vue.chart_plot.push([x_new, y_new, line, 'point { fill-color:'+self.vue.colors[labels[i]]+'}']);
+
+        self.reset_gchart();
+
+        //want to print
+        //"NEWLY INSERTED VALUE"
+        //"Cluster #"
+        //"Value: ..."
+        //find the index of the cluster_center
 
 
         console.log(x_new);
         console.log(y_new);
-
-
-
-
     };
+
+    self.reset_gchart = function(){
+        // Initialize a graph for google chart.
+        var container = document.getElementById('chart_div');
+        container.style.display = 'block';
+
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart());
+        function drawChart() {
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'X');
+            data.addColumn('number', 'Y');
+            data.addColumn({type: 'string', role: 'tooltip'});
+            data.addColumn( {type: 'string', role: 'style'} );    
+
+            var plot = self.vue.chart_plot;
+
+            data.addRows(plot)
+
+            var options = self.vue.options;
+
+            var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+            
+            google.visualization.events.addListener(chart, 'ready', function () {
+                container.style.display = 'none';
+            });
+
+            chart.draw(data, options);
+
+
+            self.vue.chart_plot = plot;
+            self.vue.chart_options = options;
+        }
+
+        // Make the chart object visible
+        $('#chart_div').show();
+    };
+
+    function index_of_closest_point(selected_field, new_data, points_data){
+        selected_field = self.vue.checked_fields[0];
+        new_inserted_code = convert_to_ASCII(self.vue.new_data[selected_field]);
+        point_i = -1;
+        difference = 999999;
+        // FIXME: random inputs should still find a closest cluster
+        for(var i = 0; i < self.vue.points_data.length; i++){
+            point_code = convert_to_ASCII(self.vue.points_data[i][selected_field]);
+            if(self.vue.points_data[i][selected_field] == self.vue.new_data[selected_field]){
+                point_i = i;
+                break;
+            }else if(Math.abs(new_inserted_code-point_code) < difference){
+                difference = Math.abs(new_inserted_code - point_code);
+                point_i = i;
+            }
+        }
+        return point_i
+    }
+
+    function create_new_entry_dict(fields, new_data){
+        new_dict = {};
+        for (var i = 0; i < fields.length; i++){
+            new_dict[fields[i]] = new_data[fields[i]];
+        }
+        return new_dict;
+    }
+
 
     // adapted partly by: 
     // http://stackoverflow.com/questions/31380320/change-point-colour-based-on-value-for-google-scatter-chart
@@ -251,7 +319,17 @@ var app = function(){
                         line, 
                         'point { fill-color:'+colors[i]+'}']);
         }
+        self.vue.colors = colors;
         return plot;
+    }
+
+    function find_index_of_nested_arr(cluster_centers, point){
+        for(var i = 0; i < cluster_centers.length; i++){
+            if(point[0] == cluster_centers[i][0] && point[1] == cluster_centers[i][1]){
+                return i;
+            }
+        }
+        return -1;
     }
 
     function calc_distance(x1, y1, x2, y2){
@@ -312,6 +390,7 @@ var app = function(){
             file_name: "",
             chart_plot: [],
             chart_options: {},
+            colors: []
         },
         methods: {
             get_upload_status: self.get_upload_status,
