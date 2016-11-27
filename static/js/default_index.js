@@ -246,7 +246,7 @@ var app = function(){
 
             data.addRows(plot)
 
-            var options = self.vue.options;
+            var options = self.vue.chart_options;
 
             var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
             
@@ -266,14 +266,14 @@ var app = function(){
     };
 
     function index_of_closest_point(selected_field, new_data, points_data){
-        selected_field = self.vue.checked_fields[0];
-        new_inserted_code = convert_to_ASCII(self.vue.new_data[selected_field]);
+        // selected_field = self.vue.checked_fields[0];
+        new_inserted_code = convert_to_ASCII(new_data[selected_field]);
         point_i = -1;
         difference = 999999;
         // FIXME: random inputs should still find a closest cluster
-        for(var i = 0; i < self.vue.points_data.length; i++){
-            point_code = convert_to_ASCII(self.vue.points_data[i][selected_field]);
-            if(self.vue.points_data[i][selected_field] == self.vue.new_data[selected_field]){
+        for(var i = 0; i < points_data.length; i++){
+            point_code = convert_to_ASCII(points_data[i][selected_field]);
+            if(points_data[i][selected_field] == new_data[selected_field]){
                 point_i = i;
                 break;
             }else if(Math.abs(new_inserted_code-point_code) < difference){
