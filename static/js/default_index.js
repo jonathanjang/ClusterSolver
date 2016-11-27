@@ -110,18 +110,18 @@ var app = function(){
                   self.vue.labels = data.labels;
                   self.vue.cluster_centers = data.cluster_centers;
                   self.vue.file_name = data.file_name;
-                  self.set_gchart();
+                  self.set_gchart([], {});
               });
     };
 
-    self.set_gchart = function(){
+    self.set_gchart = function(plot, options){
         // Initialize a graph for google chart.
         var container = document.getElementById('chart_div');
         container.style.display = 'block';
 
         google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart());
-        function drawChart() {
+        google.charts.setOnLoadCallback(drawChart(plot, options));
+        function drawChart(passed_in_plot, passed_in_options) {
 
             var data = new google.visualization.DataTable();
             data.addColumn('number', 'X');
@@ -129,17 +129,27 @@ var app = function(){
             data.addColumn({type: 'string', role: 'tooltip'});
             data.addColumn( {type: 'string', role: 'style'} );    
 
-            plot = parse_points();
+            var plot = [];
+            if (passed_in_plot.length == 0){
+                plot = parse_points();
+            }else{
+                plot = passed_in_plot;
+            }
 
             data.addRows(plot)
 
-            var options = {
-                title: 'Results of ' + self.vue.file_name ,
-                hAxis: {title: 'X', minValue: parseInt(self.vue.x_lower), maxValue: parseInt(self.vue.x_upper)},
-                vAxis: {title: 'Y', minValue: parseInt(self.vue.y_lower), maxValue: parseInt(self.vue.y_upper)},
-                legend: 'none',
-                tooltip: {isHTML: true}
-            };
+            var options = {};
+            if (Object.keys(passed_in_options).length == 0){
+                options = {
+                    title: 'Results of ' + self.vue.file_name ,
+                    hAxis: {title: 'X', minValue: parseInt(self.vue.x_lower), maxValue: parseInt(self.vue.x_upper)},
+                    vAxis: {title: 'Y', minValue: parseInt(self.vue.y_lower), maxValue: parseInt(self.vue.y_upper)},
+                    legend: 'none',
+                    tooltip: {isHTML: true}
+                };
+            }else{
+                options = passed_in_options;
+            }
 
             var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
             
@@ -188,50 +198,58 @@ var app = function(){
         // now add it to the plot!
         self.vue.chart_plot.push([new_points[0], new_points[1], line, 'point { fill-color:'+self.vue.colors[center_i]+'}']);
 
-        self.reset_gchart();
+        self.set_gchart(self.vue.chart_plot, self.vue.chart_options);
         self.vue.new_data = {};
 
         console.log(x_new);
         console.log(y_new);
     };
 
-    self.reset_gchart = function(){
-        // Initialize a graph for google chart.
-        var container = document.getElementById('chart_div');
-        container.style.display = 'block';
+    // self.reset_gchart = function(){
+    //     // Initialize a graph for google chart.
+    //     var container = document.getElementById('chart_div');
+    //     container.style.display = 'block';
 
-        google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart());
-        function drawChart() {
+    //     google.charts.load('current', {'packages':['corechart']});
+    //     google.charts.setOnLoadCallback(drawChart());
+    //     function drawChart() {
 
-            var data = new google.visualization.DataTable();
-            data.addColumn('number', 'X');
-            data.addColumn('number', 'Y');
-            data.addColumn({type: 'string', role: 'tooltip'});
-            data.addColumn( {type: 'string', role: 'style'} );    
+    //         var data = new google.visualization.DataTable();
+    //         data.addColumn('number', 'X');
+    //         data.addColumn('number', 'Y');
+    //         data.addColumn({type: 'string', role: 'tooltip'});
+    //         data.addColumn( {type: 'string', role: 'style'} );    
 
-            var plot = self.vue.chart_plot;
+    //         var plot = self.vue.chart_plot;
 
-            data.addRows(plot)
+    //         data.addRows(plot)
 
-            var options = self.vue.chart_options;
+    //         var options = self.vue.chart_options;
 
-            var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+    //         var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
             
-            google.visualization.events.addListener(chart, 'ready', function () {
-                container.style.display = 'none';
-            });
+    //         google.visualization.events.addListener(chart, 'ready', function () {
+    //             container.style.display = 'none';
+    //         });
 
-            chart.draw(data, options);
+    //         chart.draw(data, options);
 
 
-            self.vue.chart_plot = plot;
-            self.vue.chart_options = options;
-        }
+    //         // self.vue.chart_plot = plot;
+    //         // self.vue.chart_options = options;
+    //     }
 
-        // Make the chart object visible
-        $('#chart_div').show();
-    };
+    //     // Make the chart object visible
+    //     $('#chart_div').show();
+    // };
+
+    self.add_to_profile = function(){
+        console.log("inside add_to_profile");
+    }
+
+
+
+    //Helper functions:
 
     //FIXME: there may be a point where you want to start a new cluster!
     function index_of_closest_point(selected_field, new_data, points_data){
@@ -401,7 +419,8 @@ var app = function(){
             upload_button_clicked: self.upload_button_clicked,
             push_field: self.push_field,
             continue_button_clicked: self.continue_button_clicked,
-            insert_point: self.insert_point
+            insert_point: self.insert_point,
+            add_to_profile: self.add_to_profile
         }
 
     });
