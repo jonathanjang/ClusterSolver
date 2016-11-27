@@ -167,34 +167,29 @@ var app = function(){
         $('#chart_div').hide();
 
         // find the point that is most similar to the newly inserted one
-
-
         point_i = index_of_closest_point(self.vue.checked_fields[0],
                                           self.vue.new_data,
                                           self.vue.points_data);
 
 
         // get the closest center
-        // then assign a point to it
         center = get_closest_center(self.vue.points[point_i], self.vue.cluster_centers);
         center_i = center[2];
+
+        // then assign a point to it
         new_points = create_new_points(center);
 
         new_entry_dict = create_new_entry_dict(self.vue.fields, self.vue.new_data);
 
+        // create a string for the tooltip
         line = "NEWLY INSERTED VALUE\n";
         line += convert_dict_to_string(new_entry_dict, center_i);
 
-        self.vue.chart_plot.push([new_points[0], new_points[1], line, 'point { fill-color:'+self.vue.colors[labels[i]]+'}']);
+        // now add it to the plot!
+        self.vue.chart_plot.push([new_points[0], new_points[1], line, 'point { fill-color:'+self.vue.colors[center_i]+'}']);
 
         self.reset_gchart();
-
-        //want to print
-        //"NEWLY INSERTED VALUE"
-        //"Cluster #"
-        //"Value: ..."
-        //find the index of the cluster_center
-
+        self.vue.new_data = {};
 
         console.log(x_new);
         console.log(y_new);
@@ -238,6 +233,7 @@ var app = function(){
         $('#chart_div').show();
     };
 
+    //FIXME: there may be a point where you want to start a new cluster!
     function index_of_closest_point(selected_field, new_data, points_data){
         // selected_field = self.vue.checked_fields[0];
         new_inserted_code = convert_to_ASCII(new_data[selected_field]);
