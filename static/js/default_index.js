@@ -168,6 +168,7 @@ var app = function(){
         // find the point that is most similar to the newly inserted one
         selected_field = self.vue.checked_fields[0];
         point_i = -1;
+        // FIXME: random inputs should still find a closest cluster
         for(var i = 0; i < self.vue.points_data.length; i++){
             if(self.vue.points_data[i][selected_field] == self.vue.new_data[selected_field]){
                 point_i = i;
