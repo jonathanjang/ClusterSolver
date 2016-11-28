@@ -13,6 +13,19 @@ def check_login():
         logged_in = auth.user_id is not None
         ))
 
+
+def get_graphs():
+    start_i = int(request.vars.start_i) if request.vars.start_i is not None else 0
+    end_i = int(request.vars.end_i) if request.vars.end_i is not None else 0
+    print start_i
+    print end_i
+
+
+
+
+
+
+
 # not being used as of this moment
 def check_upload_status():
     print upload_complete

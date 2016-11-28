@@ -15,6 +15,7 @@ var app = function(){
     self.start = function(){
         self.vue.page = 'upload';
         self.check_logged_in();
+        self.get_graphs();
     }
 
     self.check_logged_in = function(){
@@ -26,6 +27,20 @@ var app = function(){
     self.change_page = function(page_name){
         self.vue.page = page_name;
     };
+
+    function create_graphs_url(start_i, end_i){
+        var pp = {
+            start_i: start_i,
+            end_i: end_i
+        };
+        return get_graphs_url + '?' + $.param(pp); 
+    }
+
+    self.get_graphs = function(){
+        $.getJSON(create_graphs_url(0,10), function(data){
+            
+        })
+    }
 
     // FIXME: when the upload btn is pressed, page is changed even if 
     // a form has not been uploaded
@@ -116,7 +131,7 @@ var app = function(){
 
     self.set_gchart = function(plot, options){
         // Initialize a graph for google chart.
-        var container = document.getElementById('chart_div');
+        var container = document.getElementById('chart_div_1');
         container.style.display = 'block';
 
         google.charts.load('current', {'packages':['corechart']});
@@ -151,7 +166,7 @@ var app = function(){
                 options = passed_in_options;
             }
 
-            var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+            var chart = new google.visualization.ScatterChart(document.getElementById('chart_div_1'));
             
             google.visualization.events.addListener(chart, 'ready', function () {
                 container.style.display = 'none';
@@ -165,7 +180,7 @@ var app = function(){
         }
 
         // Make the chart object visible
-        $('#chart_div').show();
+        $('#chart_div_1').show();
     };
 
     // Outline for this method:
@@ -174,7 +189,7 @@ var app = function(){
     // 3. using its center, plot a new point
     // 4. start appending to lists
     self.insert_point = function(){
-        $('#chart_div').hide();
+        $('#chart_div_1').hide();
 
         // find the point that is most similar to the newly inserted one
         point_i = index_of_closest_point(self.vue.checked_fields[0],
@@ -249,7 +264,7 @@ var app = function(){
             chart_options: JSON.stringify(self.vue.chart_options)
         });
         self.change_page('profile');
-        $('#chart_div').hide();
+        $('#chart_div_1').hide();
 
     };
 
@@ -267,7 +282,6 @@ var app = function(){
         new_inserted_code = convert_to_ASCII(new_data[selected_field]);
         point_i = -1;
         difference = 999999;
-        // FIXME: random inputs should still find a closest cluster
         for(var i = 0; i < points_data.length; i++){
             point_code = convert_to_ASCII(points_data[i][selected_field]);
             if(points_data[i][selected_field] == new_data[selected_field]){
@@ -439,7 +453,10 @@ var app = function(){
 
     self.start();
     $("#vue-div").show();
-    $("#chart_div").hide();
+    $("#chart_div_1").hide();
+    $("#chart_div_2").hide();
+    $("#chart_div_3").hide();
+    $("#chart_div_4").hide();
 
 
     return self;

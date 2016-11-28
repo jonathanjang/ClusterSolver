@@ -12,6 +12,7 @@
   var get_fields_url = "{{=URL('api', 'get_fields')}}";
   var start_clustering_url = "{{=URL('api', 'start_clustering')}}";
   var add_to_profile_url = "{{=URL('api', 'add_to_profile')}}";
+  var get_graphs_url = "{{=URL('api', 'get_graphs')}}";
 </script>
 
 <script src="{{=URL('static', 'js/dropzone.js')}}"></script>
@@ -38,7 +39,11 @@ $(function() {
 
 <div class="main_content">
 
-        <div id="chart_div" style="width: 900px; height: 500px;"></div>
+        <div id="chart_div_1" style="width: 900px; height: 500px;"></div>
+        <div id="chart_div_2" style="width: 900px; height: 500px;"></div>
+        <div id="chart_div_3" style="width: 900px; height: 500px;"></div>
+        <div id="chart_div_4" style="width: 900px; height: 500px;"></div>
+
 
   <div id="vue-div">
   <!-- test1@gmail.com ,test -->
