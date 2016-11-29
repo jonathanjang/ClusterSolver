@@ -441,7 +441,8 @@ var app = function(){
             chart_options: {},
             news_feed_chart_plots: [],
             news_feed_chart_options: {},
-            colors: []
+            colors: [],
+            slider_val: ""
         },
         methods: {
             get_upload_status: self.get_upload_status,
