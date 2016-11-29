@@ -17,13 +17,21 @@ def check_login():
 def get_graphs():
     start_i = int(request.vars.start_i) if request.vars.start_i is not None else 0
     end_i = int(request.vars.end_i) if request.vars.end_i is not None else 0
-    print start_i
-    print end_i
+    chart_data = []
+    chart_options = []
+    rows = db(db.saved_graphs).select(limitby=(start_i, end_i), orderby=~db.saved_graphs._id)
+    for i, r in enumerate(rows):
+        # print i
+        # print r.chart_options
+        # print r.chart_plot
+        chart_options.append(r.chart_options)
+        chart_data.append(r.chart_plot)
 
+    # print chart_data
+    # print chart_options
 
-
-
-
+    return dict(chart_plot_list=chart_data,
+                chart_options_list=chart_options)
 
 
 # not being used as of this moment

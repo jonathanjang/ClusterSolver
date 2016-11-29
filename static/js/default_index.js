@@ -37,8 +37,11 @@ var app = function(){
     }
 
     self.get_graphs = function(){
-        $.getJSON(create_graphs_url(0,10), function(data){
-            
+        console.log("hello");
+        $.getJSON(create_graphs_url(0,5), function(data){
+            console.log(data);
+            self.vue.news_feed_chart_plots = data.chart_plot_list;
+            self.vue.news_feed_chart_options = data.chart_options_list;
         })
     }
 
@@ -436,6 +439,8 @@ var app = function(){
             file_name: "",
             chart_plot: [],
             chart_options: {},
+            news_feed_chart_plots: [],
+            news_feed_chart_options: {},
             colors: []
         },
         methods: {
@@ -457,6 +462,7 @@ var app = function(){
     $("#chart_div_2").hide();
     $("#chart_div_3").hide();
     $("#chart_div_4").hide();
+    $("#chart_div_5").hide();
 
 
     return self;
