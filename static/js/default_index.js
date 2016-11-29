@@ -277,7 +277,6 @@ var app = function(){
     };
 
 
-
     //Helper functions:
 
     //FIXME: there may be a point where you want to start a new cluster!
