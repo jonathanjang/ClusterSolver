@@ -12,8 +12,9 @@ var app = function(){
         }
     };
 
+
     self.start = function(){
-        self.vue.page = 'upload';
+        self.vue.page = 'home';
         self.check_logged_in();
         self.get_graphs();
     }

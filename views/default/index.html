@@ -1,6 +1,11 @@
 {{extend 'layout.html'}}
 
 {{block head}}
+<!-- MDL PACKAGES -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.indigo-pink.min.css">
+<script defer src="https://code.getmdl.io/1.2.1/material.min.js"></script>
+
 <script src="{{=URL('static', 'js/vue.js')}}"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <!-- FIXME: this should not be needed, but it is VVV -->
@@ -36,6 +41,7 @@ $(function() {
 </script>
 
 {{end}}
+<body>
 
 <div class="main_content">
 
@@ -45,18 +51,79 @@ $(function() {
   <div id="chart_div_4" style="width: 900px; height: 500px;"></div>
   <div id="chart_div_5" style="width: 900px; height: 500px;"></div>
 
+<div id="vue-div">
 
-  <div id="vue-div">
+  <div class="home" v-if="page == 'home'">
+    <div class="section splash-box">
+      <div class="section-inner">
+        <center><img id="clustersolver-logo" src="/ClusterSolver/static/images/clustersolver_logo_small.png"></center>
+        <div class="spash-text alone">
+        <!-- FIXME: css styling is not working -->
+          <center><h1>Easy Clustering for any data</h1></center>
+        <div id="index_btns">
+          <center><button class="btn btn-warning" v-on:click="change_page('upload')"><i class="fa fa-upload"></i>Upload</button></center><br>
+          <center><button class="btn btn-success btn" v-on:click="show_news_feed()">View News Feed</button></center>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="section steps">
+    <h2>Clustering in 4 easy steps</h2>
+
+    <ul class="steps-list-icon mdl-list">
+      <li class="mdl-list__item">
+        <span class="mdl-list__item-primary-content">
+        <i class="material-icons">import_export</i>
+        
+        <div class="step_text">
+
+        Upload .csv file
+        </div>
+    </span>
+      </li>
+      <li class="mdl-list__item">
+        <span class="mdl-list__item-primary-content">
+        <i class="material-icons">settings</i>
+        <div class="step_text">
+
+        Choose parameters and settings for clusterings
+        </div>
+      </span>
+      </li>
+      <li class="mdl-list__item">
+        <span class="mdl-list__item-primary-content">
+        <i class="material-icons">equalizer</i>
+        <div class="step_text">
+        View clusters and insert new data
+        </div>
+      </span>
+      </li>  
+      <li class="mdl-list__item">
+        <span class="mdl-list__item-primary-content">
+        <i class="material-icons">library_add</i>
+        <div class="step_text">
+          Add to your personal collection
+        </div>
+      </span>
+      </li>
+    </ul>
+    </div>
+  </div>
+
+
+
+
+
   <!-- test1@gmail.com ,test -->
 <!--     <div v-if="!logged_in"><h3>Hi, Welcome to ClusterSolver. Please log in at the top right to start!</h3></div>
     <div v-if="logged_in">
  -->      
       <!-- FIXME: problem with logging in and using dropzone -->
       <div id="upload_div" v-if="page == 'upload'"> 
-        <h3>Welcome to ClusterSolver!. Please input a .csv file to perform clustering on! Please use commas to separate the values and not spaces!</h3><br>
+      Please upload a .csv file!
 
         <div id="uploader_div">
-          <form action="" class="dropzone dz-clickable" id="file-uploader">
+          <form action="/index" class="dropzone dz-clickable" id="file-uploader">
             <div class="dz-message">
               Drop files here to upload them, or click to select them.
             </div>
@@ -139,6 +206,7 @@ $(function() {
 <!--     </div>
  -->  </div>
 </div>
+</body>
 
 <script src="{{=URL('static', 'js/default_index.js')}}"></script>
 

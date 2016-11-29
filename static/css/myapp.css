@@ -563,3 +563,48 @@
   width: 75px;
   height: 30px;
 }
+
+.home {
+    background-color: red;
+    margin: -60px -20px -60px;
+}
+
+.splash-box {
+    min-height: 200px;
+    padding-top: 50px;
+}
+
+.section {
+    padding: 50px 50px;
+    border-bottom: 1px solid #bababa;
+    background-color: white;
+}
+
+.section .section-inner {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-family: "Bodoni MT";
+    font-size: 33px;
+    font-weight: 300;
+    color: #58595B;
+    padding: 0px;
+    text-transform: none;
+    margin: 10px 0 25px;
+}
+
+.steps {
+color: #333333;
+font-family: Gill Sans / Gill Sans MT, sans-serif;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.step_text {
+  padding: 20px;
+  position: relative;
+}
