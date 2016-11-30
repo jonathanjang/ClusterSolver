@@ -14,6 +14,7 @@
 <script>
   var check_login_url = "{{=URL('api', 'check_login')}}";
   var upload_url = "{{=URL('default', 'upload_form')}}";
+  var get_fields_url = "{{=URL('api', 'get_fields')}}";
   var preprocess_data_url = "{{=URL('api', 'preprocess_data')}}";
   var start_clustering_url = "{{=URL('api', 'start_clustering')}}";
   var add_to_profile_url = "{{=URL('api', 'add_to_profile')}}";
@@ -153,57 +154,91 @@ $(function() {
       <input type='checkbox' v-on:click="push_field(f)">
       ${f}
     </div>
-      
+    <button class="btn btn-success btn-sm" v-if="!more_settings_btn" v-on:click="more_settings_btn_clicked()">More Settings</button>
+
+    <!-- FIXME: put in two columns,  explain each setting on page-->
     <!-- Let the user choose between advanced and default settings -->
-    <p style="width: 300px;">
-      <br>
-      # of Clusters: ${ input_k }
-      <br>
-      <!--<input class="mdl-slider mdl-js-slider" type="range"
-      min="0" max="100" tabindex="0" v-model="input_k">
-      <div class="mdl-tooltip" data-mdl-for="slider3">${input_k}</div>-->
-      <input id="slider3" class="mdl-slider mdl-js-slider" type="range"  
-         min="0" max="100" tabindex="0" step="1" 
-         v-model="input_k">
+    <div class="more_settings" v-if="more_settings_btn">
+      <div class="row">
+        <br>
+        # of Clusters: ${ input_k }
+        <br>
+        <div class="col-md-6">
+          <p style="width: 300px;">
+            <input id="slider3" class="mdl-slider mdl-js-slider col-md-6" type="range"  
+             min="0" max="50" tabindex="0" step="1" 
+             v-model="input_k">
+          </p>
+        </div>
+        <div class="col-md-6">HELLO</div>
 <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
  -->      
+      </div>
   
-      <br>
-      Upper bound for X: ${ x_upper }
-      <br>
-      <input id="slider3" class="mdl-slider mdl-js-slider" type="range"  
-         min="0" max="100" tabindex="0" step="1" 
-         v-model="x_upper">
-<!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
- -->
-
+      <div class="row">    
+        <br>
+        Upper bound for X: ${ x_upper }
+        <br>
+        <div class="col-md-6">
+          <p style="width: 300px;">
+            <input id="slider3" class="mdl-slider mdl-js-slider"  type="range"  
+             min="0" max="100" tabindex="0" step="1" 
+             v-model="x_upper">
+          </p>
+        </div>
+        <div class="col-md-6">HELLO</div>
+      </div>
+  <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
+   -->
+    <div class="row">
       <br>
       Upper bound for Y: ${ y_upper }
       <br>
-      <input id="slider3" class="mdl-slider mdl-js-slider" type="range"  
-         min="0" max="100" tabindex="0" step="1" 
-         v-model="y_upper">
-<!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
- -->      
+      <div class="col-md-6">
+        <p style="width: 300px;">
+          <input id="slider3" class="mdl-slider mdl-js-slider col-md-6" type="range"  
+           min="0" max="100" tabindex="0" step="1" 
+           v-model="y_upper">
+        </p>
+      </div>
+      <div class="col-md-6">HELLO</div>
+    </div>
 
+  <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
+   -->      
+    <div class="row">
       <br>
-      Number of iterations: ${ num_iters }
+      # of iterations: ${ num_iters }
       <br>
-      <input id="slider3" class="mdl-slider mdl-js-slider" type="range"  
-         min="0" max="500" tabindex="0" step="1" 
-         v-model="num_iters">
-<!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
--->
+      <div class="col-md-6">
+        <p style="width: 300px;">
+          <input id="slider3" class="mdl-slider mdl-js-slider col-md-6" type="range"  
+           min="0" max="500" tabindex="0" step="1" 
+           v-model="num_iters">
+        </p>
+      </div>
+      <div class="col-md-6">HELLO</div>
+    </div>
 
+  <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
+  -->
+
+    <div class="row">
       <br>
       New Cluster Parameter: ${ new_clust_param }
       <br>
-      <input id="slider3" class="mdl-slider mdl-js-slider" type="range"  
-         min="0" max="2000" tabindex="0" step="1" 
-         v-model="new_clust_param">
-<!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
--->
-    </p>
+      <div class="col-md-6">
+      <p style="width: 300px;">
+
+        <input id="slider3" class="mdl-slider mdl-js-slider col-md-6" type="range"  
+           min="0" max="500" tabindex="0" step="1" 
+           v-model="new_clust_param">
+      </p>
+      </div>
+      <div class="col-md-6">HELLO</div>
+    </div>
+  <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
+  -->
 
 <!--       <textarea class="small_area" v-model="input_k" placeholder="# of Clusters" type="text"></textarea>
       <br>
@@ -232,10 +267,13 @@ $(function() {
       <!-- FIXME: Add a parameter to let the user chose how much they want to depend on the field they have chosen -->
 
 
-    <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
-    <div class="error_message" v-if="is_error">
-      ${ err_message }
+      <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
+      <div class="error_message" v-if="is_error">
+        ${ err_message }
+      </div>
     </div>
+
+
   </div>
 
       <div id="clustering_div" v-if="page=='clustering'">

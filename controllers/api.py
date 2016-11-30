@@ -134,7 +134,7 @@ def group_data(data_list, selected_field):
         grouped_data.append(group)
     return grouped_data
 
-def preprocess_data():
+def get_fields():
     path = db(db.import_data).select().last().file_path
 
     with open(path, 'rb') as csvfile:
@@ -148,9 +148,49 @@ def preprocess_data():
                 break
             i += 1
 
+    # num clusters should depend on how many differnt values there are
+    # upper bound should be different values * 3 for suggested
+    # num iters should default to 300
+    # new cluster parameter should depend on the length of the smallest input
+
+
     return response.json(dict(
         field_list=fields,
         f_index=[i for i in xrange(len(fields))]
+        ))
+
+def preprocess_data():
+    selected_field = request.vars['checked_fields[]']
+    path = db(db.import_data).select().last().file_path
+    field_vals = []
+
+    with open(path, 'rb') as csvfile:
+        reader = csv.reader(csvfile)
+        i = 0
+        field_i = -1
+        for row in reader:
+            if i == 0:
+                field_i = row.index(selected_field)
+            else:
+                field_vals.append(row[field_i])
+            i += 1
+
+    print field_vals
+    k_input=len(set(field_vals))
+    k_input_max=len(field_vals)
+
+    val_lengths = [len(f) for f in field_vals]
+    average_length = int(sum(val_lengths)/len(val_lengths))
+
+    return response.json(dict(
+        k_input=k_input,
+        k_input_max=k_input_max,
+        x_upper=k_input*3,
+        x_upper_max=k_input_max*3,
+        y_upper=k_input*3,
+        y_upper_max=k_input_max*3,
+        new_clust_param=30*average_length,
+        new_clust_param_max=50*average_length
         ))
 
 

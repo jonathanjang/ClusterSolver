@@ -61,21 +61,32 @@ var app = function(){
         return (status == 1)
     };
 
-    function preprocess_data(){
-        $.getJSON(preprocess_data_url, function(data){
+    function get_fields(){
+        $.getJSON(get_fields_url, function(data){
             self.vue.fields = data.field_list;
             self.vue.f_index = data.f_index;
         });
     }
 
+    self.more_settings_btn_clicked = function(){
+        $.getJSON(preprocess_data_url, { checked_fields: self.vue.checked_fields }, function(data){
+            self.vue.input_k = data.k_input;
+            self.vue.input_k_max = data.k_input_max;
+            self.vue.x_upper = data.x_upper;
+            self.vue.x_upper_max = data.x_upper_max;
+            self.vue.y_upper = data.y_upper;
+            self.vue.y_upper_max = data.y_upper_max;
+            self.vue.new_clust_param = data.new_clust_param;
+            self.vue.new_clust_param_max = data.new_clust_param_max;
+            self.vue.more_settings_btn = !self.vue.more_settings_btn;
+
+        });
+
+    }
+
     self.upload_button_clicked = function(){
         self.change_page('settings');
-        //FIXME: take this out when submitting/demo
-        self.vue.x_lower = "0";
-        self.vue.x_upper = "20";
-        self.vue.y_lower = "0";
-        self.vue.y_upper = "20";
-        preprocess_data();
+        get_fields();
     };
 
     self.push_field = function(f){
@@ -88,32 +99,8 @@ var app = function(){
     };
 
     self.continue_button_clicked = function(){
-        if (self.vue.checked_fields.length > 1){
-            self.vue.is_error = true
-            self.vue.err_message = "You have selected too many fields, please choose one";
-        }else if (isNaN(parseInt(self.vue.input_k))){
-            self.vue.is_error = true
-            self.vue.err_message = "Please put in a number for # of clusters";
-        }else if (isNaN(parseInt(self.vue.x_lower))){
-            self.vue.is_error = true
-            self.vue.err_message = "Please put in a number for the lower bound of X";
-        }else if (isNaN(parseInt(self.vue.x_upper))){
-            self.vue.is_error = true
-            self.vue.err_message = "Please put in a number for the upper bound of X";
-        }else if (isNaN(parseInt(self.vue.y_lower))){
-            self.vue.is_error = true
-            self.vue.err_message = "Please put in a number for the lower bound of Y";
-        }else if (isNaN(parseInt(self.vue.y_upper))){
-            self.vue.is_error = true
-            self.vue.err_message = "Please put in a number for the upper bound of Y";    
-        }else if (isNaN(parseInt(self.vue.num_iters))){
-            self.vue.is_error = true
-            self.vue.err_message = "Please put in a number for the # of iterations";    
-        }else{
-            self.vue.is_error = false;
-            self.start_clustering();
-            self.change_page('clustering');
-        }
+        self.start_clustering();
+        self.change_page('clustering');
     };
 
     self.start_clustering = function(){
@@ -423,17 +410,22 @@ var app = function(){
         data: {
             logged_in: false,
             home_upload_btn: false,
+            more_settings_btn: false,
             fields: [],
             page: 'upload',
             is_uploaded: false,
             checked_fields: [],
             input_k: "8",
-            x_lower: "",
+            input_k_max: "40",
+            x_lower: "0",
             x_upper: "30",
-            y_lower: "",
+            x_upper_max: "100",
+            y_lower: "0",
             y_upper: "30",
+            y_upper_max: "100",
             num_iters: "300",
-            new_clust_param: "750",
+            new_clust_param: "200",
+            new_clust_param_max: "1000",
             err_message: "",
             is_error: false,
             new_data: {},
@@ -459,7 +451,8 @@ var app = function(){
             insert_point: self.insert_point,
             add_to_profile: self.add_to_profile,
             change_page: self.change_page,
-            view_plot: self.view_plot
+            view_plot: self.view_plot,
+            more_settings_btn_clicked: self.more_settings_btn_clicked
         }
 
     });
