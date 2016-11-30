@@ -59,10 +59,23 @@ $(function() {
       <div class="section-inner">
         <center><img id="clustersolver-logo" src="/ClusterSolver/static/images/clustersolver_logo_small.png"></center>
         <div class="spash-text alone">
-        <!-- FIXME: css styling is not working -->
           <center><h1>Easy Clustering for any data</h1></center>
         <div id="index_btns">
-          <center><button class="btn btn-warning" v-on:click="change_page('upload')"><i class="fa fa-upload"></i>Upload</button></center><br>
+          <!-- FIXME: change buttons to MDL designs -->
+          <center><button v-if="!home_upload_btn" class="btn btn-warning" v-on:click="home_upload_btn_clicked()">Upload</button></center><br>
+          <center><button v-if="home_upload_btn" class="btn btn-warning" v-on:click="home_upload_btn_clicked()">Quit Upload</button></center><br>
+
+          
+          <div id="uploader_div" v-bind:class="{ 'hidden' : !home_upload_btn }">
+            <form action="" class="dropzone dz-clickable" id="file-uploader">
+            <div class="dz-message">
+              Drop a .csv file here for upload, or click here to select them.
+            </div>
+            </form>
+            <div v-if="logged_in">
+              <button class="btn btn-warning btn-sm" v-on:click="upload_button_clicked()">Import</button>
+            </div>
+          </div>
           <center><button class="btn btn-success btn" v-on:click="show_news_feed()">View News Feed</button></center>
         </div>
         </div>
@@ -70,48 +83,51 @@ $(function() {
     </div>
 
     <div class="section steps">
-    <h3>Clustering in 4 easy steps</h3>
-    <ul class="steps-list-icon mdl-list">
-      <li class="mdl-list__item">
-        <span class="mdl-list__item-primary-content">
-        <i class="material-icons">import_export</i>
-        <div class="step_text">
-        Upload .csv file
-        </div>
-    </span>
-      </li>
-      <li class="mdl-list__item">
-        <span class="mdl-list__item-primary-content">
-        <i class="material-icons">settings</i>
-        <div class="step_text">
-        Choose parameters and settings for clusterings
-        </div>
+      <h3>Clustering in 4 easy steps</h3>
+      <ul class="steps-list-icon mdl-list">
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+          <i class="material-icons">import_export</i>
+          <div class="step_text">
+          Upload .csv file
+          </div>
       </span>
-      </li>
-      <li class="mdl-list__item">
-        <span class="mdl-list__item-primary-content">
-        <i class="material-icons">equalizer</i>
-        <div class="step_text">
-        View clusters and insert new data
-        </div>
-      </span>
-      </li>  
-      <li class="mdl-list__item">
-        <span class="mdl-list__item-primary-content">
-        <i class="material-icons">library_add</i>
-        <div class="step_text">
-          Add to your personal collection
-        </div>
-      </span>
-      </li>
-    </ul>
+        </li>
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+          <i class="material-icons">settings</i>
+          <div class="step_text">
+          Choose parameters and settings for clusterings
+          </div>
+        </span>
+        </li>
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+          <i class="material-icons">equalizer</i>
+          <div class="step_text">
+          View clusters and insert new data
+          </div>
+        </span>
+        </li>  
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+          <i class="material-icons">library_add</i>
+          <div class="step_text">
+            Add to your personal collection
+          </div>
+        </span>
+        </li>
+      </ul>
+
     </div>
 
-    <!-- FIXME: IMPLEMENT SLIDERS FOR SETTINGS ESE -->
-    <input id="slider3" class="mdl-slider mdl-js-slider" type="range"  
+    <!-- FIXME: IMPLEMENT SLIDERS FOR SETTINGS -->
+<!--     <input id="slider3" class="mdl-slider mdl-js-slider" type="range"  
          min="0" max="100" tabindex="0" step="2" 
          v-model="slider_val">
-    <div>${ slider_val }</div>
+   <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
+    <div>${ slider_val }</div> -->
+  
   </div>
 
 
@@ -122,72 +138,96 @@ $(function() {
 <!--     <div v-if="!logged_in"><h3>Hi, Welcome to ClusterSolver. Please log in at the top right to start!</h3></div>
     <div v-if="logged_in">
  -->      
-      <!-- FIXME: problem with logging in and using dropzone -->
-      <div id="upload_div" v-if="page == 'upload'"> 
-        <i class="material-icons">import_export</i>
-        Please upload a .csv file!
-        <div id="uploader_div">
-          <form action="/" class="dropzone dz-clickable" id="file-uploader">
-            <div class="dz-message">
-              Drop files here to upload them, or click to select them.
-            </div>
-          </form>
-          <div v-if="logged_in">
-            <button class="btn btn-warning btn-sm" v-on:click="upload_button_clicked()">Upload</button>
-          </div>
+      <!-- FIXME: problem with dropzone when it's the 2nd page -->
+<!--       <div id="upload_div" v-if="page == 'upload'"> 
           <div v-if="!logged_in">
             <button class="btn btn-warning btn-sm disabled">Upload</button><br>
             Please log in to start!          
           </div>
         </div>      
+      </div> -->
+
+  <div id="settings_div" v-if="page == 'settings'"> 
+  Please chose <b>one</b> field that you want to focus on.
+    <div class="fields" v-for="f in fields">
+      <input type='checkbox' v-on:click="push_field(f)">
+      ${f}
+    </div>
+      
+    <!-- Let the user choose between advanced and default settings -->
+    <p style="width: 300px;">
+      <br>
+      # of Clusters: ${ input_k }
+      <br>
+      <!--<input class="mdl-slider mdl-js-slider" type="range"
+      min="0" max="100" tabindex="0" v-model="input_k">
+      <div class="mdl-tooltip" data-mdl-for="slider3">${input_k}</div>-->
+      <input id="slider3" class="mdl-slider mdl-js-slider" type="range"  
+         min="0" max="100" tabindex="0" step="1" 
+         v-model="input_k">
+<!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
+ -->      
+  
+      <br>
+      Upper bound for X: ${ x_upper }
+      <br>
+      <input id="slider3" class="mdl-slider mdl-js-slider" type="range"  
+         min="0" max="100" tabindex="0" step="1" 
+         v-model="x_upper">
+<!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
+ -->
+
+      <br>
+      Upper bound for Y: ${ y_upper }
+      <br>
+      <input id="slider3" class="mdl-slider mdl-js-slider" type="range"  
+         min="0" max="100" tabindex="0" step="1" 
+         v-model="y_upper">
+<!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
+ -->      
+
+      <br>
+      Number of iterations: ${ num_iters }
+      <br>
+      <input id="slider3" class="mdl-slider mdl-js-slider" type="range"  
+         min="0" max="500" tabindex="0" step="1" 
+         v-model="num_iters">
+<!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
+-->
+    </p>
+
+<!--       <textarea class="small_area" v-model="input_k" placeholder="# of Clusters" type="text"></textarea>
+      <br>
+      Please input an lower bound for X:
+      <br>
+      <textarea class="small_area" v-model="x_lower" placeholder="X Lower Bound" type="text"></textarea>
+      <br>
+      Please input an upper bound for X:
+      <br>
+      <textarea class="small_area" v-model="x_upper" placeholder="X Upper Bound" type="text"></textarea>
+      <br>
+      Please input an lower bound for Y:
+      <br>
+      <textarea class="small_area" v-model="y_lower" placeholder="Y Lower Bound" type="text"></textarea>
+      <br>
+      Please input an upper bound for Y:
+      <br>
+      <textarea class="small_area" v-model="y_upper" placeholder="Y Upper Bound" type="text"></textarea>
+      <br>
+      Please select the # of iterations you want to run:
+      <br>
+      <textarea class="small_area" v-model="num_iters" placeholder="# of Iterations" type="text"></textarea>
+      <br> -->
 
 
+      <!-- FIXME: Add a parameter to let the user chose how much they want to depend on the field they have chosen -->
 
 
-      </div>
-      <div id="settings_div" v-if="page == 'settings'"> 
-      Please chose <b>one</b> field that you want to focus on.
-        <div class="fields" v-for="f in fields">
-          <input type='checkbox' v-on:click="push_field(f)">
-          ${f}
-        </div>
-          
-        <!-- Let the user choose between advanced and default settings -->
-          <br>
-          Please input the number of clusters you would like:
-          <br>
-          <textarea class="small_area" v-model="input_k" placeholder="# of Clusters" type="text"></textarea>
-          <br>
-          Please input an lower bound for X:
-          <br>
-          <textarea class="small_area" v-model="x_lower" placeholder="X Lower Bound" type="text"></textarea>
-          <br>
-          Please input an upper bound for X:
-          <br>
-          <textarea class="small_area" v-model="x_upper" placeholder="X Upper Bound" type="text"></textarea>
-          <br>
-          Please input an lower bound for Y:
-          <br>
-          <textarea class="small_area" v-model="y_lower" placeholder="Y Lower Bound" type="text"></textarea>
-          <br>
-          Please input an upper bound for Y:
-          <br>
-          <textarea class="small_area" v-model="y_upper" placeholder="Y Upper Bound" type="text"></textarea>
-          <br>
-          Please select the # of iterations you want to run:
-          <br>
-          <textarea class="small_area" v-model="num_iters" placeholder="# of Iterations" type="text"></textarea>
-          <br>
-
-
-          <!-- FIXME: Add a parameter to let the user chose how much they want to depend on the field they have chosen -->
-
-
-        <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
-        <div class="error_message" v-if="is_error">
-          ${ err_message }
-        </div>
-      </div>
+    <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
+    <div class="error_message" v-if="is_error">
+      ${ err_message }
+    </div>
+  </div>
 
       <div id="clustering_div" v-if="page=='clustering'">
         <div id="new_data">
@@ -217,3 +257,6 @@ $(function() {
 
 <script src="{{=URL('static', 'js/default_index.js')}}"></script>
 
+<!-- FIXME:
+      1. change background color of div on homepage
+      2. back btns for each page -->

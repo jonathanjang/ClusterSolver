@@ -12,6 +12,10 @@ var app = function(){
         }
     };
 
+    self.home_upload_btn_clicked = function(){
+        self.vue.home_upload_btn = !self.vue.home_upload_btn;
+    };
+
 
     self.start = function(){
         self.vue.page = 'home';
@@ -418,15 +422,16 @@ var app = function(){
         unsafeDelimiters: ['!{', '}'],
         data: {
             logged_in: false,
+            home_upload_btn: false,
             fields: [],
             page: 'upload',
             is_uploaded: false,
             checked_fields: [],
             input_k: "8",
             x_lower: "",
-            x_upper: "",
+            x_upper: "30",
             y_lower: "",
-            y_upper: "",
+            y_upper: "30",
             num_iters: "300",
             err_message: "",
             is_error: false,
@@ -445,6 +450,7 @@ var app = function(){
             slider_val: ""
         },
         methods: {
+            home_upload_btn_clicked: self.home_upload_btn_clicked,
             get_upload_status: self.get_upload_status,
             upload_button_clicked: self.upload_button_clicked,
             push_field: self.push_field,
