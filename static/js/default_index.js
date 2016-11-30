@@ -25,6 +25,16 @@ var app = function(){
         self.check_logged_in();
     }
 
+    self.back_to_home = function(){
+        $("#chart_div_1").hide();
+        $("#chart_div_2").hide();
+        $("#chart_div_3").hide();
+        $("#chart_div_4").hide();
+        $("#chart_div_5").hide();
+        console.log("inside back_to_home");
+        self.change_page('home');
+    };
+
     self.check_logged_in = function(){
         $.getJSON(check_login_url, function(data){
             self.vue.logged_in = data.logged_in;
@@ -49,7 +59,7 @@ var app = function(){
 
             self.vue.feed_chart_plots = parse_server_data(data.chart_data);
             self.vue.feed_chart_options = parse_server_data(data.chart_options);
-            self.set_multiple_gcharts(self.vue.feed_chart_plots, self.vue.feed_chart_options);
+            self.dispatch_multiple_gcharts(self.vue.feed_chart_plots, self.vue.feed_chart_options);
 
             self.change_page('feed');
         });
@@ -137,19 +147,23 @@ var app = function(){
               });
     };
 
-    self.set_multiple_gcharts = function(plots, options){
-        // Initialize a graph for google chart.
+    self.dispatch_multiple_gcharts = function(plots, options){
         chart_divs = ['chart_div_1', 'chart_div_2', 'chart_div_3', 'chart_div_4', 'chart_div_5'];
-
-        console.log("hello");
-
-        for (var i = 0; i < chart_divs.length; i++){
-            var container = document.getElementById(chart_divs[i]);
-            container.style.display = 'block';
-            google.charts.load('current', {'packages':['corechart']});
-            google.charts.setOnLoadCallback(drawChart(plots[i], options[i], chart_divs[i]));
-
+        for(var i = 0; i < chart_divs.length; i++){
+            self.set_gchart_with_div(plots[i], options[i], chart_divs[i]);
         }
+    }
+
+// FIXME: does not work
+    self.set_gchart_with_div = function(plot, options, chart_div){
+        // Initialize a graph for google chart.
+
+        console.log(chart_div)
+        var container = document.getElementById(chart_div);
+        console.log(container);
+        container.style.display = 'block';
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart(plot, options, chart_div));
         // var container = document.getElementById('chart_div_1');
         // container.style.display = 'block';
 
@@ -184,7 +198,7 @@ var app = function(){
                 };
             }else{
                 options = passed_in_options;
-                console.log(options['title']);
+                console.log(options['hAxis']['maxValue']);
             }
 
             var chart = new google.visualization.ScatterChart(document.getElementById(chart_div));
@@ -202,9 +216,9 @@ var app = function(){
         }
 
         // Make the chart object visible
-        for(var i = 0; i < chart_divs.length; i++){
-            $(chart_divs[i]).show();
-        }
+        chart_div = '#' + chart_div;
+        $(chart_div).show();
+
     };
 
     self.set_gchart = function(plot, options){
@@ -540,6 +554,7 @@ var app = function(){
             get_upload_status: self.get_upload_status,
             upload_button_clicked: self.upload_button_clicked,
             push_field: self.push_field,
+            back_to_home: self.back_to_home,
             continue_button_clicked: self.continue_button_clicked,
             insert_point: self.insert_point,
             add_to_feed: self.add_to_feed,

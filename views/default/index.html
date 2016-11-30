@@ -132,7 +132,7 @@ $(function() {
   
 
   <div id="settings_div" v-if="page == 'settings'"> 
-  <button class="btn btn-warning btn-sm" v-on:click="change_page('home')">Back to Home</button><br><br>
+  <button class="btn btn-warning btn-sm" v-on:click="back_to_home()">Back to Home</button><br><br>
 
   Please chose <b>one</b> field that you want to focus on.
     <div class="row">
@@ -263,7 +263,7 @@ $(function() {
       </div>
 
       <div id="feed_div" v-if="page=='feed'">
-        <button class="btn btn-success btn-sm" v-on:click="change_page('home')">Back to Home</button><br>
+        <button class="btn btn-success btn-sm" v-on:click="back_to_home()">Back to Home</button><br>
 
       </div>
 
@@ -275,4 +275,5 @@ $(function() {
 <script src="{{=URL('static', 'js/default_index.js')}}"></script>
 
 <!-- FIXME:
-      1. back btns for each page -->
+      1. back btns for each page - clustering page home, news feed home
+      2. try improving the news feed- show publisher and be able to edit/insert -->
