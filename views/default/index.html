@@ -150,12 +150,16 @@ $(function() {
 
   <div id="settings_div" v-if="page == 'settings'"> 
   Please chose <b>one</b> field that you want to focus on.
-    <div class="fields" v-for="f in fields">
-      <input type='checkbox' v-on:click="push_field(f)">
-      ${f}
+    <div class="row">
+      <div class="col-md-4">
+        <div class="fields " v-for="f in fields">
+          <input type='checkbox' v-on:click="push_field(f)">
+          ${f}
+        </div>
+        <button class="btn btn-success btn-sm" v-if="!more_settings_btn" v-on:click="more_settings_btn_clicked()">More Settings</button>
+      </div>
+      <div class="col-md-4 description">Please choose the field that you would like to focus on for this graph. The field that you choose will help the algorithm figure resolve the most important clusters.</div>
     </div>
-    <button class="btn btn-success btn-sm" v-if="!more_settings_btn" v-on:click="more_settings_btn_clicked()">More Settings</button>
-
     <!-- FIXME: put in two columns,  explain each setting on page-->
     <!-- Let the user choose between advanced and default settings -->
     <div class="more_settings" v-if="more_settings_btn">
@@ -163,14 +167,14 @@ $(function() {
         <br>
         # of Clusters: ${ input_k }
         <br>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <p style="width: 300px;">
             <input id="slider3" class="mdl-slider mdl-js-slider col-md-6" type="range"  
              min="0" max="50" tabindex="0" step="1" 
              v-model="input_k">
           </p>
         </div>
-        <div class="col-md-6">HELLO</div>
+        <div class="col-md-4 description">This parameter is the number of clusters you want to see in the output graph.</div>
 <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
  -->      
       </div>
@@ -179,14 +183,14 @@ $(function() {
         <br>
         Upper bound for X: ${ x_upper }
         <br>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <p style="width: 300px;">
             <input id="slider3" class="mdl-slider mdl-js-slider"  type="range"  
              min="0" max="100" tabindex="0" step="1" 
              v-model="x_upper">
           </p>
         </div>
-        <div class="col-md-6">HELLO</div>
+        <div class="col-md-4 description">This parameter is upper limit of the X-axis in the output graph.</div>
       </div>
   <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
    -->
@@ -194,14 +198,14 @@ $(function() {
       <br>
       Upper bound for Y: ${ y_upper }
       <br>
-      <div class="col-md-6">
+      <div class="col-md-4">
         <p style="width: 300px;">
           <input id="slider3" class="mdl-slider mdl-js-slider col-md-6" type="range"  
            min="0" max="100" tabindex="0" step="1" 
            v-model="y_upper">
         </p>
       </div>
-      <div class="col-md-6">HELLO</div>
+      <div class="col-md-4 description">This parameter is upper limit of the Y-axis in the output graph.</div>
     </div>
 
   <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
@@ -210,14 +214,14 @@ $(function() {
       <br>
       # of iterations: ${ num_iters }
       <br>
-      <div class="col-md-6">
+      <div class="col-md-4">
         <p style="width: 300px;">
           <input id="slider3" class="mdl-slider mdl-js-slider col-md-6" type="range"  
            min="0" max="500" tabindex="0" step="1" 
            v-model="num_iters">
         </p>
       </div>
-      <div class="col-md-6">HELLO</div>
+      <div class="col-md-4 description">This parameter is maximum number of iterations you would like the clustering algorithm to run. Think of it as the amount of time you want to give the algorithm to run,</div>
     </div>
 
   <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
@@ -227,7 +231,7 @@ $(function() {
       <br>
       New Cluster Parameter: ${ new_clust_param }
       <br>
-      <div class="col-md-6">
+      <div class="col-md-4">
       <p style="width: 300px;">
 
         <input id="slider3" class="mdl-slider mdl-js-slider col-md-6" type="range"  
@@ -235,7 +239,7 @@ $(function() {
            v-model="new_clust_param">
       </p>
       </div>
-      <div class="col-md-6">HELLO</div>
+      <div class="col-md-4 description">This parameter is the offset you want to tolerate when inserting new points into the graph. If the difference between the inserted point and the already defined points is too different, then a new cluster will be started.</div>
     </div>
   <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
   -->
