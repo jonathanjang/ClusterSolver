@@ -25,13 +25,13 @@ def get_graphs():
         # print r.chart_options
         # print r.chart_plot
         chart_options.append(r.chart_options)
-        chart_data.append(r.chart_plot)
+        chart_data.append([r.chart_plot])
 
-    # print chart_data
-    # print chart_options
+    print json.dumps(chart_data)
+    print json.dumps(chart_options)
 
-    return dict(chart_plot_list=chart_data,
-                chart_options_list=chart_options)
+    return response.json(dict(chart_data=chart_data,
+                chart_options=chart_options))
 
 
 # not being used as of this moment
@@ -175,7 +175,6 @@ def preprocess_data():
                 field_vals.append(row[field_i])
             i += 1
 
-    print field_vals
     k_input=len(set(field_vals))
     k_input_max=len(field_vals)
 
@@ -183,18 +182,18 @@ def preprocess_data():
     average_length = int(sum(val_lengths)/len(val_lengths))
 
     return response.json(dict(
-        k_input=k_input,
-        k_input_max=k_input_max,
-        x_upper=k_input*3,
-        x_upper_max=k_input_max*3,
-        y_upper=k_input*3,
-        y_upper_max=k_input_max*3,
-        new_clust_param=30*average_length,
-        new_clust_param_max=50*average_length
+        k_input=str(k_input),
+        k_input_max=str(k_input_max),
+        x_upper=str(k_input*3),
+        x_upper_max=str(k_input_max*3),
+        y_upper=str(k_input*3),
+        y_upper_max=str(k_input_max*3),
+        new_clust_param=str(30*average_length),
+        new_clust_param_max=str(50*average_length)
         ))
 
 
-def add_to_profile():
+def add_to_feed():
     db.saved_graphs.insert(user_id=auth.user_id,
                            chart_plot=request.vars.chart_plot,
                            chart_options=request.vars.chart_options)

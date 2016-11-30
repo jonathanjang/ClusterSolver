@@ -23,7 +23,6 @@ var app = function(){
     self.start = function(){
         self.vue.page = 'home';
         self.check_logged_in();
-        self.get_graphs();
     }
 
     self.check_logged_in = function(){
@@ -44,13 +43,24 @@ var app = function(){
         return get_graphs_url + '?' + $.param(pp); 
     }
 
-    self.get_graphs = function(){
+    self.create_news_feed = function(){
         console.log("hello");
         $.getJSON(create_graphs_url(0,5), function(data){
-            console.log(data);
-            self.vue.news_feed_chart_plots = data.chart_plot_list;
-            self.vue.news_feed_chart_options = data.chart_options_list;
-        })
+
+            self.vue.feed_chart_plots = parse_server_data(data.chart_data);
+            self.vue.feed_chart_options = parse_server_data(data.chart_options);
+            self.set_multiple_gcharts(self.vue.feed_chart_plots, self.vue.feed_chart_options);
+
+            self.change_page('feed');
+        });
+    }
+
+    function parse_server_data(data){
+        l = [];
+        for(var i = 0; i < data.length; i++){
+            l.push(JSON.parse(data[i]));
+        }
+        return l;
     }
 
     // FIXME: when the upload btn is pressed, page is changed even if 
@@ -127,6 +137,76 @@ var app = function(){
               });
     };
 
+    self.set_multiple_gcharts = function(plots, options){
+        // Initialize a graph for google chart.
+        chart_divs = ['chart_div_1', 'chart_div_2', 'chart_div_3', 'chart_div_4', 'chart_div_5'];
+
+        console.log("hello");
+
+        for (var i = 0; i < chart_divs.length; i++){
+            var container = document.getElementById(chart_divs[i]);
+            container.style.display = 'block';
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawChart(plots[i], options[i], chart_divs[i]));
+
+        }
+        // var container = document.getElementById('chart_div_1');
+        // container.style.display = 'block';
+
+        // google.charts.load('current', {'packages':['corechart']});
+        // google.charts.setOnLoadCallback(drawChart(plot, options));
+        function drawChart(passed_in_plot, passed_in_options, chart_div) {
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'X');
+            data.addColumn('number', 'Y');
+            data.addColumn({type: 'string', role: 'tooltip'});
+            data.addColumn( {type: 'string', role: 'style'} );    
+
+            var plot = [];
+            if (passed_in_plot.length == 0){
+                plot = parse_points();
+            }else{
+                plot = passed_in_plot;
+                console.log(plot);
+            }
+
+            data.addRows(plot)
+
+            var options = {};
+            if (Object.keys(passed_in_options).length == 0){
+                options = {
+                    title: 'Results of ' + self.vue.file_name ,
+                    hAxis: {title: 'X', minValue: parseInt(self.vue.x_lower), maxValue: parseInt(self.vue.x_upper)},
+                    vAxis: {title: 'Y', minValue: parseInt(self.vue.y_lower), maxValue: parseInt(self.vue.y_upper)},
+                    legend: 'none',
+                    tooltip: {isHTML: true}
+                };
+            }else{
+                options = passed_in_options;
+                console.log(options['title']);
+            }
+
+            var chart = new google.visualization.ScatterChart(document.getElementById(chart_div));
+            
+            google.visualization.events.addListener(chart, 'ready', function () {
+                container.style.display = 'none';
+            });
+
+            chart.draw(data, options);
+
+            console.log(chart_div);
+            // $(chart_div).show();
+            // self.vue.chart_plot = plot;
+            // self.vue.chart_options = options;
+        }
+
+        // Make the chart object visible
+        for(var i = 0; i < chart_divs.length; i++){
+            $(chart_divs[i]).show();
+        }
+    };
+
     self.set_gchart = function(plot, options){
         // Initialize a graph for google chart.
         var container = document.getElementById('chart_div_1');
@@ -149,6 +229,8 @@ var app = function(){
                 plot = passed_in_plot;
             }
 
+            console.log(plot);
+
             data.addRows(plot)
 
             var options = {};
@@ -163,6 +245,8 @@ var app = function(){
             }else{
                 options = passed_in_options;
             }
+
+            console.log(options);
 
             var chart = new google.visualization.ScatterChart(document.getElementById('chart_div_1'));
             
@@ -256,12 +340,16 @@ var app = function(){
     //     $('#chart_div').show();
     // };
 
-    self.add_to_profile = function(){
-        $.post(add_to_profile_url, {
+    self.add_to_feed = function(){
+        $.post(add_to_feed_url, {
             chart_plot: JSON.stringify(self.vue.chart_plot),
-            chart_options: JSON.stringify(self.vue.chart_options)
+            chart_options: JSON.stringify(self.vue.chart_options),
+            x_upper: self.vue.x_upper,
+            y_upper: self.vue.y_upper,
+            file_name: self.vue.file_name,
+
         });
-        self.change_page('profile');
+        self.change_page('feed');
         $('#chart_div_1').hide();
 
     };
@@ -441,8 +529,8 @@ var app = function(){
             file_name: "",
             chart_plot: [],
             chart_options: {},
-            news_feed_chart_plots: [],
-            news_feed_chart_options: {},
+            feed_chart_plots: [],
+            feed_chart_options: [],
             colors: [],
             slider_val: ""
         },
@@ -454,7 +542,8 @@ var app = function(){
             push_field: self.push_field,
             continue_button_clicked: self.continue_button_clicked,
             insert_point: self.insert_point,
-            add_to_profile: self.add_to_profile,
+            add_to_feed: self.add_to_feed,
+            create_news_feed: self.create_news_feed,
             change_page: self.change_page,
             view_plot: self.view_plot,
             more_settings_btn_clicked: self.more_settings_btn_clicked

@@ -17,7 +17,7 @@
   var get_fields_url = "{{=URL('api', 'get_fields')}}";
   var preprocess_data_url = "{{=URL('api', 'preprocess_data')}}";
   var start_clustering_url = "{{=URL('api', 'start_clustering')}}";
-  var add_to_profile_url = "{{=URL('api', 'add_to_profile')}}";
+  var add_to_feed_url = "{{=URL('api', 'add_to_feed')}}";
   var get_graphs_url = "{{=URL('api', 'get_graphs')}}";
 </script>
 
@@ -46,11 +46,11 @@ $(function() {
 
 <div class="main_content">
 
-  <div id="chart_div_1" style="width: 900px; height: 500px;"></div>
-  <div id="chart_div_2" style="width: 900px; height: 500px;"></div>
-  <div id="chart_div_3" style="width: 900px; height: 500px;"></div>
-  <div id="chart_div_4" style="width: 900px; height: 500px;"></div>
-  <div id="chart_div_5" style="width: 900px; height: 500px;"></div>
+  <div id="chart_div_1" style="width: 1150px; height: 600px;"></div>
+  <div id="chart_div_2" style="width: 1150px; height: 600px;"></div>
+  <div id="chart_div_3" style="width: 1150px; height: 600px;"></div>
+  <div id="chart_div_4" style="width: 1150px; height: 600px;"></div>
+  <div id="chart_div_5" style="width: 1150px; height: 600px;"></div>
 
 <div id="vue-div">
 
@@ -77,7 +77,7 @@ $(function() {
               <button class="btn btn-warning btn-sm" v-on:click="upload_button_clicked()">Import</button>
             </div>
           </div>
-          <center><button class="btn btn-success btn" v-on:click="show_news_feed()">View News Feed</button></center>
+          <center><button class="btn btn-success btn" v-on:click="create_news_feed()">View News Feed</button></center>
         </div>
         </div>
       </div>
@@ -114,7 +114,7 @@ $(function() {
           <span class="mdl-list__item-primary-content">
           <i class="material-icons">library_add</i>
           <div class="step_text">
-            Add to your personal collection
+            Add to the news feed.
           </div>
         </span>
         </li>
@@ -122,7 +122,6 @@ $(function() {
 
     </div>
 
-    <!-- FIXME: IMPLEMENT SLIDERS FOR SETTINGS -->
 <!--     <input id="slider3" class="mdl-slider mdl-js-slider" type="range"  
          min="0" max="100" tabindex="0" step="2" 
          v-model="slider_val">
@@ -130,25 +129,11 @@ $(function() {
     <div>${ slider_val }</div> -->
   
   </div>
-
-
-
-
-
-  <!-- test1@gmail.com ,test -->
-<!--     <div v-if="!logged_in"><h3>Hi, Welcome to ClusterSolver. Please log in at the top right to start!</h3></div>
-    <div v-if="logged_in">
- -->      
-      <!-- FIXME: problem with dropzone when it's the 2nd page -->
-<!--       <div id="upload_div" v-if="page == 'upload'"> 
-          <div v-if="!logged_in">
-            <button class="btn btn-warning btn-sm disabled">Upload</button><br>
-            Please log in to start!          
-          </div>
-        </div>      
-      </div> -->
+  
 
   <div id="settings_div" v-if="page == 'settings'"> 
+  <button class="btn btn-warning btn-sm" v-on:click="change_page('home')">Back to Home</button><br><br>
+
   Please chose <b>one</b> field that you want to focus on.
     <div class="row">
       <div class="col-md-4">
@@ -156,11 +141,12 @@ $(function() {
           <input type='checkbox' v-on:click="push_field(f)">
           ${f}
         </div>
+        <br>
         <button class="btn btn-success btn-sm" v-if="!more_settings_btn" v-on:click="more_settings_btn_clicked()">More Settings</button>
       </div>
       <div class="col-md-4 description">Please choose the field that you would like to focus on for this graph. The field that you choose will help the algorithm figure resolve the most important clusters.</div>
     </div>
-    <!-- FIXME: put in two columns,  explain each setting on page-->
+
     <!-- Let the user choose between advanced and default settings -->
     <div class="more_settings" v-if="more_settings_btn">
       <div class="row">
@@ -243,35 +229,13 @@ $(function() {
     </div>
   <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
   -->
-
-<!--       <textarea class="small_area" v-model="input_k" placeholder="# of Clusters" type="text"></textarea>
-      <br>
-      Please input an lower bound for X:
-      <br>
-      <textarea class="small_area" v-model="x_lower" placeholder="X Lower Bound" type="text"></textarea>
-      <br>
-      Please input an upper bound for X:
-      <br>
-      <textarea class="small_area" v-model="x_upper" placeholder="X Upper Bound" type="text"></textarea>
-      <br>
-      Please input an lower bound for Y:
-      <br>
-      <textarea class="small_area" v-model="y_lower" placeholder="Y Lower Bound" type="text"></textarea>
-      <br>
-      Please input an upper bound for Y:
-      <br>
-      <textarea class="small_area" v-model="y_upper" placeholder="Y Upper Bound" type="text"></textarea>
-      <br>
-      Please select the # of iterations you want to run:
-      <br>
-      <textarea class="small_area" v-model="num_iters" placeholder="# of Iterations" type="text"></textarea>
-      <br> -->
-
-
       <!-- FIXME: Add a parameter to let the user chose how much they want to depend on the field they have chosen -->
 
 
       <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
+      <br>
+
+      <!-- FIXME: this is obsolete :/ -->
       <div class="error_message" v-if="is_error">
         ${ err_message }
       </div>
@@ -295,25 +259,20 @@ $(function() {
           <button class="btn btn-warning btn-sm" v-on:click="insert_point()">Insert</button><br>
         </div>
           <button class="btn btn-warning btn-sm" v-on:click="insert_more_btn_clicked()" v-if="!insert_more_btn">Insert and Classify Point</button><br>
-          <br><button class="btn btn-success btn-sm" v-on:click="add_to_profile()">Add to Feed</button><br>
+          <br><button class="btn btn-success btn-sm" v-on:click="add_to_feed()">Add to Feed</button><br>
       </div>
 
-      <div id="profile_div" v-if="page=='profile'">
-        Here is a list of your most recent plots:<br>
-        Select <b>one</b> plot you would like to view again:<br>
-        <button class="btn btn-warning btn-sm" v-on:click="view_plot()">View Plot</button><br>
-        <button class="btn btn-success btn-sm" v-on:click="change_page('upload')">Back to Upload</button><br>
+      <div id="feed_div" v-if="page=='feed'">
+        <button class="btn btn-success btn-sm" v-on:click="change_page('home')">Back to Home</button><br>
 
       </div>
 
-    <!-- VVV comment out this div -->
-<!--     </div>
- -->  </div>
+
+  </div>
 </div>
 </body>
 
 <script src="{{=URL('static', 'js/default_index.js')}}"></script>
 
 <!-- FIXME:
-      1. change background color of div on homepage
-      2. back btns for each page -->
+      1. back btns for each page -->
