@@ -16,6 +16,9 @@ var app = function(){
         self.vue.home_upload_btn = !self.vue.home_upload_btn;
     };
 
+    self.insert_more_btn_clicked = function(){
+        self.vue.insert_more_btn = !self.vue.insert_more_btn;
+    }
 
     self.start = function(){
         self.vue.page = 'home';
@@ -411,6 +414,7 @@ var app = function(){
             logged_in: false,
             home_upload_btn: false,
             more_settings_btn: false,
+            insert_more_btn: false,
             fields: [],
             page: 'upload',
             is_uploaded: false,
@@ -444,6 +448,7 @@ var app = function(){
         },
         methods: {
             home_upload_btn_clicked: self.home_upload_btn_clicked,
+            insert_more_btn_clicked: self.insert_more_btn_clicked,
             get_upload_status: self.get_upload_status,
             upload_button_clicked: self.upload_button_clicked,
             push_field: self.push_field,

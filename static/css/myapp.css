@@ -596,6 +596,7 @@ h1 {
 
 .steps {
   color: #333333;
+  background-color: #e6e6e6;
   font-family: Gill Sans / Gill Sans MT, sans-serif;
 }
 
@@ -618,4 +619,5 @@ ul {
   -moz-border-radius: 16px;
   -webkit-border-radius: 16px;
   border-radius: 16px;
+  font-weight: bold;
 }

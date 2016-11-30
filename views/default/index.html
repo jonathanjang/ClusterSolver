@@ -60,7 +60,7 @@ $(function() {
       <div class="section-inner">
         <center><img id="clustersolver-logo" src="/ClusterSolver/static/images/clustersolver_logo_small.png"></center>
         <div class="spash-text alone">
-          <center><h1>Easy Clustering for any data</h1></center>
+          <center><h2>Easy Clustering for any data</h2></center>
         <div id="index_btns">
           <!-- FIXME: change buttons to MDL designs -->
           <center><button v-if="!home_upload_btn" class="btn btn-warning" v-on:click="home_upload_btn_clicked()">Upload</button></center><br>
@@ -281,15 +281,21 @@ $(function() {
   </div>
 
       <div id="clustering_div" v-if="page=='clustering'">
-        <div id="new_data">
-          Feel free to add more points to predict on: <br>
+        <div id="new_data" v-if="insert_more_btn">
+          <h5>Insert more points to be classified</h5><br>
           <div v-for="i in f_index">
             ${fields[i]}: <br>
-            <textarea class="input_area" v-model="new_data[fields[i]]" type="text"></textarea> 
-          </div>
-          <button class="btn btn-warning btn-sm" v-on:click="insert_point()">Insert and Classify Point</button><br>
-          <button class="btn btn-success btn-sm" v-on:click="add_to_profile()">Add to Profile</button><br>
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="fields[i]" v-model="new_data[fields[i]]">
+                <!-- FIXME: would really like to get this label working VVV -->
+<!--                 <label class="mdl-textfield__label" for="fields[i]">${fields[i]}</label>
+ -->              </div>
+<!--             <textarea class="input_area" v-model="new_data[fields[i]]" type="text"></textarea> 
+ -->          </div>
+          <button class="btn btn-warning btn-sm" v-on:click="insert_point()">Insert</button><br>
         </div>
+          <button class="btn btn-warning btn-sm" v-on:click="insert_more_btn_clicked()" v-if="!insert_more_btn">Insert and Classify Point</button><br>
+          <br><button class="btn btn-success btn-sm" v-on:click="add_to_profile()">Add to Feed</button><br>
       </div>
 
       <div id="profile_div" v-if="page=='profile'">
