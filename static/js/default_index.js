@@ -61,8 +61,8 @@ var app = function(){
         return (status == 1)
     };
 
-    self.get_fields = function(){
-        $.getJSON(get_fields_url, function(data){
+    function preprocess_data(){
+        $.getJSON(preprocess_data_url, function(data){
             self.vue.fields = data.field_list;
             self.vue.f_index = data.f_index;
         });
@@ -75,7 +75,7 @@ var app = function(){
         self.vue.x_upper = "20";
         self.vue.y_lower = "0";
         self.vue.y_upper = "20";
-        self.get_fields();
+        preprocess_data();
     };
 
     self.push_field = function(f){
@@ -433,6 +433,7 @@ var app = function(){
             y_lower: "",
             y_upper: "30",
             num_iters: "300",
+            new_clust_param: "750",
             err_message: "",
             is_error: false,
             new_data: {},

@@ -134,7 +134,7 @@ def group_data(data_list, selected_field):
         grouped_data.append(group)
     return grouped_data
 
-def get_fields():
+def preprocess_data():
     path = db(db.import_data).select().last().file_path
 
     with open(path, 'rb') as csvfile:

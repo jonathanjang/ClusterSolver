@@ -14,7 +14,7 @@
 <script>
   var check_login_url = "{{=URL('api', 'check_login')}}";
   var upload_url = "{{=URL('default', 'upload_form')}}";
-  var get_fields_url = "{{=URL('api', 'get_fields')}}";
+  var preprocess_data_url = "{{=URL('api', 'preprocess_data')}}";
   var start_clustering_url = "{{=URL('api', 'start_clustering')}}";
   var add_to_profile_url = "{{=URL('api', 'add_to_profile')}}";
   var get_graphs_url = "{{=URL('api', 'get_graphs')}}";
@@ -192,6 +192,15 @@ $(function() {
       <input id="slider3" class="mdl-slider mdl-js-slider" type="range"  
          min="0" max="500" tabindex="0" step="1" 
          v-model="num_iters">
+<!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
+-->
+
+      <br>
+      New Cluster Parameter: ${ new_clust_param }
+      <br>
+      <input id="slider3" class="mdl-slider mdl-js-slider" type="range"  
+         min="0" max="2000" tabindex="0" step="1" 
+         v-model="new_clust_param">
 <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
 -->
     </p>
