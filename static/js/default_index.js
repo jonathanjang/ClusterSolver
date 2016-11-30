@@ -31,8 +31,8 @@ var app = function(){
         $("#chart_div_3").hide();
         $("#chart_div_4").hide();
         $("#chart_div_5").hide();
-        console.log("inside back_to_home");
         self.change_page('home');
+        self.vue.home_upload_btn = !self.vue.home_upload_btn;
     };
 
     self.check_logged_in = function(){
@@ -54,13 +54,10 @@ var app = function(){
     }
 
     self.create_news_feed = function(){
-        console.log("hello");
         $.getJSON(create_graphs_url(0,5), function(data){
-
             self.vue.feed_chart_plots = parse_server_data(data.chart_data);
             self.vue.feed_chart_options = parse_server_data(data.chart_options);
             self.dispatch_multiple_gcharts(self.vue.feed_chart_plots, self.vue.feed_chart_options);
-
             self.change_page('feed');
         });
     }
@@ -154,13 +151,10 @@ var app = function(){
         }
     }
 
-// FIXME: does not work
     self.set_gchart_with_div = function(plot, options, chart_div){
         // Initialize a graph for google chart.
 
-        console.log(chart_div)
         var container = document.getElementById(chart_div);
-        console.log(container);
         container.style.display = 'block';
         google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(drawChart(plot, options, chart_div));
@@ -182,7 +176,6 @@ var app = function(){
                 plot = parse_points();
             }else{
                 plot = passed_in_plot;
-                console.log(plot);
             }
 
             data.addRows(plot)
@@ -198,7 +191,6 @@ var app = function(){
                 };
             }else{
                 options = passed_in_options;
-                console.log(options['hAxis']['maxValue']);
             }
 
             var chart = new google.visualization.ScatterChart(document.getElementById(chart_div));
@@ -208,11 +200,6 @@ var app = function(){
             });
 
             chart.draw(data, options);
-
-            console.log(chart_div);
-            // $(chart_div).show();
-            // self.vue.chart_plot = plot;
-            // self.vue.chart_options = options;
         }
 
         // Make the chart object visible
@@ -243,8 +230,6 @@ var app = function(){
                 plot = passed_in_plot;
             }
 
-            console.log(plot);
-
             data.addRows(plot)
 
             var options = {};
@@ -259,8 +244,6 @@ var app = function(){
             }else{
                 options = passed_in_options;
             }
-
-            console.log(options);
 
             var chart = new google.visualization.ScatterChart(document.getElementById('chart_div_1'));
             
@@ -368,9 +351,6 @@ var app = function(){
 
     };
 
-    self.view_plot = function(){
-        console.log("inside view_plot");
-    };
 
 
     //Helper functions:
@@ -560,7 +540,6 @@ var app = function(){
             add_to_feed: self.add_to_feed,
             create_news_feed: self.create_news_feed,
             change_page: self.change_page,
-            view_plot: self.view_plot,
             more_settings_btn_clicked: self.more_settings_btn_clicked
         }
 
