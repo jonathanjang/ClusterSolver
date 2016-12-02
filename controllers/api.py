@@ -27,8 +27,8 @@ def get_graphs():
         chart_options.append(r.chart_options)
         chart_data.append([r.chart_plot])
 
-    print json.dumps(chart_data)
-    print json.dumps(chart_options)
+    # print json.dumps(chart_data)
+    # print json.dumps(chart_options)
 
     return response.json(dict(chart_data=chart_data,
                 chart_options=chart_options))

@@ -32,6 +32,8 @@ var app = function(){
         $("#chart_div_4").hide();
         $("#chart_div_5").hide();
         self.change_page('home');
+        //FIXME: not the greatest fix in the world, but w/e
+        location.reload();
         self.vue.home_upload_btn = !self.vue.home_upload_btn;
     };
 

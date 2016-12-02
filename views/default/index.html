@@ -33,7 +33,8 @@ $(function() {
     acceptedFiles: '.csv', 
     createImageThumbnails: false,
     init: function() {
-      this.on("queuecomplete", function() {
+      this.on("processing", function(file) { 
+        this.options.autoProcessQueue = true;
       });
     }
   }
