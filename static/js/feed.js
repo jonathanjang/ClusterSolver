@@ -21,9 +21,10 @@ $( document ).ready(function() {
 function get_graph_data(){
 	$.post( get_graphs_url, { start_i: 0, end_i: 5 }, function( data ) {
   		insert_info_and_btns(data.user_names, data.posted_time, data.updated_time, data.can_delete);
-  		graph_plot = data.chart_data;
-  		graph_options = data.chart_options;
+  		graph_plot = parse_server_data(data.chart_data);
+  		graph_options = parse_server_data(data.chart_options);
   		create_btn_events(data.chart_data.length);
+  		console.log(data.fields)
   		console.log(graph_plot);
 		console.log(graph_options);
 
@@ -61,12 +62,20 @@ function insert_info_and_btns(users, post_time, update_time, can_delete){
 function create_btn_events(length){
 	for (var i = 0; i < length; i++){
 		$("#chart_delete_" + (i+1)).on('click', function() {
-			console.log("clicked chart_delete_" + (i+1))
+			//FIXME: sum delete logic
 		});
 
 		$("#chart_edit_" + (i+1)).on('click', function() {
-			console.log("clicked chart_edit_" + (i+1))
+
 		});
 
 	}
+}
+
+function parse_server_data(data){
+    l = [];
+    for(var i = 0; i < data.length; i++){
+        l.push(JSON.parse(data[i]));
+    }
+    return l;
 }

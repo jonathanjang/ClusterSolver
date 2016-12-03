@@ -337,13 +337,14 @@ var app = function(){
     // };
 
     self.add_to_feed = function(){
+        console.log(self.vue.fields);
         $.post(add_to_feed_url, {
             chart_plot: JSON.stringify(self.vue.chart_plot),
             chart_options: JSON.stringify(self.vue.chart_options),
             x_upper: self.vue.x_upper,
             y_upper: self.vue.y_upper,
             file_name: self.vue.file_name,
-
+            fields: self.vue.fields
         });
         self.change_page('feed');
         self.create_news_feed();
