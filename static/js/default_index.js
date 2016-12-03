@@ -148,7 +148,7 @@ var app = function(){
 
     self.dispatch_multiple_gcharts = function(plots, options){
         chart_divs = ['chart_div_1', 'chart_div_2', 'chart_div_3', 'chart_div_4', 'chart_div_5'];
-        for(var i = 0; i < chart_divs.length; i++){
+        for(var i = 0; i < plots.length; i++){
             self.set_gchart_with_div(plots[i], options[i], chart_divs[i]);
         }
     }
@@ -169,7 +169,7 @@ var app = function(){
             data.addColumn( {type: 'string', role: 'style'} );    
 
             var plot = [];
-            if (passed_in_plot.length == 0){
+            if (typeof passed_in_plot === "undefined" || passed_in_plot.length == 0){
                 plot = parse_points();
             }else{
                 plot = passed_in_plot;
@@ -202,8 +202,8 @@ var app = function(){
         // Make the chart object visible
         chart_div = '#' + chart_div;
         $(chart_div).show();
-        $("#test").show();
-
+        // $("#test").show();
+        $("#edit_feed_btn").show();
 
     };
 
@@ -552,7 +552,9 @@ var app = function(){
     $("#chart_div_3").hide();
     $("#chart_div_4").hide();
     $("#chart_div_5").hide();
-    $("#test").hide();
+    // $("#test").hide();
+    $("#edit_feed_btn").hide();
+
 
 
     return self;

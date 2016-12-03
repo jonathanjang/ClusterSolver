@@ -51,6 +51,7 @@ $(function() {
 
 <!-- FIXME: ADD NEWS FEED CONTENT HERE -->
 <div id="test"></div>
+  <div id="edit_feed_btn" class="btn btn-warning">Edit Feed</div>
 
   <div id="chart_div_1" style="width: 1150px; height: 600px;"></div>
   <div id="chart_div_2" style="width: 1150px; height: 600px;"></div>
@@ -269,7 +270,8 @@ $(function() {
       </div>
 
       <div id="feed_div" v-if="page=='feed'">
-        <button class="btn btn-success btn-sm" v-on:click="back_to_home()">Back to Home</button><br>
+        <br>
+        <button class="btn btn-success btn-sm" v-on:click="back_to_home()">Back to Home</button><br><br>
 
       </div>
 

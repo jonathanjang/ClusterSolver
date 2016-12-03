@@ -19,7 +19,10 @@ def get_graphs():
     end_i = int(request.vars.end_i) if request.vars.end_i is not None else 0
     chart_data = []
     chart_options = []
-    users = []
+    user_names = []
+    posted_time = []
+    updated_time = []
+    can_delete = []
     rows = db(db.saved_graphs).select(limitby=(start_i, end_i), orderby=~db.saved_graphs._id)
     for i, r in enumerate(rows):
         # print i
@@ -27,7 +30,16 @@ def get_graphs():
         # print r.chart_plot
         chart_options.append(r.chart_options)
         chart_data.append([r.chart_plot])
-        users.append(r.user_id)
+        user_names.append(get_user_name_from_email(r.user_email))
+        posted_time.append(r.created_on)
+        updated_time.append(r.updated_on)
+        can_delete.append(r.user_email == auth.user.email)
+
+    print user_names
+    print posted_time
+    print updated_time
+    print can_delete
+
 
     # print json.dumps(chart_data)
     # print json.dumps(chart_options)
@@ -35,6 +47,10 @@ def get_graphs():
     return response.json(dict(
                 chart_data=chart_data,
                 chart_options=chart_options,
+                user_names=user_names,
+                posted_time=posted_time,
+                updated_time=updated_time,
+                can_delete=can_delete
                 ))
 
 
