@@ -50,10 +50,9 @@ $(function() {
 
 <div class="main_content">
 
-<!-- FIXME: ADD NEWS FEED CONTENT HERE -->
-<div id="test"></div>
   <div id="edit_feed_btn" class="btn btn-warning">Edit Feed</div>
 
+  <!-- FIXME: TRY TO STYLE THIS PAGE -->
   <div id="chart_div_1" style="width: 1150px; height: 600px;"></div>
   <div id="chart_div_2" style="width: 1150px; height: 600px;"></div>
   <div id="chart_div_3" style="width: 1150px; height: 600px;"></div>
@@ -237,8 +236,9 @@ $(function() {
     </div>
   <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
   -->
-      <!-- FIXME: Add a parameter to let the user chose how much they want to depend on the field they have chosen -->
+      <!-- FIXME: implement the parameter to let the user chose how much they want to depend on the field they have chosen -->
 
+      <!-- FIXME: parameter for how close together clusters should be -->
 
       <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
       <br>
@@ -253,6 +253,7 @@ $(function() {
   </div>
 
       <div id="clustering_div" v-if="page=='clustering'">
+      <!-- FIXME: STYLE THIS PAGE! -->
         <div id="new_data" v-if="insert_more_btn">
           <h5>Insert more points to be classified</h5><br>
           <div v-for="i in f_index">
@@ -285,4 +286,4 @@ $(function() {
 
 <!-- FIXME:
       1. back btns for each page - clustering page home, news feed home
-      2. try improving the news feed- show publisher and be able to edit/insert -->
+-->

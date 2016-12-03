@@ -86,6 +86,7 @@ function create_edit_listener(edit_str, fields, index, chart_div){
 			l = []
 			for (var j = 0; j < fields.length; j++){
 				l.push($('#' + edit_str + '_' + j).val());
+				$('#' + edit_str + '_' + j).val("");
 			}
 			do_insertion(l, index);
 			set_gchart(graph_plot[index], graph_options[index], chart_div);
@@ -109,6 +110,7 @@ function do_insertion(list, index){
 	x_new = new_pts[0];
 	y_new = new_pts[1];
 	console.log(new_pts);
+	console.log(color);
 
 	tooltip = create_tooltip(list, color, index);
 
@@ -161,7 +163,7 @@ function create_tooltip(list, color, index){
 	for (var i = 0; i < list.length; i++){
 		line1 += fields[index][i]+ ":" + list[i] + " ";
 	}
-	line2 = "point { fill-color:" + color +"}";
+	line2 = "point { fill-color:" + color + " }";
 	
 	return [line1, line2];
 }
@@ -169,6 +171,7 @@ function create_tooltip(list, color, index){
 function find_color(center_i, index){
 	style = graph_plot[index][center_i][3];
 	console.log(style.substring(19,26));
+	return style.substring(19,26);
 }
 
 function find_points_close(list, index, plot_arr){
