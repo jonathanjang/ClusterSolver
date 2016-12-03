@@ -37,7 +37,7 @@ def get_graphs():
         can_delete.append(r.user_email == auth.user.email)
         fields.append(r.col_name)
 
-    print fields
+    # print fields
 
     return response.json(dict(
                 chart_data=chart_data,
