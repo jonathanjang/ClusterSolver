@@ -65,12 +65,12 @@ function create_btn_events(length, fields){
 		var edit_str = "chart_edit_" + (i+1);
 
 		// create_del_listener();
-		create_edit_listener(edit_str, fields[i], i)
+		create_edit_listener(edit_str, fields[i], i, chart_divs[i])
 
 	}
 }
 
-function create_edit_listener(edit_str, fields, index){
+function create_edit_listener(edit_str, fields, index, chart_div){
 	$('#' + edit_str).on('click', function(){
 
 		for(var j = 0; j < fields.length; j++){
@@ -88,6 +88,7 @@ function create_edit_listener(edit_str, fields, index){
 				l.push($('#' + edit_str + '_' + j).val());
 			}
 			do_insertion(l, index);
+			set_gchart(graph_plot[index], graph_options[index], chart_div);
 		})
 		$('#' + edit_str).hide();
 	})
@@ -111,9 +112,48 @@ function do_insertion(list, index){
 
 	tooltip = create_tooltip(list, color, index);
 
-
-
+	point = [x_new, y_new, tooltip[0], tooltip[1]];
+	graph_plot[index].push(point);
 }
+
+function set_gchart(plot, options, chart_div){
+	div = chart_div.substring(1,chart_div.length);
+    // Initialize a graph for google chart.
+    var container = document.getElementById(div);
+    container.style.display = 'block';
+
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart(plot, options));
+
+    function drawChart(passed_in_plot, passed_in_options) {
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'X');
+        data.addColumn('number', 'Y');
+        data.addColumn({type: 'string', role: 'tooltip'});
+        data.addColumn( {type: 'string', role: 'style'} );    
+
+        var plot = [];
+        plot = passed_in_plot;
+
+        data.addRows(plot)
+
+        var options = {};        
+        options = passed_in_options;
+
+        var chart = new google.visualization.ScatterChart(document.getElementById(div));
+        
+        google.visualization.events.addListener(chart, 'ready', function () {
+            container.style.display = 'none';
+        });
+
+        chart.draw(data, options);
+    }
+
+    // Make the chart object visible
+    $(chart_div).show();
+};
+
 
 function create_tooltip(list, color, index){
 	line1 = "NEWLY INSERTED VALUE\nValue: ";
