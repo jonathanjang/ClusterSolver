@@ -19,9 +19,11 @@
   var start_clustering_url = "{{=URL('api', 'start_clustering')}}";
   var add_to_feed_url = "{{=URL('api', 'add_to_feed')}}";
   var get_graphs_url = "{{=URL('api', 'get_graphs')}}";
+
 </script>
 
 <script src="{{=URL('static', 'js/dropzone.js')}}"></script>
+<script src="{{=URL('static', 'js/feed.js')}}"></script>
 
 <script>
 $(function() {
@@ -46,6 +48,9 @@ $(function() {
 <body>
 
 <div class="main_content">
+
+<!-- FIXME: ADD NEWS FEED CONTENT HERE -->
+<div id="test"></div>
 
   <div id="chart_div_1" style="width: 1150px; height: 600px;"></div>
   <div id="chart_div_2" style="width: 1150px; height: 600px;"></div>

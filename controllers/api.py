@@ -19,6 +19,7 @@ def get_graphs():
     end_i = int(request.vars.end_i) if request.vars.end_i is not None else 0
     chart_data = []
     chart_options = []
+    users = []
     rows = db(db.saved_graphs).select(limitby=(start_i, end_i), orderby=~db.saved_graphs._id)
     for i, r in enumerate(rows):
         # print i
@@ -26,12 +27,15 @@ def get_graphs():
         # print r.chart_plot
         chart_options.append(r.chart_options)
         chart_data.append([r.chart_plot])
+        users.append(r.user_id)
 
     # print json.dumps(chart_data)
     # print json.dumps(chart_options)
 
-    return response.json(dict(chart_data=chart_data,
-                chart_options=chart_options))
+    return response.json(dict(
+                chart_data=chart_data,
+                chart_options=chart_options,
+                ))
 
 
 # not being used as of this moment
@@ -201,3 +205,13 @@ def add_to_feed():
     # print db(db.saved_graphs).select().last().chart_plot
 
     return ""
+
+#copied and pasted from hw2
+def get_user_name_from_email(email):
+    """Returns a string corresponding to the user first and last names,
+    given the user email."""
+    u = db(db.auth_user.email == email).select().first()
+    if u is None:
+        return 'None'
+    else:
+        return ' '.join([u.first_name, u.last_name])

@@ -160,11 +160,6 @@ var app = function(){
         container.style.display = 'block';
         google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(drawChart(plot, options, chart_div));
-        // var container = document.getElementById('chart_div_1');
-        // container.style.display = 'block';
-
-        // google.charts.load('current', {'packages':['corechart']});
-        // google.charts.setOnLoadCallback(drawChart(plot, options));
         function drawChart(passed_in_plot, passed_in_options, chart_div) {
 
             var data = new google.visualization.DataTable();
@@ -207,6 +202,8 @@ var app = function(){
         // Make the chart object visible
         chart_div = '#' + chart_div;
         $(chart_div).show();
+        $("#test").show();
+
 
     };
 
@@ -349,7 +346,8 @@ var app = function(){
 
         });
         self.change_page('feed');
-        $('#chart_div_1').hide();
+        self.create_news_feed();
+        // $('#chart_div_1').hide();
 
     };
 
@@ -554,6 +552,7 @@ var app = function(){
     $("#chart_div_3").hide();
     $("#chart_div_4").hide();
     $("#chart_div_5").hide();
+    $("#test").hide();
 
 
     return self;

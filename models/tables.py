@@ -16,5 +16,10 @@ db.define_table('import_data',
 
 db.define_table('saved_graphs',
 				Field('user_id'),
+                # Field('user_email', default=auth.user.email if auth.user_id else None),
+
 				Field('chart_plot'),
-				Field('chart_options'))
+				Field('chart_options'),
+				Field('created_on', 'datetime', default=datetime.datetime.utcnow()),
+				Field('updated_on', 'datetime', update=datetime.datetime.utcnow())
+				)
