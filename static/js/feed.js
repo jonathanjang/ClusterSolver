@@ -1,5 +1,7 @@
 graph_plot = [];
 graph_options = [];
+selected = [];
+fields = [];
 
 $( document ).ready(function() {
 	// TRYNNA put, posted on, edited on, posted by, delete, and edit
@@ -8,10 +10,6 @@ $( document ).ready(function() {
 		$('#edit_feed_btn').hide();
 		get_graph_data();
 	});
-
-
-
-
 });
 
 function get_graph_data(){
@@ -19,10 +17,13 @@ function get_graph_data(){
   		insert_info_and_btns(data.user_names, data.posted_time, data.updated_time, data.can_delete);
   		graph_plot = parse_server_data(data.chart_data);
   		graph_options = parse_server_data(data.chart_options);
+  		selected = data.selected;
+  		// selected_f_indexes = data.selected_f_indexes;
+  		fields = data.fields;
   		create_btn_events(data.chart_data.length, data.fields);
   		console.log(graph_plot);
 		console.log(graph_options);
-
+		console.log(data.selected);
 
 		close_divs();
 	});
@@ -92,6 +93,57 @@ function create_edit_listener(edit_str, fields, index){
 	})
 }
 
+function do_insertion(list, index){
+	close_pt_i = find_points_close(list, index, graph_plot[index]);
+	if (close_pt_i != -1){
+		center_i = find_closest_center(close_pt_i, index);
+		console.log(center_i);
+	}else{
+		//FIXME: make a random num		
+	}
+}
+
+function find_points_close(list, index, plot_arr){
+	f_index = fields[index].indexOf(selected[0]);
+	new_val = list[f_index];
+	match = -1;
+	for(var i = 0; i < graph_plot[index].length; i++){
+		lookup_i = graph_plot[index][i][2].indexOf(new_val);
+		if(lookup_i != -1){
+			match = i
+			break;
+		}
+	}
+	return match;
+}
+
+function find_closest_center(close_pt_i, index){
+	clusters = [];
+	for(var i = 0; i < graph_plot[index].length; i++){
+		lookup_i = graph_plot[index][i][2].indexOf("Cluster Center");
+		if(lookup_i != -1){
+			clusters.push(i);
+		}
+	}
+
+	dist = 99999999;
+	close_pt_elem = graph_plot[index][close_pt_i];
+	center_i = -1;
+	for(var i = 0; i < clusters.length; i++){
+		gp_elem = graph_plot[index][clusters[i]]
+		d = calc_distance(close_pt_elem[0], close_pt_elem[1], gp_elem[0], gp_elem[1]);
+		if (d < dist){
+			dist = d;
+			center_i = clusters[i];
+		}
+	}
+	return center_i;
+}
+
+function calc_distance(x1, y1, x2, y2){
+    return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+}
+
 
 function parse_server_data(data){
     l = [];
@@ -106,4 +158,13 @@ function close_divs(){
 	for (var i = 0 ; i < chart_divs.length; i++){
 		$(chart_divs[i]).after("</div>");
 	}
+}
+
+function return_index_of(arr, element){
+	for(var i = 0; i < arr.length; i++){
+		if(arr[i] == element){
+			return i;
+		}
+	}
+	return -1;
 }

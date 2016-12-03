@@ -344,7 +344,8 @@ var app = function(){
             x_upper: self.vue.x_upper,
             y_upper: self.vue.y_upper,
             file_name: self.vue.file_name,
-            fields: self.vue.fields
+            fields: self.vue.fields,
+            checked_fields: self.vue.checked_fields
         });
         self.change_page('feed');
         self.create_news_feed();

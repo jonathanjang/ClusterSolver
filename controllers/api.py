@@ -24,11 +24,9 @@ def get_graphs():
     updated_time = []
     can_delete = []
     fields = []
+    selected = []
     rows = db(db.saved_graphs).select(limitby=(start_i, end_i), orderby=~db.saved_graphs._id)
     for i, r in enumerate(rows):
-        # print i
-        # print r.chart_options
-        # print r.chart_plot
         chart_options.append(r.chart_options)
         chart_data.append([r.chart_plot])
         user_names.append(get_user_name_from_email(r.user_email))
@@ -36,8 +34,8 @@ def get_graphs():
         updated_time.append(r.updated_on)
         can_delete.append(r.user_email == auth.user.email)
         fields.append(r.col_name)
+        selected.append(r.selected)
 
-    # print fields
 
     return response.json(dict(
                 chart_data=chart_data,
@@ -46,7 +44,8 @@ def get_graphs():
                 posted_time=posted_time,
                 updated_time=updated_time,
                 can_delete=can_delete,
-                fields=fields
+                fields=fields,
+                selected=selected
                 ))
 
 
@@ -210,10 +209,13 @@ def preprocess_data():
 
 
 def add_to_feed():
+    # print request.vars
+    # print request.vars['checked_fields[]']
     db.saved_graphs.insert(user_id=auth.user_id,
                            chart_plot=request.vars.chart_plot,
                            chart_options=request.vars.chart_options,
-                           col_name=request.vars['fields[]'])
+                           col_name=request.vars['fields[]'],
+                           selected=request.vars['checked_fields[]'])
     # print db(db.saved_graphs).select().last().chart_options
     # print db(db.saved_graphs).select().last().chart_plot
 

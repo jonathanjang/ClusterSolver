@@ -16,7 +16,7 @@ db.define_table('import_data',
 
 db.define_table('saved_graphs',
 				Field('user_id'),
-				# Field('checked'),
+				Field('selected'),
                 Field('user_email', default=auth.user.email if auth.user_id else None),
 				Field('chart_plot'),
 				Field('chart_options'),
