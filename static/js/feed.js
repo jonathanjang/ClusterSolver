@@ -3,6 +3,10 @@ graph_options = [];
 selected = [];
 fields = [];
 
+// FIXME: OPTIONAL: uodate database
+// FIXME: DELETE
+// FIXME: STYLE
+
 $( document ).ready(function() {
 	// TRYNNA put, posted on, edited on, posted by, delete, and edit
 
@@ -21,11 +25,8 @@ function get_graph_data(){
   		// selected_f_indexes = data.selected_f_indexes;
   		fields = data.fields;
   		create_btn_events(data.chart_data.length, data.fields);
-  		console.log(graph_plot);
-		console.log(graph_options);
-		console.log(data.selected);
 
-		close_divs();
+		// close_divs();
 	});
 }
 
@@ -34,7 +35,6 @@ function insert_info_and_btns(users, post_time, update_time, can_delete){
 	for (var i = 0; i < users.length; i++){
 
 		var str = "\"chart_name_" + (i+1) + "\"";
-		console.log(str);
 		$(chart_divs[i]).after("<div id=" + str + ">");
 		$(chart_divs[i]).after("<h5>Created By: " + users[i] + "</h5>");
 		$(chart_divs[i]).after("<h5>Posted On: " + post_time[i] + "</h5>");
@@ -72,13 +72,12 @@ function create_btn_events(length, fields){
 
 function create_edit_listener(edit_str, fields, index, chart_div){
 	$('#' + edit_str).on('click', function(){
-
 		for(var j = 0; j < fields.length; j++){
 			var inp = fields[j] + '<br> <input type="text" name="' + fields[j] + '"' +
 				      ' id="' + edit_str + '_' + j + '"><br>';
 			$('#edit_input_' + index).before(inp);
 		}
-		var edit = $('<input type="button" value="Post Edit ' + (index+1) + '"' +
+		var edit = $('<br><input type="button" value="Post Edit ' + (index+1) + '"' +
 		   			 ' class=\"btn btn-warning\"/ id="post_edit' + (index+1) + '">');
 		$('#edit_input_' + index).before(edit);
 
@@ -110,7 +109,6 @@ function do_insertion(list, index){
 	x_new = new_pts[0];
 	y_new = new_pts[1];
 	console.log(new_pts);
-	console.log(color);
 
 	tooltip = create_tooltip(list, color, index);
 
@@ -159,7 +157,6 @@ function set_gchart(plot, options, chart_div){
 
 function create_tooltip(list, color, index){
 	line1 = "NEWLY INSERTED VALUE\nValue: ";
-	console.log(fields);
 	for (var i = 0; i < list.length; i++){
 		line1 += fields[index][i]+ ":" + list[i] + " ";
 	}
@@ -170,7 +167,6 @@ function create_tooltip(list, color, index){
 
 function find_color(center_i, index){
 	style = graph_plot[index][center_i][3];
-	console.log(style.substring(19,26));
 	return style.substring(19,26);
 }
 
@@ -265,12 +261,12 @@ function getRandomColor() {
     return color;
 }
 
-function close_divs(){
-	chart_divs = ['#chart_div_1', '#chart_div_2', '#chart_div_3', '#chart_div_4', '#chart_div_5'];
-	for (var i = 0 ; i < chart_divs.length; i++){
-		$(chart_divs[i]).after("</div>");
-	}
-}
+// function close_divs(){
+// 	chart_divs = ['#chart_div_1', '#chart_div_2', '#chart_div_3', '#chart_div_4', '#chart_div_5'];
+// 	for (var i = 0 ; i < chart_divs.length; i++){
+// 		$(chart_divs[i]).after("</div>");
+// 	}
+// }
 
 function return_index_of(arr, element){
 	for(var i = 0; i < arr.length; i++){
