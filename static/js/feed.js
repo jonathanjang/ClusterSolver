@@ -95,12 +95,40 @@ function create_edit_listener(edit_str, fields, index){
 
 function do_insertion(list, index){
 	close_pt_i = find_points_close(list, index, graph_plot[index]);
+	new_pts = [];
+	color = -1;
 	if (close_pt_i != -1){
 		center_i = find_closest_center(close_pt_i, index);
-		console.log(center_i);
+		color = find_color(center_i, index);
+		new_pts = create_new_points(center_i, index);
 	}else{
-		//FIXME: make a random num		
+		new_pts = create_random_pts();
+		color = getRandomColor();
 	}
+	x_new = new_pts[0];
+	y_new = new_pts[1];
+	console.log(new_pts);
+
+	tooltip = create_tooltip(list, color, index);
+
+
+
+}
+
+function create_tooltip(list, color, index){
+	line1 = "NEWLY INSERTED VALUE\nValue: ";
+	console.log(fields);
+	for (var i = 0; i < list.length; i++){
+		line1 += fields[index][i]+ ":" + list[i] + " ";
+	}
+	line2 = "point { fill-color:" + color +"}";
+	
+	return [line1, line2];
+}
+
+function find_color(center_i, index){
+	style = graph_plot[index][center_i][3];
+	console.log(style.substring(19,26));
 }
 
 function find_points_close(list, index, plot_arr){
@@ -140,6 +168,38 @@ function find_closest_center(close_pt_i, index){
 	return center_i;
 }
 
+function create_random_pts(){
+    x_lower = graph_options[0]['hAxis']['minValue'];
+    x_upper = graph_options[0]['hAxis']['maxValue'];
+    y_lower = graph_options[0]['vAxis']['minValue'];
+    y_upper = graph_options[0]['vAxis']['maxValue'];
+
+    x_new = Math.random()*(x_upper-x_lower+1) + x_lower;
+    y_new = Math.random()*(y_upper-y_lower+1) + y_lower;
+
+    return [x_new, y_new];    
+}
+
+function create_new_points(center_i, index){
+	center_x = graph_plot[index][center_i][0];
+	center_y = graph_plot[index][center_i][1];
+
+    x_lower = graph_options[0]['hAxis']['minValue'];
+    x_upper = graph_options[0]['hAxis']['maxValue'];
+    y_lower = graph_options[0]['vAxis']['minValue'];
+    y_upper = graph_options[0]['vAxis']['maxValue'];
+
+    x_new_lower = center_x - 1 > x_lower ? center_x - 1 : x_lower
+    x_new_upper = center_x + 1 < x_upper ? center_x + 1 : x_upper
+    y_new_lower = center_y - 1 > y_lower ? center_y - 1 : y_lower
+    y_new_upper = center_y + 1 < y_upper ? center_y + 1 : y_upper
+
+    x_new = Math.random()*(x_new_upper-x_new_lower+1) + x_new_lower;
+    y_new = Math.random()*(y_new_upper-y_new_lower+1) + y_new_lower;
+
+    return [x_new, y_new];
+}
+
 function calc_distance(x1, y1, x2, y2){
     return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
 }
@@ -151,6 +211,15 @@ function parse_server_data(data){
         l.push(JSON.parse(data[i]));
     }
     return l;
+}
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
 }
 
 function close_divs(){
