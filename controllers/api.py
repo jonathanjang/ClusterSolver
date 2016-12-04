@@ -25,16 +25,20 @@ def get_graphs():
     can_delete = []
     fields = []
     selected = []
-    rows = db(db.saved_graphs).select(limitby=(start_i, end_i), orderby=~db.saved_graphs._id)
+    has_more = False
+    rows = db(db.saved_graphs).select(limitby=(start_i, end_i+1), orderby=~db.saved_graphs._id)
     for i, r in enumerate(rows):
-        chart_options.append(r.chart_options)
-        chart_data.append([r.chart_plot])
-        user_names.append(get_user_name_from_email(r.user_email))
-        posted_time.append(r.created_on)
-        updated_time.append(r.updated_on)
-        can_delete.append(r.user_email == auth.user.email)
-        fields.append(r.col_name)
-        selected.append(r.selected)
+        if i < end_i - start_i:
+            chart_options.append(r.chart_options)
+            chart_data.append([r.chart_plot])
+            user_names.append(get_user_name_from_email(r.user_email))
+            posted_time.append(r.created_on)
+            updated_time.append(r.updated_on)
+            can_delete.append(r.user_email == auth.user.email)
+            fields.append(r.col_name)
+            selected.append(r.selected)
+        else:
+            has_more = True
 
 
     return response.json(dict(
@@ -45,7 +49,8 @@ def get_graphs():
                 updated_time=updated_time,
                 can_delete=can_delete,
                 fields=fields,
-                selected=selected
+                selected=selected,
+                has_more=has_more
                 ))
 
 

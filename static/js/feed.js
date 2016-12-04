@@ -33,28 +33,36 @@ function get_graph_data(){
 function insert_info_and_btns(users, post_time, update_time, can_delete){
 	chart_divs = ['#chart_div_1', '#chart_div_2', '#chart_div_3', '#chart_div_4', '#chart_div_5'];
 	for (var i = 0; i < users.length; i++){
-
-		var str = "\"chart_name_" + (i+1) + "\"";
-		$(chart_divs[i]).after("<div id=" + str + ">");
-		$(chart_divs[i]).after("<h5>Created By: " + users[i] + "</h5>");
-		$(chart_divs[i]).after("<h5>Posted On: " + post_time[i] + "</h5>");
-		if(post_time[i] != update_time[i]){
-			$(chart_divs[i]).after("<h5>Updated On: " + update_time[i] + "</h5>");
-
-		}
-		var edit_btn_id = 'chart_edit_' + (i+1);
-		$(chart_divs[i]).after("<i class=\"fa fa-pencil\"></i>");
-		var edit = $('<input type="button" value="Edit Graph ' + (i+1) + '"' +
-		   			 ' class=\"btn btn-warning\"/ id="'+ edit_btn_id +'">');
-		$(chart_divs[i]).after(edit);
-		var edit_div = $('<div id="' + 'edit_input_' + i + '"></div>');
-		$(chart_divs[i]).after(edit_div);		
 		if(can_delete[i]){
 			var del_btn_id = 'chart_delete_' + (i+1);
 			var del = $('<input type="button" value="Delete Graph ' + (i+1) + '"' +
-			   			 ' class=\"btn btn-warning\"/ id="'+ del_btn_id +'"><br>');
-			$(chart_divs[i]).after(del);
+			   			 ' class=\"btn btn-danger\"/ id="'+ del_btn_id +'"><br>');
+			$(chart_divs[i]).before(del);
 		}
+
+		var edit_div = $('<div id="' + 'edit_div_' + (i+1) + '"></div>');
+		$(chart_divs[i]).before(edit_div);
+
+		var edit_btn_id = 'chart_edit_' + (i+1);
+		// $(chart_divs[i]).after("<i class=\"fa fa-pencil\"></i>");
+		var edit = $('<br><input type="button" value="Edit Graph ' + (i+1) + '"' +
+		   			 ' class=\"btn btn-success\"/ id="'+ edit_btn_id +'"><br>');
+		$(chart_divs[i]).before(edit);
+
+
+
+
+		var str = "\"chart_name_" + (i+1) + "\"";
+		$(chart_divs[i]).before('<div class="row" id="row_' + (i+1) + '"></div>');
+		$('#row_' + (i+1)).append('<div class="col-md-4" style="font-weight: bold;"><h6>Created By: ' + users[i] + '</h6></div>');
+		$('#row_' + (i+1)).append('<div class="col-md-4" style="font-weight: bold;"><h6>Posted On: ' + post_time[i] + '</h6></div');
+
+		if(post_time[i] != update_time[i]){
+			$(chart_divs[i]).before("<h5>Updated On: " + update_time[i] + "</h5>");
+
+		}
+		
+
 	}
 }
 
@@ -64,10 +72,14 @@ function create_btn_events(length, fields){
 		var del_str = "#chart_delete_" + (i+1);
 		var edit_str = "chart_edit_" + (i+1);
 
-		// create_del_listener();
+		create_del_listener()
 		create_edit_listener(edit_str, fields[i], i, chart_divs[i])
 
 	}
+}
+
+function create_del_listener(del_str){
+
 }
 
 function create_edit_listener(edit_str, fields, index, chart_div){
@@ -75,11 +87,24 @@ function create_edit_listener(edit_str, fields, index, chart_div){
 		for(var j = 0; j < fields.length; j++){
 			var inp = fields[j] + '<br> <input type="text" name="' + fields[j] + '"' +
 				      ' id="' + edit_str + '_' + j + '"><br>';
-			$('#edit_input_' + index).before(inp);
+			$('#edit_div_' + (index+1)).append(inp);
 		}
 		var edit = $('<br><input type="button" value="Post Edit ' + (index+1) + '"' +
-		   			 ' class=\"btn btn-warning\"/ id="post_edit' + (index+1) + '">');
-		$('#edit_input_' + index).before(edit);
+		   			 ' class=\"btn btn-success\"/ id="post_edit' + (index+1) + '"><br>');
+		$('#edit_div_' + (index+1)).append(edit);
+
+		var cancel_edit = $('<br><input type="button" value="Cancel Edit ' + (index+1) + '"' +
+		   			 ' class=\"btn btn-warning\"/ id="cancel_edit' + (index+1) + '">');
+		$('#edit_div_' + (index+1)).append(cancel_edit);
+
+		$('#cancel_edit' + (index+1)).on('click', function(){
+			for(var j = 0; j < fields.length; j++){
+				$('#' + edit_str + '_' + j).val("");
+			}
+			$('#edit_div_' + (index+1)).hide();
+			$('#' + edit_str).show();
+		})
+
 
 		$('#post_edit' + (index+1)).on('click', function(){
 			l = []

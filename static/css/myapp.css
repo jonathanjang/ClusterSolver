@@ -621,3 +621,7 @@ ul {
   border-radius: 16px;
   font-weight: bold;
 }
+
+#row_1 #row_2 #row_3 #row_4 #row_5 {
+  font-size: 200%;
+}

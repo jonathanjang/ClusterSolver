@@ -60,9 +60,14 @@ var app = function(){
             self.vue.feed_chart_plots = parse_server_data(data.chart_data);
             self.vue.feed_chart_options = parse_server_data(data.chart_options);
             self.dispatch_multiple_gcharts(self.vue.feed_chart_plots, self.vue.feed_chart_options);
+            self.vue.has_more = data.has_more;
             self.change_page('feed');
         });
-    }
+    };
+
+    self.load_more = function(){
+        console.log("load more has been clicked");
+    };
 
     function parse_server_data(data){
         l = [];
@@ -347,8 +352,9 @@ var app = function(){
             fields: self.vue.fields,
             checked_fields: self.vue.checked_fields
         });
-        self.change_page('feed');
         self.create_news_feed();
+        self.change_page('feed');
+
         // $('#chart_div_1').hide();
 
     };
@@ -499,6 +505,7 @@ var app = function(){
             home_upload_btn: false,
             more_settings_btn: false,
             insert_more_btn: false,
+            has_more: false,
             fields: [],
             page: 'upload',
             is_uploaded: false,
@@ -542,7 +549,8 @@ var app = function(){
             add_to_feed: self.add_to_feed,
             create_news_feed: self.create_news_feed,
             change_page: self.change_page,
-            more_settings_btn_clicked: self.more_settings_btn_clicked
+            more_settings_btn_clicked: self.more_settings_btn_clicked,
+            load_more: self.load_more
         }
 
     });

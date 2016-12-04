@@ -50,7 +50,7 @@ $(function() {
 
 <div class="main_content">
 
-  <div id="edit_feed_btn" class="btn btn-warning">Edit Feed</div>
+  <div id="edit_feed_btn" class="btn btn-info">Edit Feed</div>
 
   <!-- FIXME: TRY TO STYLE THIS PAGE -->
   <div id="chart_div_1" style="width: 1150px; height: 600px;"></div>
@@ -273,8 +273,9 @@ $(function() {
       </div>
 
       <div id="feed_div" v-if="page=='feed'">
-        <br>
-        <button class="btn btn-success btn-sm" v-on:click="back_to_home()">Back to Home</button><br><br>
+        <button class="btn btn-warning btn-sm" v-if="has_more" v-on:click="load_more()">Load More</button>
+        <br><br>
+        <button class="btn btn-primary btn-sm" v-on:click="back_to_home()">Back to Home</button><br><br>
 
       </div>
 
