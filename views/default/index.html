@@ -50,7 +50,7 @@ $(function() {
 
 <div class="main_content">
 
-  <div id="edit_feed_btn" class="btn btn-info">Edit Feed</div>
+  <div id="feed_details_btn" class="btn btn-info">Show Feed Details</div>
 
   <!-- FIXME: TRY TO STYLE THIS PAGE -->
   <div id="chart_div_1" style="width: 1150px; height: 600px;"></div>
@@ -261,10 +261,6 @@ $(function() {
       <div class="col-md-4 description">Name your graph!</div>
     </div>
 
-
-      <!-- FIXME: parameter for how close together clusters should be -->
-
-
       <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
       <br>
 
@@ -292,8 +288,15 @@ $(function() {
           <button class="btn btn-warning btn-sm" v-on:click="insert_point()">Insert</button><br>
         </div>
           <button class="btn btn-warning btn-sm" v-on:click="insert_more_btn_clicked()" v-if="!insert_more_btn">Insert and Classify Point</button><br>
-          <!-- FIXME: let them comment about their post! -->
-          <br><button class="btn btn-success btn-sm" v-on:click="add_to_feed()">Add to Feed</button><br>
+
+          <br><button class="btn btn-success btn-sm" v-on:click="message_box()" v-if="!show_box">Add to Feed</button><br>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" v-if="show_box">
+            Post Content: <br>
+            <input class="mdl-textfield__input" type="text" v-model="post_content">
+            <br><button class="btn btn-success btn-sm" v-on:click="add_to_feed()">Add to Feed</button><br>
+
+          </div>
+
       </div>
 
       <div id="feed_div" v-if="page=='feed'">

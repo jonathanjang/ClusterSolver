@@ -25,6 +25,8 @@ def get_graphs():
     can_delete = []
     fields = []
     selected = []
+    d_offsets = []
+    post_content = []
     has_more = False
     rows = db(db.saved_graphs).select(limitby=(start_i, end_i+1), orderby=~db.saved_graphs._id)
     for i, r in enumerate(rows):
@@ -37,9 +39,12 @@ def get_graphs():
             can_delete.append(r.user_email == auth.user.email)
             fields.append(r.col_name)
             selected.append(r.selected)
+            d_offsets.append(r.d_offset)
+            post_content.append(r.post_content)
         else:
             has_more = True
 
+    print d_offsets
 
     return response.json(dict(
                 chart_data=chart_data,
@@ -50,7 +55,9 @@ def get_graphs():
                 can_delete=can_delete,
                 fields=fields,
                 selected=selected,
-                has_more=has_more
+                has_more=has_more,
+                d_offsets=d_offsets,
+                post_content=post_content
                 ))
 
 
@@ -224,7 +231,8 @@ def add_to_feed():
                            chart_options=request.vars.chart_options,
                            col_name=request.vars['fields[]'],
                            selected=request.vars['checked_fields[]'],
-                           d_offset=request.vars.d_offset)
+                           d_offset=request.vars.d_offset,
+                           post_content=request.vars.post_content)
     # print db(db.saved_graphs).select().last().chart_options
     # print db(db.saved_graphs).select().last().chart_plot
 

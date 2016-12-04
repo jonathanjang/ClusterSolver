@@ -2,35 +2,39 @@ graph_plot = [];
 graph_options = [];
 selected = [];
 fields = [];
+d_offsets = [];
 
-// FIXME: OPTIONAL: uodate database
 // FIXME: DELETE
-// FIXME: STYLE
 
 $( document ).ready(function() {
 	// TRYNNA put, posted on, edited on, posted by, delete, and edit
 
-	$("#edit_feed_btn").on('click', function() {
-		$('#edit_feed_btn').hide();
+	$("#feed_details_btn").on('click', function() {
+		$('#feed_details_btn').hide();
 		get_graph_data();
 	});
 });
 
 function get_graph_data(){
 	$.post( get_graphs_url, { start_i: 0, end_i: 5 }, function( data ) {
-  		insert_info_and_btns(data.user_names, data.posted_time, data.updated_time, data.can_delete);
+		console.log(data.post_content);
+  		insert_info_and_btns(data.user_names, data.posted_time, data.updated_time, data.can_delete, data.post_content);
   		graph_plot = parse_server_data(data.chart_data);
   		graph_options = parse_server_data(data.chart_options);
   		selected = data.selected;
   		// selected_f_indexes = data.selected_f_indexes;
   		fields = data.fields;
+  		d_offsets = data.d_offsets;
   		create_btn_events(data.chart_data.length, data.fields);
+
 
 		// close_divs();
 	});
 }
 
-function insert_info_and_btns(users, post_time, update_time, can_delete){
+
+// FIXME: change 'edit' to 'insert', and edit to show feed details
+function insert_info_and_btns(users, post_time, update_time, can_delete, post_content){
 	chart_divs = ['#chart_div_1', '#chart_div_2', '#chart_div_3', '#chart_div_4', '#chart_div_5'];
 	for (var i = 0; i < users.length; i++){
 		if(can_delete[i]){
@@ -56,6 +60,8 @@ function insert_info_and_btns(users, post_time, update_time, can_delete){
 		$(chart_divs[i]).before('<div class="row" id="row_' + (i+1) + '"></div>');
 		$('#row_' + (i+1)).append('<div class="col-md-4" style="font-weight: bold;"><h6>Created By: ' + users[i] + '</h6></div>');
 		$('#row_' + (i+1)).append('<div class="col-md-4" style="font-weight: bold;"><h6>Posted On: ' + post_time[i] + '</h6></div');
+		$(chart_divs[i]).before('<div class="description">' + post_content[i] + '</div>');
+
 
 		if(post_time[i] != update_time[i]){
 			$(chart_divs[i]).before("<h5>Updated On: " + update_time[i] + "</h5>");
@@ -245,6 +251,7 @@ function create_random_pts(){
 }
 
 function create_new_points(center_i, index){
+	d_offset = parseInt(d_offsets[index])
 	center_x = graph_plot[index][center_i][0];
 	center_y = graph_plot[index][center_i][1];
 
@@ -253,10 +260,10 @@ function create_new_points(center_i, index){
     y_lower = graph_options[0]['vAxis']['minValue'];
     y_upper = graph_options[0]['vAxis']['maxValue'];
 
-    x_new_lower = center_x - 1 > x_lower ? center_x - 1 : x_lower
-    x_new_upper = center_x + 1 < x_upper ? center_x + 1 : x_upper
-    y_new_lower = center_y - 1 > y_lower ? center_y - 1 : y_lower
-    y_new_upper = center_y + 1 < y_upper ? center_y + 1 : y_upper
+    x_new_lower = center_x - d_offset > x_lower ? center_x - d_offset : x_lower
+    x_new_upper = center_x + d_offset < x_upper ? center_x + d_offset : x_upper
+    y_new_lower = center_y - d_offset > y_lower ? center_y - d_offset : y_lower
+    y_new_upper = center_y + d_offset < y_upper ? center_y + d_offset : y_upper
 
     x_new = Math.random()*(x_new_upper-x_new_lower+1) + x_new_lower;
     y_new = Math.random()*(y_new_upper-y_new_lower+1) + y_new_lower;

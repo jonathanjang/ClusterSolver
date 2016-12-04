@@ -130,6 +130,10 @@ var app = function(){
         self.change_page('clustering');
     };
 
+    self.message_box = function(){
+        self.vue.show_box = !self.vue.show_box;
+    };
+
     self.start_clustering = function(){
         $.post(start_clustering_url, 
               {
@@ -209,7 +213,7 @@ var app = function(){
         chart_div = '#' + chart_div;
         $(chart_div).show();
         // $("#test").show();
-        $("#edit_feed_btn").show();
+        $("#feed_details_btn").show();
 
     };
 
@@ -359,7 +363,8 @@ var app = function(){
             file_name: self.vue.file_name,
             fields: self.vue.fields,
             checked_fields: self.vue.checked_fields,
-            d_offset: self.vue.d_offset
+            d_offset: self.vue.d_offset,
+            post_content: self.vue.post_content
         });
         self.create_news_feed();
         self.change_page('feed');
@@ -372,9 +377,7 @@ var app = function(){
 
     //Helper functions:
 
-    //FIXME: there may be a point where you want to start a new cluster!
     function index_of_closest_point(selected_field, new_data, points_data){
-        // selected_field = self.vue.checked_fields[0];
         new_inserted_code = convert_to_ASCII(new_data[selected_field]);
         point_i = -1;
         difference = 999999;
@@ -573,7 +576,9 @@ var app = function(){
             feed_chart_plots: [],
             feed_chart_options: [],
             colors: [],
-            slider_val: ""
+            slider_val: "",
+            show_box: false,
+            post_content: ""
         },
         methods: {
             home_upload_btn_clicked: self.home_upload_btn_clicked,
@@ -588,7 +593,8 @@ var app = function(){
             create_news_feed: self.create_news_feed,
             change_page: self.change_page,
             more_settings_btn_clicked: self.more_settings_btn_clicked,
-            load_more: self.load_more
+            load_more: self.load_more,
+            message_box: self.message_box
         }
 
     });
@@ -601,7 +607,7 @@ var app = function(){
     $("#chart_div_4").hide();
     $("#chart_div_5").hide();
     // $("#test").hide();
-    $("#edit_feed_btn").hide();
+    $("#feed_details_btn").hide();
 
 
 
