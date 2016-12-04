@@ -4,10 +4,8 @@ selected = [];
 fields = [];
 d_offsets = [];
 
-// FIXME: DELETE
 
 $( document ).ready(function() {
-	// TRYNNA put, posted on, edited on, posted by, delete, and edit
 
 	$("#feed_details_btn").on('click', function() {
 		$('#feed_details_btn').hide();
@@ -33,15 +31,14 @@ function get_graph_data(){
 }
 
 
-// FIXME: change 'edit' to 'insert', and edit to show feed details
 function insert_info_and_btns(users, post_time, update_time, can_delete, post_content){
 	chart_divs = ['#chart_div_1', '#chart_div_2', '#chart_div_3', '#chart_div_4', '#chart_div_5'];
 	for (var i = 0; i < users.length; i++){
 		if(can_delete[i]){
-			var del_btn_id = 'chart_delete_' + (i+1);
-			var del = $('<input type="button" value="Delete Graph ' + (i+1) + '"' +
-			   			 ' class=\"btn btn-danger\"/ id="'+ del_btn_id +'"><br>');
-			$(chart_divs[i]).before(del);
+			// var del_btn_id = 'chart_delete_' + (i+1);
+			// var del = $('<input type="button" value="Delete Graph ' + (i+1) + '"' +
+			//    			 ' class=\"btn btn-danger\"/ id="'+ del_btn_id +'"><br>');
+			// $(chart_divs[i]).before(del);
 		}
 
 		var edit_div = $('<div id="' + 'edit_div_' + (i+1) + '"></div>');
@@ -49,7 +46,7 @@ function insert_info_and_btns(users, post_time, update_time, can_delete, post_co
 
 		var edit_btn_id = 'chart_edit_' + (i+1);
 		// $(chart_divs[i]).after("<i class=\"fa fa-pencil\"></i>");
-		var edit = $('<br><input type="button" value="Edit Graph ' + (i+1) + '"' +
+		var edit = $('<br><input type="button" value="Insert to Graph ' + (i+1) + '"' +
 		   			 ' class=\"btn btn-success\"/ id="'+ edit_btn_id +'"><br>');
 		$(chart_divs[i]).before(edit);
 
@@ -95,11 +92,11 @@ function create_edit_listener(edit_str, fields, index, chart_div){
 				      ' id="' + edit_str + '_' + j + '"><br>';
 			$('#edit_div_' + (index+1)).append(inp);
 		}
-		var edit = $('<br><input type="button" value="Post Edit ' + (index+1) + '"' +
+		var edit = $('<br><input type="button" value="Insert to Graph ' + (index+1) + '"' +
 		   			 ' class=\"btn btn-success\"/ id="post_edit' + (index+1) + '"><br>');
 		$('#edit_div_' + (index+1)).append(edit);
 
-		var cancel_edit = $('<br><input type="button" value="Cancel Edit ' + (index+1) + '"' +
+		var cancel_edit = $('<br><input type="button" value="Cancel Insert ' + (index+1) + '"' +
 		   			 ' class=\"btn btn-warning\"/ id="cancel_edit' + (index+1) + '">');
 		$('#edit_div_' + (index+1)).append(cancel_edit);
 
