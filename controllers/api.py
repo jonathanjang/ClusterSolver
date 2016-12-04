@@ -44,8 +44,6 @@ def get_graphs():
         else:
             has_more = True
 
-    print d_offsets
-
     return response.json(dict(
                 chart_data=chart_data,
                 chart_options=chart_options,
@@ -109,12 +107,9 @@ def perform_clustering(data_list, selected_field, k, iterations, bounds_list, d_
     processed_data = process_data(data_list, selected_field, bounds_list, d_offset)
     pairs_list = processed_data.keys()
     coordinate_list = [[x,y] for x,y in pairs_list]
-    # print coordinate_list
     X = np.array(coordinate_list)
     iterations = int(iterations)
     kmeans = KMeans(n_clusters=k, random_state=0, max_iter=iterations).fit(X)
-    # print kmeans.labels_
-    # print kmeans.cluster_centers_
 
 
     return [processed_data, kmeans.labels_, kmeans.cluster_centers_]
@@ -145,8 +140,6 @@ def process_data(data_list, selected_field, bounds_list, d_offset):
             y = random.uniform(y_single_lower, y_single_upper)
             coordinates_to_data_dict[x,y] = data
 
-    # print coordinates_to_data_dict
-    # print grouped_data
     return coordinates_to_data_dict
 
 
@@ -224,8 +217,6 @@ def preprocess_data():
 
 
 def add_to_feed():
-    # print request.vars
-    # print request.vars['checked_fields[]']
     db.saved_graphs.insert(user_id=auth.user_id,
                            chart_plot=request.vars.chart_plot,
                            chart_options=request.vars.chart_options,
@@ -233,8 +224,6 @@ def add_to_feed():
                            selected=request.vars['checked_fields[]'],
                            d_offset=request.vars.d_offset,
                            post_content=request.vars.post_content)
-    # print db(db.saved_graphs).select().last().chart_options
-    # print db(db.saved_graphs).select().last().chart_plot
 
     return ""
 

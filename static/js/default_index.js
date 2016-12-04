@@ -315,44 +315,6 @@ var app = function(){
         console.log(y_new);
     };
 
-    // self.reset_gchart = function(){
-    //     // Initialize a graph for google chart.
-    //     var container = document.getElementById('chart_div');
-    //     container.style.display = 'block';
-
-    //     google.charts.load('current', {'packages':['corechart']});
-    //     google.charts.setOnLoadCallback(drawChart());
-    //     function drawChart() {
-
-    //         var data = new google.visualization.DataTable();
-    //         data.addColumn('number', 'X');
-    //         data.addColumn('number', 'Y');
-    //         data.addColumn({type: 'string', role: 'tooltip'});
-    //         data.addColumn( {type: 'string', role: 'style'} );    
-
-    //         var plot = self.vue.chart_plot;
-
-    //         data.addRows(plot)
-
-    //         var options = self.vue.chart_options;
-
-    //         var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
-            
-    //         google.visualization.events.addListener(chart, 'ready', function () {
-    //             container.style.display = 'none';
-    //         });
-
-    //         chart.draw(data, options);
-
-
-    //         // self.vue.chart_plot = plot;
-    //         // self.vue.chart_options = options;
-    //     }
-
-    //     // Make the chart object visible
-    //     $('#chart_div').show();
-    // };
-
     self.add_to_feed = function(){
         console.log(self.vue.fields);
         $.post(add_to_feed_url, {
@@ -368,8 +330,6 @@ var app = function(){
         });
         self.create_news_feed();
         self.change_page('feed');
-
-        // $('#chart_div_1').hide();
 
     };
 
@@ -387,18 +347,23 @@ var app = function(){
             point_code = convert_to_ASCII(points_data[i][selected_field]);
             curr_diff = Math.abs(new_inserted_code-point_code)
             
-            if(points_data[i][selected_field] == new_data[selected_field]){
-                point_i = i;
-                break;
-            }else if(curr_diff < difference){
+            if(curr_diff < difference){
                 difference = Math.abs(new_inserted_code - point_code);
                 point_i = i;
             }
 
             total_tol += curr_diff;
             if(total_tol > d_off){
-                return -1;
+                point_i = -1;
+                break;
             }
+        }
+
+        for(var i = 0; i < points_data.length; i++){
+            if(points_data[i][selected_field] == new_data[selected_field]){
+                point_i = i;
+                break;
+            }            
         }
         return point_i
     }
@@ -606,7 +571,6 @@ var app = function(){
     $("#chart_div_3").hide();
     $("#chart_div_4").hide();
     $("#chart_div_5").hide();
-    // $("#test").hide();
     $("#feed_details_btn").hide();
 
 

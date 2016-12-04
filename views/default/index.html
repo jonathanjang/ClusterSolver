@@ -127,12 +127,6 @@ $(function() {
 
     </div>
 
-<!--     <input id="slider3" class="mdl-slider mdl-js-slider" type="range"  
-         min="0" max="100" tabindex="0" step="2" 
-         v-model="slider_val">
-   <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
-    <div>${ slider_val }</div> -->
-  
   </div>
   
 
@@ -152,7 +146,6 @@ $(function() {
       <div class="col-md-4 description">Please choose the field that you would like to focus on for this graph. The field that you choose will help the algorithm figure resolve the most important clusters.</div>
     </div>
 
-    <!-- Let the user choose between advanced and default settings -->
     <div class="more_settings" v-if="more_settings_btn">
       <div class="row">
         <br>
@@ -166,8 +159,6 @@ $(function() {
           </p>
         </div>
         <div class="col-md-4 description">This parameter is the number of clusters you want to see in the output graph.</div>
-<!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
- -->      
       </div>
   
       <div class="row">    
@@ -183,8 +174,6 @@ $(function() {
         </div>
         <div class="col-md-4 description">This parameter is upper limit of the X-axis in the output graph.</div>
       </div>
-  <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
-   -->
     <div class="row">
       <br>
       Upper bound for Y: ${ y_upper }
@@ -199,8 +188,6 @@ $(function() {
       <div class="col-md-4 description">This parameter is upper limit of the Y-axis in the output graph.</div>
     </div>
 
-  <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
-   -->      
     <div class="row">
       <br>
       # of iterations: ${ num_iters }
@@ -214,9 +201,6 @@ $(function() {
       </div>
       <div class="col-md-4 description">This parameter is maximum number of iterations you would like the clustering algorithm to run. Think of it as the amount of time you want to give the algorithm to run,</div>
     </div>
-
-  <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
-  -->
 
     <div class="row">
       <br>
@@ -276,7 +260,6 @@ $(function() {
       <div id="clustering_div" v-if="page=='clustering'">
         <div class="description">These are the results of your file.</div>
 
-      <!-- FIXME: STYLE THIS PAGE! -->
         <div id="new_data" v-if="insert_more_btn">
           <h5>Insert more points to be classified</h5><br>
           <div v-for="i in f_index">
@@ -315,4 +298,6 @@ $(function() {
 
 <!-- FIXME:
       1. back btns for each page - clustering page home, news feed home
+      2. Delete
+      3. Load More
 -->

@@ -20,13 +20,9 @@ function get_graph_data(){
   		graph_plot = parse_server_data(data.chart_data);
   		graph_options = parse_server_data(data.chart_options);
   		selected = data.selected;
-  		// selected_f_indexes = data.selected_f_indexes;
   		fields = data.fields;
   		d_offsets = data.d_offsets;
   		create_btn_events(data.chart_data.length, data.fields);
-
-
-		// close_divs();
 	});
 }
 
@@ -289,13 +285,6 @@ function getRandomColor() {
     }
     return color;
 }
-
-// function close_divs(){
-// 	chart_divs = ['#chart_div_1', '#chart_div_2', '#chart_div_3', '#chart_div_4', '#chart_div_5'];
-// 	for (var i = 0 ; i < chart_divs.length; i++){
-// 		$(chart_divs[i]).after("</div>");
-// 	}
-// }
 
 function return_index_of(arr, element){
 	for(var i = 0; i < arr.length; i++){
