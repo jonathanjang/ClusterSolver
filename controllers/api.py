@@ -66,6 +66,7 @@ def start_clustering():
     path = db(db.import_data).select().last().file_path
     name = db(db.import_data).select().last().file_name
     data_list = []
+    d_offset = int(request.vars.d_offset)
 
     with open(path, 'rb') as csvfile:
         reader = csv.reader(csvfile)
@@ -83,7 +84,7 @@ def start_clustering():
 
     data = perform_clustering(data_list, selected_field, k, request.vars['num_iters'], 
                        [request.vars['x_lower'], request.vars['x_upper'], 
-                        request.vars['y_lower'], request.vars['y_upper']])
+                        request.vars['y_lower'], request.vars['y_upper']], d_offset)
 
     nd_cluster_centers = list(data[2])
     cluster_centers = [d.tolist() for d in nd_cluster_centers]
@@ -97,8 +98,8 @@ def start_clustering():
         ))
 
 
-def perform_clustering(data_list, selected_field, k, iterations, bounds_list):
-    processed_data = process_data(data_list, selected_field, bounds_list)
+def perform_clustering(data_list, selected_field, k, iterations, bounds_list, d_offset):
+    processed_data = process_data(data_list, selected_field, bounds_list, d_offset)
     pairs_list = processed_data.keys()
     coordinate_list = [[x,y] for x,y in pairs_list]
     # print coordinate_list
@@ -118,7 +119,7 @@ def perform_clustering(data_list, selected_field, k, iterations, bounds_list):
     # return coordinate list?? or just add all to db
 
 
-def process_data(data_list, selected_field, bounds_list):
+def process_data(data_list, selected_field, bounds_list, d_offset):
     coordinates_to_data_dict = {}
     grouped_data = group_data(data_list, selected_field)
     x_lower, x_upper = int(bounds_list[0]), int(bounds_list[1])
@@ -129,10 +130,10 @@ def process_data(data_list, selected_field, bounds_list):
         x_center_group = random.uniform(x_lower, x_upper)
         y_center_group = random.uniform(y_lower, y_upper)
         for data in group:
-            x_single_lower = x_center_group - 1 if x_center_group - 1 > x_lower else x_lower
-            x_single_upper = x_center_group + 1 if x_center_group + 1 < x_upper else x_upper
-            y_single_lower = y_center_group - 1 if y_center_group - 1 > y_lower else y_lower
-            y_single_upper = y_center_group + 1 if y_center_group + 1 < y_upper else y_upper
+            x_single_lower = x_center_group - d_offset if x_center_group - d_offset > x_lower else x_lower
+            x_single_upper = x_center_group + d_offset if x_center_group + d_offset < x_upper else x_upper
+            y_single_lower = y_center_group - d_offset if y_center_group - d_offset > y_lower else y_lower
+            y_single_upper = y_center_group + d_offset if y_center_group + d_offset < y_upper else y_upper
             x = random.uniform(x_single_lower, x_single_upper)
             y = random.uniform(y_single_lower, y_single_upper)
             coordinates_to_data_dict[x,y] = data
@@ -182,6 +183,7 @@ def get_fields():
 def preprocess_data():
     selected_field = request.vars['checked_fields[]']
     path = db(db.import_data).select().last().file_path
+    name = db(db.import_data).select().last().file_name
     field_vals = []
 
     with open(path, 'rb') as csvfile:
@@ -209,7 +211,8 @@ def preprocess_data():
         y_upper=str(k_input*3),
         y_upper_max=str(k_input_max*3),
         new_clust_param=str(30*average_length),
-        new_clust_param_max=str(50*average_length)
+        new_clust_param_max=str(50*average_length),
+        file_name=name
         ))
 
 
@@ -220,7 +223,8 @@ def add_to_feed():
                            chart_plot=request.vars.chart_plot,
                            chart_options=request.vars.chart_options,
                            col_name=request.vars['fields[]'],
-                           selected=request.vars['checked_fields[]'])
+                           selected=request.vars['checked_fields[]'],
+                           d_offset=request.vars.d_offset)
     # print db(db.saved_graphs).select().last().chart_options
     # print db(db.saved_graphs).select().last().chart_plot
 

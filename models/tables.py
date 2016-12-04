@@ -22,5 +22,6 @@ db.define_table('saved_graphs',
 				Field('chart_options'),
 				Field('created_on', 'datetime', default=datetime.datetime.utcnow()),
 				Field('updated_on', 'datetime', update=datetime.datetime.utcnow()),
-				Field('col_name', 'list:string')
+				Field('col_name', 'list:string'),
+				Field('d_offset')
 				)

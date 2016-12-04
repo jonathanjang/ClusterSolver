@@ -106,7 +106,7 @@ var app = function(){
             self.vue.new_clust_param = data.new_clust_param;
             self.vue.new_clust_param_max = data.new_clust_param_max;
             self.vue.more_settings_btn = !self.vue.more_settings_btn;
-
+            self.vue.cluster_name = data.file_name
         });
 
     }
@@ -139,7 +139,8 @@ var app = function(){
                   x_upper: self.vue.x_upper,
                   y_lower: self.vue.y_lower,
                   y_upper: self.vue.y_upper,
-                  num_iters: self.vue.num_iters
+                  num_iters: self.vue.num_iters,
+                  d_offset: self.vue.d_offset
               },
               function(data){
                   self.vue.points = data.points;
@@ -185,7 +186,7 @@ var app = function(){
             var options = {};
             if (Object.keys(passed_in_options).length == 0){
                 options = {
-                    title: 'Results of ' + self.vue.file_name ,
+                    title: 'Results of ' + self.vue.cluster_name,
                     hAxis: {title: 'X', minValue: parseInt(self.vue.x_lower), maxValue: parseInt(self.vue.x_upper)},
                     vAxis: {title: 'Y', minValue: parseInt(self.vue.y_lower), maxValue: parseInt(self.vue.y_upper)},
                     legend: 'none',
@@ -239,7 +240,7 @@ var app = function(){
             var options = {};
             if (Object.keys(passed_in_options).length == 0){
                 options = {
-                    title: 'Results of ' + self.vue.file_name ,
+                    title: 'Results of ' + self.vue.cluster_name,
                     hAxis: {title: 'X', minValue: parseInt(self.vue.x_lower), maxValue: parseInt(self.vue.x_upper)},
                     vAxis: {title: 'Y', minValue: parseInt(self.vue.y_lower), maxValue: parseInt(self.vue.y_upper)},
                     legend: 'none',
@@ -279,13 +280,16 @@ var app = function(){
                                           self.vue.new_data,
                                           self.vue.points_data);
 
-
-        // get the closest center
-        center = get_closest_center(self.vue.points[point_i], self.vue.cluster_centers);
-        center_i = center[2];
-
-        // then assign a point to it
-        new_points = create_new_points(center);
+        if(point_i != -1){
+            // get the closest center
+            center = get_closest_center(self.vue.points[point_i], self.vue.cluster_centers);
+            center_i = center[2];
+            // then assign a point to it
+            new_points = create_new_points(center);
+        }else{
+            new_points = get_random_points();
+            center_i = -1;
+        }
 
         new_entry_dict = create_new_entry_dict(self.vue.fields, self.vue.new_data);
 
@@ -293,8 +297,12 @@ var app = function(){
         line = "NEWLY INSERTED VALUE\n";
         line += convert_dict_to_string(new_entry_dict, center_i);
 
-        // now add it to the plot!
-        self.vue.chart_plot.push([new_points[0], new_points[1], line, 'point { fill-color:'+self.vue.colors[center_i]+'}']);
+        if (point_i != -1){
+            // now add it to the plot!
+            self.vue.chart_plot.push([new_points[0], new_points[1], line, 'point { fill-color:'+self.vue.colors[center_i]+'}']);
+        }else{
+            self.vue.chart_plot.push([new_points[0], new_points[1], line, 'point { fill-color:'+getRandomColor()+'}']);            
+        }
 
         self.set_gchart(self.vue.chart_plot, self.vue.chart_options);
         self.vue.new_data = {};
@@ -350,7 +358,8 @@ var app = function(){
             y_upper: self.vue.y_upper,
             file_name: self.vue.file_name,
             fields: self.vue.fields,
-            checked_fields: self.vue.checked_fields
+            checked_fields: self.vue.checked_fields,
+            d_offset: self.vue.d_offset
         });
         self.create_news_feed();
         self.change_page('feed');
@@ -369,14 +378,23 @@ var app = function(){
         new_inserted_code = convert_to_ASCII(new_data[selected_field]);
         point_i = -1;
         difference = 999999;
+        total_tol = 0;
+        d_off = parseInt(self.vue.d_offset);
         for(var i = 0; i < points_data.length; i++){
             point_code = convert_to_ASCII(points_data[i][selected_field]);
+            curr_diff = Math.abs(new_inserted_code-point_code)
+            
             if(points_data[i][selected_field] == new_data[selected_field]){
                 point_i = i;
                 break;
-            }else if(Math.abs(new_inserted_code-point_code) < difference){
+            }else if(curr_diff < difference){
                 difference = Math.abs(new_inserted_code - point_code);
                 point_i = i;
+            }
+
+            total_tol += curr_diff;
+            if(total_tol > d_off){
+                return -1;
             }
         }
         return point_i
@@ -399,17 +417,31 @@ var app = function(){
         return closest_center;
     }
 
-    function create_new_points(center){
+    function get_random_points(){
         x_lower = parseInt(self.vue.x_lower);
         x_upper = parseInt(self.vue.x_upper);
         y_lower = parseInt(self.vue.y_lower);
         y_upper = parseInt(self.vue.y_upper);
 
+        x_new = Math.random()*(x_upper-x_lower+1) + x_lower;
+        y_new = Math.random()*(y_upper-y_lower+1) + y_lower;
+
+        return [x_new, y_new];
+
+    }
+
+    function create_new_points(center){
+        x_lower = parseInt(self.vue.x_lower);
+        x_upper = parseInt(self.vue.x_upper);
+        y_lower = parseInt(self.vue.y_lower);
+        y_upper = parseInt(self.vue.y_upper);
+        d_offset = parseInt(self.vue.d_offset);
+
         console.log(center[0], center[1]);
-        x_new_lower = center[0] - 1 > x_lower ? center[0] - 1 : x_lower
-        x_new_upper = center[0] + 1 < x_upper ? center[0] + 1 : x_upper
-        y_new_lower = center[1] - 1 > y_lower ? center[1] - 1 : y_lower
-        y_new_upper = center[1] + 1 < y_upper ? center[1] + 1 : y_upper
+        x_new_lower = center[0] - d_offset > x_lower ? center[0] - d_offset : x_lower
+        x_new_upper = center[0] + d_offset < x_upper ? center[0] + d_offset : x_upper
+        y_new_lower = center[1] - d_offset > y_lower ? center[1] - d_offset : y_lower
+        y_new_upper = center[1] + d_offset < y_upper ? center[1] + d_offset : y_upper
 
         x_new = Math.random()*(x_new_upper-x_new_lower+1) + x_new_lower;
         y_new = Math.random()*(y_new_upper-y_new_lower+1) + y_new_lower;
@@ -470,7 +502,10 @@ var app = function(){
     }
 
     function convert_dict_to_string(dict, label){
-        line = "Cluster #" + label + ": \nValue: ";
+        line = "";
+        if(label != -1){
+            line += "Cluster #" + label + ": \nValue: ";
+        }
         for(var i = 0; i < self.vue.fields.length; i++){
             line += self.vue.fields[i] + "=" + dict[self.vue.fields[i]] + " ";
         }
@@ -521,7 +556,10 @@ var app = function(){
             num_iters: "300",
             new_clust_param: "200",
             new_clust_param_max: "1000",
+            d_offset: "1",
+            d_offset_max: "30",
             err_message: "",
+            cluster_name: "",
             is_error: false,
             new_data: {},
             f_index: [],

@@ -69,11 +69,9 @@ $(function() {
         <div class="spash-text alone">
           <center><h2>Easy Clustering for any data</h2></center>
         <div id="index_btns">
-          <!-- FIXME: change buttons to MDL designs -->
           <center><button v-if="!home_upload_btn" class="btn btn-warning" v-on:click="home_upload_btn_clicked()">Upload</button></center><br>
           <center><button v-if="home_upload_btn" class="btn btn-warning" v-on:click="home_upload_btn_clicked()">Quit Upload</button></center><br>
 
-          <!-- FIXME: dropzone doesn't work after the first upload -->
           <div id="uploader_div" v-bind:class="{ 'hidden' : !home_upload_btn }">
             <form action="" class="dropzone dz-clickable" id="file-uploader">
             <div class="dz-message">
@@ -234,11 +232,38 @@ $(function() {
       </div>
       <div class="col-md-4 description">This parameter is the offset you want to tolerate when inserting new points into the graph. If the difference between the inserted point and the already defined points is too different, then a new cluster will be started.</div>
     </div>
-  <!--       <div class="mdl-tooltip" data-mdl-for="slider3">${slider_val}</div>
-  -->
-      <!-- FIXME: implement the parameter to let the user chose how much they want to depend on the field they have chosen -->
+
+    <div class="row">
+      <br>
+      Dependency Offset: ${ d_offset }
+      <br>
+      <div class="col-md-4">
+      <p style="width: 300px;">
+
+        <input id="slider3" class="mdl-slider mdl-js-slider col-md-6" type="range"  
+           min="0" max="30" tabindex="0" step="1" 
+           v-model="d_offset">
+      </p>
+      </div>
+      <div class="col-md-4 description">This parameter let's your decide how close together you want your points to be in your cluster.</div>
+    </div>
+
+    <div class="row">
+      <br>
+      Name your Cluster: 
+      <br>
+      <div class="col-md-4">
+      <p style="width: 300px;">
+
+        <input class="mdl-textfield__input" type="text" id="name" v-model="cluster_name">
+      </p>
+      </div>
+      <div class="col-md-4 description">Name your graph!</div>
+    </div>
+
 
       <!-- FIXME: parameter for how close together clusters should be -->
+
 
       <button class="btn btn-warning btn-sm" v-on:click="continue_button_clicked()">Continue to Clustering</button>
       <br>
@@ -253,6 +278,8 @@ $(function() {
   </div>
 
       <div id="clustering_div" v-if="page=='clustering'">
+        <div class="description">These are the results of your file.</div>
+
       <!-- FIXME: STYLE THIS PAGE! -->
         <div id="new_data" v-if="insert_more_btn">
           <h5>Insert more points to be classified</h5><br>
@@ -260,15 +287,12 @@ $(function() {
             ${fields[i]}: <br>
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <input class="mdl-textfield__input" type="text" id="fields[i]" v-model="new_data[fields[i]]">
-                <!-- FIXME: would really like to get this label working VVV -->
-<!--                 <label class="mdl-textfield__label" for="fields[i]">${fields[i]}</label>
- -->              
               </div>
-<!--             <textarea class="input_area" v-model="new_data[fields[i]]" type="text"></textarea> 
- -->          </div>
+          </div>
           <button class="btn btn-warning btn-sm" v-on:click="insert_point()">Insert</button><br>
         </div>
           <button class="btn btn-warning btn-sm" v-on:click="insert_more_btn_clicked()" v-if="!insert_more_btn">Insert and Classify Point</button><br>
+          <!-- FIXME: let them comment about their post! -->
           <br><button class="btn btn-success btn-sm" v-on:click="add_to_feed()">Add to Feed</button><br>
       </div>
 
