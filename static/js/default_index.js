@@ -326,9 +326,10 @@ var app = function(){
             checked_fields: self.vue.checked_fields,
             d_offset: self.vue.d_offset,
             post_content: self.vue.post_content
+        }, function(data){
+            self.create_news_feed();
+            self.change_page('feed');            
         });
-        self.create_news_feed();
-        self.change_page('feed');
 
     };
 
