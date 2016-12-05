@@ -15,7 +15,6 @@ $( document ).ready(function() {
 
 function get_graph_data(){
 	$.post( get_graphs_url, { start_i: 0, end_i: 5 }, function( data ) {
-		console.log(data.post_content);
   		insert_info_and_btns(data.user_names, data.posted_time, data.updated_time, data.can_delete, data.post_content);
   		graph_plot = parse_server_data(data.chart_data);
   		graph_options = parse_server_data(data.chart_options);

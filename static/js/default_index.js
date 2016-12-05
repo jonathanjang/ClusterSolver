@@ -316,7 +316,6 @@ var app = function(){
     };
 
     self.add_to_feed = function(){
-        console.log(self.vue.fields);
         $.post(add_to_feed_url, {
             chart_plot: JSON.stringify(self.vue.chart_plot),
             chart_options: JSON.stringify(self.vue.chart_options),
@@ -342,12 +341,13 @@ var app = function(){
         point_i = -1;
         difference = 999999;
         total_tol = 0;
-        d_off = parseInt(self.vue.d_offset);
+        clust_off = parseInt(self.vue.new_clust_param);
         for(var i = 0; i < points_data.length; i++){
             point_code = convert_to_ASCII(points_data[i][selected_field]);
             curr_diff = Math.abs(new_inserted_code-point_code)
             
-            if(curr_diff < difference && curr_diff < d_off){
+
+            if(curr_diff < difference && curr_diff < clust_off){
                 difference = Math.abs(new_inserted_code - point_code);
                 point_i = i;
             }
@@ -360,6 +360,7 @@ var app = function(){
                 break;
             }            
         }
+
         return point_i
     }
 
@@ -468,6 +469,8 @@ var app = function(){
         line = "";
         if(label != -1){
             line += "Cluster #" + label + ": \nValue: ";
+        }else{
+            line += "NEW CLUSTER\nValue: ";            
         }
         for(var i = 0; i < self.vue.fields.length; i++){
             line += self.vue.fields[i] + "=" + dict[self.vue.fields[i]] + " ";
