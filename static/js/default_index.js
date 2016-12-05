@@ -347,16 +347,11 @@ var app = function(){
             point_code = convert_to_ASCII(points_data[i][selected_field]);
             curr_diff = Math.abs(new_inserted_code-point_code)
             
-            if(curr_diff < difference){
+            if(curr_diff < difference && curr_diff < d_off){
                 difference = Math.abs(new_inserted_code - point_code);
                 point_i = i;
             }
 
-            total_tol += curr_diff;
-            if(total_tol > d_off){
-                point_i = -1;
-                break;
-            }
         }
 
         for(var i = 0; i < points_data.length; i++){
