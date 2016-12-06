@@ -73,6 +73,7 @@ def start_clustering():
     data_list = []
     d_offset = int(request.vars.d_offset)
 
+    # parse the csv file
     with open(path, 'rb') as csvfile:
         reader = csv.reader(csvfile)
         i = 0
@@ -87,10 +88,13 @@ def start_clustering():
 
     selected_field = request.vars['checked_fields[]']
 
+
+    # pass the csv data, and user parameters into the clustering method
     data = perform_clustering(data_list, selected_field, k, request.vars['num_iters'], 
                        [request.vars['x_lower'], request.vars['x_upper'], 
                         request.vars['y_lower'], request.vars['y_upper']], d_offset)
 
+    # get the cluster centers, IMPORTANT for reinserting values
     nd_cluster_centers = list(data[2])
     cluster_centers = [d.tolist() for d in nd_cluster_centers]
 
@@ -102,7 +106,8 @@ def start_clustering():
         file_name=name
         ))
 
-
+# Take in the data and return the data, the labels of the data, and the centers
+# basically a dispatcher method that performs clustering at the end
 def perform_clustering(data_list, selected_field, k, iterations, bounds_list, d_offset):
     processed_data = process_data(data_list, selected_field, bounds_list, d_offset)
     pairs_list = processed_data.keys()
@@ -113,25 +118,24 @@ def perform_clustering(data_list, selected_field, k, iterations, bounds_list, d_
 
 
     return [processed_data, kmeans.labels_, kmeans.cluster_centers_]
-    # pseudocode:
-    # return dict where selected field value maps to x,y center coordinates
-    # return all labels
-    # return all clusters
-    # return kmeans
-    # return coordinate list?? or just add all to db
 
 
+# Process the data for clustering
 def process_data(data_list, selected_field, bounds_list, d_offset):
     coordinates_to_data_dict = {}
+    # group the data based upon the selected field
     grouped_data = group_data(data_list, selected_field)
     x_lower, x_upper = int(bounds_list[0]), int(bounds_list[1])
     y_lower, y_upper = int(bounds_list[2]), int(bounds_list[3])
-    # a mapping from cluster # to 
     centers = {}
     for group in grouped_data:
+        # for every "group" (ie same selected field value, assign an intial center)
         x_center_group = random.uniform(x_lower, x_upper)
         y_center_group = random.uniform(y_lower, y_upper)
         for data in group:
+            # for every group member in the group, randomly generate a point based 
+            # upon the user defined offset for how close together the groups are
+            # and the precomputed group center
             x_single_lower = x_center_group - d_offset if x_center_group - d_offset > x_lower else x_lower
             x_single_upper = x_center_group + d_offset if x_center_group + d_offset < x_upper else x_upper
             y_single_lower = y_center_group - d_offset if y_center_group - d_offset > y_lower else y_lower
@@ -142,7 +146,8 @@ def process_data(data_list, selected_field, bounds_list, d_offset):
 
     return coordinates_to_data_dict
 
-
+# groups the data based upon the selected field
+# returns a list of lists where each list in grouped_data has the same value
 def group_data(data_list, selected_field):
     sorted_list = sorted(data_list, key=lambda x: x[selected_field])
     unique_field_data = set([s[selected_field] for s in sorted_list])
@@ -169,17 +174,12 @@ def get_fields():
                 break
             i += 1
 
-    # num clusters should depend on how many differnt values there are
-    # upper bound should be different values * 3 for suggested
-    # num iters should default to 300
-    # new cluster parameter should depend on the length of the smallest input
-
-
     return response.json(dict(
         field_list=fields,
         f_index=[i for i in xrange(len(fields))]
         ))
 
+# give the user some predefined settings in order to perform clustering
 def preprocess_data():
     selected_field = request.vars['checked_fields[]']
     path = db(db.import_data).select().last().file_path
@@ -202,6 +202,11 @@ def preprocess_data():
 
     val_lengths = [len(f) for f in field_vals]
     average_length = int(sum(val_lengths)/len(val_lengths))
+
+    # num clusters should depend on how many differnt values there are
+    # upper bound should be different values * 3 for suggested
+    # num iters should default to 300
+    # new cluster parameter should depend on the length of the smallest input
 
     return response.json(dict(
         k_input=str(k_input),

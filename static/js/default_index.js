@@ -291,23 +291,26 @@ var app = function(){
             // then assign a point to it
             new_points = create_new_points(center);
         }else{
+            // otherwise just assign it randomly and give it a new cluster
             new_points = get_random_points();
             center_i = -1;
         }
 
+        // create a dictionary for the entry
         new_entry_dict = create_new_entry_dict(self.vue.fields, self.vue.new_data);
 
         // create a string for the tooltip
         line = "NEWLY INSERTED VALUE\n";
         line += convert_dict_to_string(new_entry_dict, center_i);
 
+        // now add it to the plot!
         if (point_i != -1){
-            // now add it to the plot!
             self.vue.chart_plot.push([new_points[0], new_points[1], line, 'point { fill-color:'+self.vue.colors[center_i]+'}']);
         }else{
             self.vue.chart_plot.push([new_points[0], new_points[1], line, 'point { fill-color:'+getRandomColor()+'}']);            
         }
 
+        // Recreate the graph with the newly inserted point
         self.set_gchart(self.vue.chart_plot, self.vue.chart_options);
         self.vue.new_data = {};
 
@@ -337,24 +340,28 @@ var app = function(){
 
     //Helper functions:
 
+    // Get the index in self.vue.points_data that is closest to the newly inserted
+    // point
     function index_of_closest_point(selected_field, new_data, points_data){
         new_inserted_code = convert_to_ASCII(new_data[selected_field]);
         point_i = -1;
         difference = 999999;
         total_tol = 0;
+        // This is the tolerance value, a measure of the point in which the newly
+        // inserted data should start a new cluster
         clust_off = parseInt(self.vue.new_clust_param);
         for(var i = 0; i < points_data.length; i++){
+            // convert to ascii as a measure of difference
             point_code = convert_to_ASCII(points_data[i][selected_field]);
             curr_diff = Math.abs(new_inserted_code-point_code)
-            
-
+            // save the closest difference so long as it is within tolerance
             if(curr_diff < difference && curr_diff < clust_off){
                 difference = Math.abs(new_inserted_code - point_code);
                 point_i = i;
             }
 
         }
-
+        // Return the index that is an exact match
         for(var i = 0; i < points_data.length; i++){
             if(points_data[i][selected_field] == new_data[selected_field]){
                 point_i = i;
@@ -365,6 +372,7 @@ var app = function(){
         return point_i
     }
 
+    // Given a point, calculate the closest cluster center
     function get_closest_center(point, cluster_centers){
         d = 999999;
         closest_center = [];
@@ -490,6 +498,7 @@ var app = function(){
         return color;
     }
 
+    // Takes in a string and converts it into ASCII
     function convert_to_ASCII(str){
         code = 0;
         for(var i = 0; i < str.length; i++){
